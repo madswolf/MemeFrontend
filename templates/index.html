@@ -1,0 +1,26 @@
+<html>
+   <head>
+      <title>HelloBitch</title>
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+   </head>
+   <body>
+    
+    <h1>Du har nu 3 valg:</h1>
+
+    <h1>Tjek om du er sej</h1>
+    <form action = "/erDuSej_request" method = "GET">
+        <p><input type = "text" name = "nm" /></p>
+        <p><input type = "submit" value = "submit" /></p>
+     </form>
+
+    <h1>Log ind</h1>
+    <form action="/login">
+        <input type ="submit">
+    </form>
+
+    <h1>Upload memes</h1>
+    <form action="/submit">
+        <input type ="submit">
+    </form>
+    </body>
+</html>

@@ -6,23 +6,36 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads/'
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def index():
+   return render_template('index.html')
+
 def login():
    return render_template('login.html')
-
-def index(fuckerName):
-   return render_template('userpage.html', fuckerName = fuckerName)
 
 def memeForm():
    return render_template('memeForm.html')
 
-app.add_url_rule('/<fuckerName>', 'index', index)
-app.add_url_rule('/', 'login', login)
+app.add_url_rule('/','index',index)
+app.add_url_rule('/login', 'login', login)
 app.add_url_rule('/submit', 'memeForm', memeForm)
+
+@app.route('/erDuSej/<fuckerName>')
+def erDuSej(fuckerName):
+   return render_template('userpage.html', fuckerName = fuckerName)
 
 @app.route('/success/<name>')
 def success(name):
    return 'welcome %s' % name
 
+@app.route('/erDuSej_request',methods = ['POST','GET'])
+def erDuSej_request():
+   if request.method == 'POST':
+      user = request.form['nm']
+      return redirect(url_for('erDuSej',fuckerName = user))
+   else:
+      user = request.args.get('nm')
+      return redirect(url_for('erDuSej',fuckerName = user))
 
 @app.route('/login_request',methods = ['POST', 'GET'])
 def login_request():
