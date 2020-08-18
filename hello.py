@@ -2,7 +2,7 @@ import os
 import random
 from flask import Flask, redirect, url_for, request, render_template
 from werkzeug import secure_filename
-from flask_sqlalchemy import SQLAlchemy
+import base64
 
 app = Flask(__name__)
 
@@ -41,10 +41,26 @@ def erDuSej(fuckerName):
 def randomMeme():
    randomMeme = getRandom()
    if len(randomMeme) == 1:
-      print(randomMeme)
       return render_template('randomMeme.html', visual = randomMeme[0])
    else:
       return render_template('randomMeme.html', visual = randomMeme[0], sound = randomMeme[1])
+
+@app.route('/requestMeme')
+def memeRequest():
+   memes = getRandom()
+
+   
+
+   if len(memes) == 1:
+      parts = memes[0].split('.')
+       
+      return parts[len(parts) - 1]+ "___" + readFileAsBase64(memes[0]) 
+   else:
+      visualParts = memes[0].split('.')
+      soundParts = memes[1].split('.')
+      
+      return visualParts[len(visualParts) - 1]+ "___" + readFileAsBase64(memes[0]) + "___" + soundParts[len(soundParts) - 1]+ "___" + readFileAsBase64(memes[1])
+
 
 @app.route('/success/<name>')
 def success(name):
@@ -70,16 +86,23 @@ def login_request():
 
 @app.route('/upload', methods = ['POST'])
 def upload_file():
-   vFile = request.files['visualFile']
-   sFile = request.files['soundFile']
-   
    count = getCount()
-   incrementCount(count)
 
+   if 'soundFile' in request.files:
+      sFile = request.files['soundFile']   
+      sFile.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(str(count) + sFile.filename)))
+   
+   vFile = request.files['visualFile']
    vFile.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(str(count) + vFile.filename)))
-   sFile.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(str(count) + sFile.filename)))
 
+   incrementCount(count)
    return 'Din meme sutter nu paa serveren'
+
+def readFileAsBase64(memeName):
+   file = open(UPLOAD_FOLDER + '/' + memeName)
+   based64 = base64.b64encode(file.read())
+   file.close()
+   return based64
 
 def getCount():
    file = open("count.txt", "r")
@@ -104,4 +127,4 @@ def getRandom():
       return filesFound
 
 if __name__ == '__main__':
-   app.run(host = '0.0.0.0')
+   app.run(host = '0.0.0.0',port = 80)
