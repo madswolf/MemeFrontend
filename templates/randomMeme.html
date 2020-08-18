@@ -1,8 +1,15 @@
+<!DOCTYPE html>
+
 <html>
    <head>
       <title>RandomXD</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/randomMeme.css') }}">
    </head>
    <body>
-       <img src="{{url_for('static',filename=visual)}}" align="middel" />
+      <button class = "requestMeme" id="requestMeme">
+         <img id="meme_image"> 
+      </button> 
+      <script type="text/javascript" src="{{ url_for('static', filename='javascript/randomMeme.js') }}"></script>
    </body>
 </html>
