@@ -2,6 +2,7 @@ import os
 import random
 from flask import Flask, redirect, url_for, request, render_template
 from werkzeug import secure_filename
+from flask_sqlalchemy import SQLAlchemy
 import base64
 
 app = Flask(__name__)
@@ -9,15 +10,19 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'static'
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///memes.db'
-#db = SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///memes.db'
+db = SQLAlchemy(app)
 
-#class files(db.model):
-#   id = db.column('meme_id',db.Integer, primary_key = True)
-#   fileName = db.column('fileName',db.String(100))
-#   fileExtension = db.column('fileExtension',db.String(5))
-#   data = db.column('data',db.LargeBinary)
+class files(db.Model):
+   id = db.Column('meme_id', db.Integer, primary_key = True)
+   fileName = db.Column('fileName',db.String(100))
+   fileExtension = db.Column('fileExtension',db.String(5))
+   data = db.Column('data',db.LargeBinary)
 
+def __init__(self, fileName,fileExtension,data):
+   self.fileName = fileName
+   self.fileExtension = fileExtension
+   self.data = data
 
 def index():
    return render_template('index.html')
@@ -28,10 +33,13 @@ def login():
 def memeForm():
    return render_template('memeForm.html')
 
+def deathRoll():
+   return render_template('deathRolling.html')
 
 app.add_url_rule('/','index',index)
 app.add_url_rule('/login', 'login', login)
 app.add_url_rule('/submit', 'memeForm', memeForm)
+app.add_url_rule('/deathRoll','deathRoll',deathRoll)
 
 @app.route('/erDuSej/<fuckerName>')
 def erDuSej(fuckerName):
@@ -124,7 +132,8 @@ def getRandom():
    if (amountFound == 0 or amountFound > 2):
       return ["error.png"]
    else:
+      print(filesFound)
       return filesFound
 
 if __name__ == '__main__':
-   app.run(host = '0.0.0.0',port = 80)
+   app.run(host = '0.0.0.0',port = 80,debug = True)
