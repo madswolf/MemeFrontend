@@ -1,0 +1,51 @@
+body{
+    height: 100vh;
+    background-color: chartreuse;
+}
+
+.flexbox{
+    height: 100vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
+#result {
+    line-height: 1em;
+    font-weight: bold;
+}
+
+.one{
+  animation: shake 0.2s;
+  animation-iteration-count: 4;
+}
+
+    
+.background{
+    animation: background-colorChange 0.2s;
+    animation-iteration-count: 4;
+}
+
+@keyframes background-colorChange{
+    33% {background-color: dodgerblue}
+    66%{background-color: purple}
+    100%{background-color: red}
+}
+
+@keyframes shake {
+  0% { transform: translate(0.08em, 0.08em) rotate(0deg); }
+  10% { transform: translate(-0.08em, -0.16em) rotate(-1deg); }
+  20% { transform: translate(-0.24em, 0) rotate(1deg); }
+  30% { transform: translate(0.24em, 0.16em) rotate(0deg); }
+  33% {color: orange}
+  40% { transform: translate(0.08em, -0.08em) rotate(1deg); }
+  50% { transform: translate(-0.08em, 0.16em) rotate(-1deg); }
+  60% { transform: translate(-0.24em, 0.08em) rotate(0deg); }
+  66%{color: yellow}
+  70% { transform: translate(0.24em, 0.08em) rotate(-1deg); }
+  80% { transform: translate(-0.08em, -0.08em) rotate(1deg); }
+  90% { transform: translate(0.08em, 0.16em) rotate(0deg); }
+  99%{color: green}
+  100% { transform: translate(0.08em, -0.16em) rotate(-1deg); }
+}
