@@ -1,8 +1,10 @@
 import os
 import random
 from flask import Flask, redirect, url_for, request, render_template
-from werkzeug import secure_filename
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug import secure_filename
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
 import base64
 
 app = Flask(__name__)
@@ -13,17 +15,39 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///memes.db'
 db = SQLAlchemy(app)
 
-class files(db.Model):
-   id = db.Column('meme_id', db.Integer, primary_key = True)
+class Meme(db.Model):
+   __tablename__ = 'meme'
+
+   #keys
+   id = db.Column('id',db.Integer,primary_key = True)
+   visual_id = db.Column(db.Integer, db.ForeignKey("memevisual.id"))
+   sound_id = db.Column(db.Integer, db.ForeignKey("memesound.id"))
+   toptext_id = db.Column(db.Integer, db.ForeignKey("memetext.id"))
+   bottomtext_id = db.Column(db.Integer, db.ForeignKey("memetext.id"))
+
+   #relationships
+   visual = relationship("MemeVisual")
+   sound = relationship("MemeSound")
+   toptext = relationship("MemeText", foreign_keys = [toptext_id])
+   bottomtext = relationship("MemeText", foreign_keys = [bottomtext_id])
+
+class MemeVisual(db.Model):
+   __tablename__ = 'memevisual'
+   id = db.Column('id', db.Integer, primary_key = True)
    fileName = db.Column('fileName',db.String(100))
-   fileExtension = db.Column('fileExtension',db.String(5))
-   data = db.Column('data',db.LargeBinary)
 
-def __init__(self, fileName,fileExtension,data):
-   self.fileName = fileName
-   self.fileExtension = fileExtension
-   self.data = data
+class MemeSound(db.Model):
+   __tablename__ = 'memesound'
+   id = db.Column('id',db.Integer, primary_key = True)
+   fileName = db.Column('fileName',db.String(100))
+   meme = relationship("Meme", uselist=False, back_populates="sound_id")
 
+class MemeText(db.Model):
+   __tablename__ = 'memetext'
+   id = db.Column('id',db.Integer, primary_key = True)
+   memeText = db.Column('memeText',db.String(50))
+   position = db.Column(db.Boolean)
+   
 def index():
    return render_template('index.html')
 
