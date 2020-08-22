@@ -1,11 +1,16 @@
 <html>
+   <head>
+      <title>Upload Meme</title>
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/memeForm.css') }}">
+   </head>
    <body>
         <h1>upload din dank meme</h1>
-        <form action = "/upload" method = "POST" 
-         enctype = "multipart/form-data">
-         <input type = "file" name = "visualFile" />
-         <input type = "file" name = "soundFile" />
-         <input type = "submit"/>
+        <form action = "/upload" method = "POST" enctype = "multipart/form-data">
+          <input type = "file" name = "visualFile" accept=".png,.jpg,.jpeg,.mp4,.gif" required/>
+          <input type = "file" name = "soundFile" accept=".mp3,.wav"/>
+          <input type = "text" name = "topText"/>
+          <input type = "text" name = "bottomText"/>
+          <input type = "submit"/>
         </form>
    </body>
 </html>

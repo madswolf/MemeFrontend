@@ -1,52 +1,32 @@
 import os
 import random
+import sqlite3
 from flask import Flask, redirect, url_for, request, render_template
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug import secure_filename
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
 import base64
 
 app = Flask(__name__)
 
+
+
 UPLOAD_FOLDER = 'static'
+SOUNDFILE_FOLDER = 'soundfiles'
+VISUALFILE_FOLDER = 'visualfiles'
+
+SOUNDFILE_TABLE_NAME = 'memesound'
+VISUALFILE_TABLE_NAME ='memevisual'
+TOPTEXT_TABLE_NAME = 'memetoptext'
+BOTTOMTEXT_TABLE_NAME = 'memebottomtext'
+
+CHANCE_OF_SOUND = 50
+CHANCE_OF_TOPTEXT = 25
+chance_OF_BOTTOMTEXT = 25
+FILENAME_MAX_LENGTH = 100
+MEMETEXT_MAX_LENGTH = 50
+
+DATABASE_NAME = 'memes.db'
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///memes.db'
-db = SQLAlchemy(app)
-
-class Meme(db.Model):
-   __tablename__ = 'meme'
-
-   #keys
-   id = db.Column('id',db.Integer,primary_key = True)
-   visual_id = db.Column(db.Integer, db.ForeignKey("memevisual.id"))
-   sound_id = db.Column(db.Integer, db.ForeignKey("memesound.id"))
-   toptext_id = db.Column(db.Integer, db.ForeignKey("memetext.id"))
-   bottomtext_id = db.Column(db.Integer, db.ForeignKey("memetext.id"))
-
-   #relationships
-   visual = relationship("MemeVisual")
-   sound = relationship("MemeSound")
-   toptext = relationship("MemeText", foreign_keys = [toptext_id])
-   bottomtext = relationship("MemeText", foreign_keys = [bottomtext_id])
-
-class MemeVisual(db.Model):
-   __tablename__ = 'memevisual'
-   id = db.Column('id', db.Integer, primary_key = True)
-   fileName = db.Column('fileName',db.String(100))
-
-class MemeSound(db.Model):
-   __tablename__ = 'memesound'
-   id = db.Column('id',db.Integer, primary_key = True)
-   fileName = db.Column('fileName',db.String(100))
-   meme = relationship("Meme", uselist=False, back_populates="sound_id")
-
-class MemeText(db.Model):
-   __tablename__ = 'memetext'
-   id = db.Column('id',db.Integer, primary_key = True)
-   memeText = db.Column('memeText',db.String(50))
-   position = db.Column(db.Boolean)
    
 def index():
    return render_template('index.html')
@@ -71,28 +51,22 @@ def erDuSej(fuckerName):
 
 @app.route('/randomMeme')
 def randomMeme():
-   randomMeme = getRandom()
-   if len(randomMeme) == 1:
-      return render_template('randomMeme.html', visual = randomMeme[0])
-   else:
-      return render_template('randomMeme.html', visual = randomMeme[0], sound = randomMeme[1])
-
+   return render_template('randomMeme.html')
+   
 @app.route('/requestMeme')
 def memeRequest():
-   memes = getRandom()
+   memes = getRandom() 
 
-   
+   result = memes["visualFile"].split('.')[-1] + "___" + readFileAsBase64(memes["visualFile"],VISUALFILE_FOLDER)
 
-   if len(memes) == 1:
-      parts = memes[0].split('.')
-       
-      return parts[len(parts) - 1]+ "___" + readFileAsBase64(memes[0]) 
-   else:
-      visualParts = memes[0].split('.')
-      soundParts = memes[1].split('.')
-      
-      return visualParts[len(visualParts) - 1]+ "___" + readFileAsBase64(memes[0]) + "___" + soundParts[len(soundParts) - 1]+ "___" + readFileAsBase64(memes[1])
+   if 'soundFile' in memes:
+      result = result + "@@@" + memes["soundFile"].split('.')[-1] + "___" + readFileAsBase64(memes["soundFile"],SOUNDFILE_FOLDER)
+   if 'topText' in memes:
+      result = result + "@@@" + memes["topText"]
+   if 'bottomText' in memes:
+      result = result + "@@@" + memes["bottomText"]
 
+   return result
 
 @app.route('/success/<name>')
 def success(name):
@@ -116,48 +90,100 @@ def login_request():
       user = request.args.get('nm')
       return redirect(url_for('success',name = user))
 
+def addAndSaveMemeFile(conn,tableName, folder, file):
+   fileName = secure_filename(file.filename)   
+   if (len(fileName) > FILENAME_MAX_LENGTH):
+      fileName = fileName[0:FILENAME_MAX_LENGTH]
+   c = conn.execute("""
+      INSERT INTO {}
+      VALUES(?,?)
+   """.format(tableName),(None,fileName))
+   print("inserted" + fileName + "into" + tableName + "with id" + str(c.lastrowid))
+   file.save(os.path.join(app.config['UPLOAD_FOLDER'], folder, fileName))
+   return c.lastrowid
+
+def addMemeText(conn,text,tableName): 
+   if (len(text) > MEMETEXT_MAX_LENGTH):
+      text = text[0:MEMETEXT_MAX_LENGTH]
+   c = conn.execute("""
+      INSERT INTO {}
+      VALUES(?,?)
+   """.format(tableName),(None,text))
+   print("inserted" + text + "as" + text + "with id" + str(c.lastrowid))
+   return c.lastrowid
+
 @app.route('/upload', methods = ['POST'])
 def upload_file():
-   count = getCount()
+   conn = sqlite3.connect(DATABASE_NAME)
+   soundID = topTextID = bottomTextID = "NULL"
 
    if 'soundFile' in request.files:
-      sFile = request.files['soundFile']   
-      sFile.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(str(count) + sFile.filename)))
-   
-   vFile = request.files['visualFile']
-   vFile.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(str(count) + vFile.filename)))
+      sFile = request.files['soundFile']
+      soundID = addAndSaveMemeFile(conn,SOUNDFILE_TABLE_NAME, SOUNDFILE_FOLDER, sFile)
 
-   incrementCount(count)
+   if 'topText' in request.form:
+      topTextID = addMemeText(conn,request.form['topText'],TOPTEXT_TABLE_NAME)
+
+   if 'bottomText' in request.form:
+      bottomTextID = addMemeText(conn,request.form['bottomText'],BOTTOMTEXT_TABLE_NAME)
+
+   vFile = request.files['visualFile']
+   visualID = addAndSaveMemeFile(conn,VISUALFILE_TABLE_NAME,VISUALFILE_FOLDER, vFile)
+
+   c = conn.execute("""
+      INSERT INTO meme
+      VALUES(?,?,?,?,?)
+   """,(None,visualID,soundID,topTextID,bottomTextID))
+   print("inserted meme into meme table with id" + str(c.lastrowid))
+   conn.commit()
+   conn.close()
+
    return 'Din meme sutter nu paa serveren'
 
-def readFileAsBase64(memeName):
-   file = open(UPLOAD_FOLDER + '/' + memeName)
+def readFileAsBase64(memeName, folder):
+   file = open(UPLOAD_FOLDER + '/' + folder + '/' + memeName)
    based64 = base64.b64encode(file.read())
    file.close()
    return based64
 
-def getCount():
-   file = open("count.txt", "r")
-   count = int(file.readline()) 
-   file.close()
-   return count
-
-def incrementCount(count):
-   file = open("count.txt","w")
-   file.write(str(count + 1))
-   file.close()
+def getRandomComponentFromTable(conn,table,fieldName):
+   c = conn.cursor()
+   c.execute("SELECT COUNT(*) FROM {}".format(table))
+   randID = random.randint(1, int(c.fetchone()[0]))
+   print("HERE -----------> " + str(randID) + "<----------------" + table)
+   c.execute("SELECT {} FROM {} where id=?".format(fieldName,table),(randID,))
+   fileName = c.fetchone()[0]
+   return fileName
 
 def getRandom():
 
-   id = str(random.randint(0, getCount() - 1))
-   dir = os.listdir(UPLOAD_FOLDER + "/")
-   filesFound = [name for name in dir if name.startswith(id)]
-   amountFound = len(filesFound)
-   if (amountFound == 0 or amountFound > 2):
-      return ["error.png"]
+   conn = sqlite3.connect(DATABASE_NAME)
+
+   visualFile = getRandomComponentFromTable(conn,VISUALFILE_TABLE_NAME,"fileName")
+   
+   if random.randint(0,100) < CHANCE_OF_SOUND:
+      soundFile = getRandomComponentFromTable(conn,SOUNDFILE_TABLE_NAME,"fileName")
+   if random.randint(0,100) < CHANCE_OF_TOPTEXT:
+      topText = getRandomComponentFromTable(conn,TOPTEXT_TABLE_NAME,"memeText")
+   if random.randint(0,100) < chance_OF_BOTTOMTEXT:
+      bottomText = getRandomComponentFromTable(conn,BOTTOMTEXT_TABLE_NAME, "memeText")
+
+   components = {}
+
+   if visualFile in globals():
+      components["visualFile"] = visualFile
    else:
-      print(filesFound)
-      return filesFound
+      components["visualFile"] = "error.png"
+   if "soundFile" in globals():
+      components["soundFile"] = soundFile
+   if "topText" in globals():
+      components["topText"] = topText
+   if "bottomText" in globals():
+      components["bottomText"] = bottomText
+
+   conn.close()
+
+   return components
 
 if __name__ == '__main__':
    app.run(host = '0.0.0.0',port = 80,debug = True)
