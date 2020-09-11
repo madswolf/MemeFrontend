@@ -21,7 +21,7 @@ body{
   animation-iteration-count: 4;
 }
 
-    
+
 .background{
     animation: background-colorChange 0.2s;
     animation-iteration-count: 4;

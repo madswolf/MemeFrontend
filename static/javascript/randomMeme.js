@@ -7,10 +7,17 @@ function getFont(width) {
     return (size|0) + 'px Impact'; // set font
 }
 
+function draw(v,c,w,h) {
+    if(v.paused || v.ended) return false;
+    c.drawImage(v,0,0,w,h);
+    setTimeout(draw,20,v,c,w,h);
+}
+
+
 async function assignRandomMeme() {
     let response = await fetch("/requestMeme");
     let newMeme = await response.text();
-    let parts = newMeme.split("___");
+    let parts = newMeme.split("@@@");
     
     if (parts.length > 3){
         let soundExtension = parts[2];
@@ -19,9 +26,17 @@ async function assignRandomMeme() {
     }
     
     //todo support .gif and .mp4(video in general)
-    let visualExtension = parts[0];
-    let visualData = parts[1];
+    let visualParts = parts[0].split("___");
+    let visualExtension = visualParts[0];
+    let visualData = visualParts[1];
+    visualData = visualData.substring(2,visualData.length - 1)
+    console.log(visualParts[0]);
+    console.log(visualData);
     let imageElement = new Image();    
+    if(visualParts[0] == "mp4"){
+        console.log("cant do mp4 yet uwu");
+        return ;
+    }
     imageElement.src = "data:image/" + visualExtension + ";base64," + visualData;
 
     imageElement.addEventListener('load', () => {
