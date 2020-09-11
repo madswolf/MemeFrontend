@@ -1,9 +1,14 @@
 import os
+import subprocess
 import random
 import sqlite3
 from flask import Flask, redirect, url_for, request, render_template
+from PIL import Image
+from io import BytesIO
+from pygifsicle import optimize
 from werkzeug import secure_filename
 import base64
+
 
 app = Flask(__name__)
 
@@ -58,7 +63,7 @@ def memeRequest():
    memes = getRandom() 
 
    result = memes["visualFile"].split('.')[-1] + "___" + readFileAsBase64(memes["visualFile"],VISUALFILE_FOLDER)
-
+   print(memes["visualFile"])
    if 'soundFile' in memes:
       result = result + "@@@" + memes["soundFile"].split('.')[-1] + "___" + readFileAsBase64(memes["soundFile"],SOUNDFILE_FOLDER)
    if 'topText' in memes:
@@ -92,14 +97,35 @@ def login_request():
 
 def addAndSaveMemeFile(conn,tableName, folder, file):
    fileName = secure_filename(file.filename)   
+   fileName, extension = os.path.splitext(fileName)
    if (len(fileName) > FILENAME_MAX_LENGTH):
       fileName = fileName[0:FILENAME_MAX_LENGTH]
+   fileLocation = os.path.join(app.config['UPLOAD_FOLDER'], folder, (fileName + extension))
+
+   file.save(fileLocation)
+
+   if ((extension == ".jpg") | (extension == ".png") | (extension == ".jpeg")):
+      image = Image.open(fileLocation)
+      image = image.resize((400,400),Image.ANTIALIAS)
+      image.save(fileLocation,optimize=True,quality=85)
+   elif (extension == ".gif"):
+      optimize(fileLocation)
+   elif(extension == ".mp4"):
+      print("ffmpeg -i " + fileLocation + " -vcodec h264 -acodec mp2 " + fileLocation)
+      fileName = fileName + "comp"
+      compressedFileLocation = os.path.join(app.config['UPLOAD_FOLDER'], folder,(fileName + extension))
+      #the compressed file needs a different name than the original since ffmpeg can't work in-place
+      subprocess.run("ffmpeg -i " + fileLocation + " -vcodec h264 -acodec mp2 " + compressedFileLocation,shell=True)
+      subprocess.run("rm " + fileLocation,shell=True)
+      fileLocation = compressedFileLocation
+   
+
    c = conn.execute("""
       INSERT INTO {}
       VALUES(?,?)
-   """.format(tableName),(None,fileName))
-   print("inserted" + fileName + "into" + tableName + "with id" + str(c.lastrowid))
-   file.save(os.path.join(app.config['UPLOAD_FOLDER'], folder, fileName))
+   """.format(tableName),(None,(fileName + extension)))
+   print("inserted" + fileName + extension + "into" + tableName + "with id" + str(c.lastrowid))
+
    return c.lastrowid
 
 def addMemeText(conn,text,tableName): 
@@ -140,14 +166,31 @@ def upload_file():
 
    return 'Din meme sutter nu paa serveren'
 
-def readFileAsBase64(memeName, folder):
-   file = open(UPLOAD_FOLDER + '/' + folder + '/' + memeName)
-   based64 = base64.b64encode(file.read())
+def readFileAsBase64(fileName, folder):
+   fileName, extension = os.path.splitext(fileName)
+   if ((extension == ".jpg" )| (extension == ".png") | (extension == ".jpeg")):
+      file = Image.open(UPLOAD_FOLDER + '/' + folder + '/' + fileName + extension)
+      im_file = BytesIO()
+      if ((extension == ".jpg") | (extension == ".jpeg")):
+         imageFormat = "JPEG"
+      else:
+         imageFormat = "PNG"
+      file.save(im_file, format=imageFormat)
+      based64 = base64.b64encode(im_file.getvalue())
+   elif((extension == ".mp3")| (extension == ".mp4")):
+      file = open(UPLOAD_FOLDER + '/' + folder + '/' + fileName + extension,"rb")
+      based64 = base64.b64encode(file.read())
+   else:
+      file = open(UPLOAD_FOLDER + '/' + folder + '/' + fileName + extension)
+      based64 = base64.b64encode(file.read())
+
    file.close()
-   return based64
+   return str(based64)
 
 def getRandomComponentFromTable(conn,table,fieldName):
    c = conn.cursor()
+   print(table)
+   print(fieldName)
    c.execute("SELECT COUNT(*) FROM {}".format(table))
    randID = random.randint(1, int(c.fetchone()[0]))
    print("HERE -----------> " + str(randID) + "<----------------" + table)
@@ -169,16 +212,17 @@ def getRandom():
       bottomText = getRandomComponentFromTable(conn,BOTTOMTEXT_TABLE_NAME, "memeText")
 
    components = {}
-
-   if visualFile in globals():
+   print(visualFile)
+   if visualFile is not None:
+      print("was in locals")
       components["visualFile"] = visualFile
    else:
       components["visualFile"] = "error.png"
-   if "soundFile" in globals():
+   if "soundFile" in locals():
       components["soundFile"] = soundFile
-   if "topText" in globals():
+   if "topText" in locals():
       components["topText"] = topText
-   if "bottomText" in globals():
+   if "bottomText" in locals():
       components["bottomText"] = bottomText
 
    conn.close()

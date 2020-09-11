@@ -27,7 +27,7 @@ function roll() {
         setTimeout(() => {
             text.classList.remove('one');
             html.classList.remove('background')  
-        },800);        
+        },1000);        
     }
 
     changeToResult(text,roll);
