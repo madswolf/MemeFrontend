@@ -40,7 +40,7 @@ def login():
    return render_template('login.html')
 
 def memeForm():
-   return render_template('memeForm.html')
+   return render_template('memeform.html')
 
 def deathRoll():
    return render_template('deathRolling.html')
