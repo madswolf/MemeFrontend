@@ -6,7 +6,7 @@ from flask import Flask, redirect, url_for, request, render_template
 from PIL import Image
 from io import BytesIO
 from pygifsicle import optimize
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 import base64
 
 
@@ -96,12 +96,13 @@ def login_request():
       return redirect(url_for('success',name = user))
 
 def addAndSaveMemeFile(conn,tableName, folder, file):
+   print(file.filename)
    fileName = secure_filename(file.filename)   
    fileName, extension = os.path.splitext(fileName)
    if (len(fileName) > FILENAME_MAX_LENGTH):
       fileName = fileName[0:FILENAME_MAX_LENGTH]
    fileLocation = os.path.join(app.config['UPLOAD_FOLDER'], folder, (fileName + extension))
-
+   print(fileLocation)
    file.save(fileLocation)
 
    if ((extension == ".jpg") | (extension == ".png") | (extension == ".jpeg")):
@@ -143,14 +144,14 @@ def upload_file():
    conn = sqlite3.connect(DATABASE_NAME)
    soundID = topTextID = bottomTextID = "NULL"
 
-   if 'soundFile' in request.files:
+   if request.files['soundFile']:
       sFile = request.files['soundFile']
       soundID = addAndSaveMemeFile(conn,SOUNDFILE_TABLE_NAME, SOUNDFILE_FOLDER, sFile)
 
-   if 'topText' in request.form:
+   if request.files['topText']:
       topTextID = addMemeText(conn,request.form['topText'],TOPTEXT_TABLE_NAME)
 
-   if 'bottomText' in request.form:
+   if request.files['bottomText']:
       bottomTextID = addMemeText(conn,request.form['bottomText'],BOTTOMTEXT_TABLE_NAME)
 
    vFile = request.files['visualFile']
