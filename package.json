@@ -1,0 +1,32 @@
+{
+  "name": "memeserver",
+  "version": "1.0.0",
+  "description": "MemeServer Rewrite",
+  "main": "index.js",
+  "build": "rimraf ./build && tsc",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "nodemon",
+    "build": "rimraf ./build && tsc",
+    "start": "npm run build && node build/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mcfishflaps/MemeServer.git"
+  },
+  "author": "Mads Wolf Jespersen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mcfishflaps/MemeServer/issues"
+  },
+  "homepage": "https://github.com/Mcfishflaps/MemeServer#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.1",
+    "nodemon": "^2.0.4",
+    "rimraf": "^3.0.2",
+    "ts-node": "^9.0.0"
+  }
+}
