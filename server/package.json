@@ -3,12 +3,12 @@
    "version": "1.0.0",
    "description": "MemeServer Rewrite",
    "main": "index.js",
-   "build": "rimraf ./build && tsc",
+   "build": "rimraf ./out && tsc",
    "scripts": {
       "test": "echo \"Error: no test specified\" && exit 1",
       "lint": "eslint . --ext .ts",
       "start:dev": "nodemon",
-      "build": "rimraf ./build && tsc",
+      "build": "rimraf ./out && tsc",
       "start": "ts-node src/index.ts"
    },
    "repository": {
