@@ -18,12 +18,14 @@ function Greeting({isLoggedIn,username}:IState){
     }
 }
 
-class UserPage extends React.Component<IState>{
-    render(){
+function UserPage (props:IState){
         return(
           <div>  
-              <Greeting isLoggedIn={this.props.isLoggedIn} username={this.props.username}/>
+              <Greeting isLoggedIn={props.isLoggedIn} username={props.username}/>
               <img src={logo} className="App-logo" alt="logo" />
+              <p>
+                Bisse basse
+              </p>
               <a
                 className="App-link"
                 href="https://reactjs.org"
@@ -35,6 +37,6 @@ class UserPage extends React.Component<IState>{
           </div>
         );
     }
-}
+
 
 export default UserPage;
