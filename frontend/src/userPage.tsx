@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './LonelyCrab.jpg';
 import IState from './State';
 
 function UserGreeting(username:string){
@@ -18,25 +17,39 @@ function Greeting({isLoggedIn,username}:IState){
     }
 }
 
+function UserField(name:string,value:string){
+  return(
+    <li className="User-field">
+      <text className="User-field-name">{name}</text>
+      <br/>
+      <text className="User-field-value">{value}</text>
+    </li>
+  );
+}
+
+function UserPicture(profilePicURL:string, classExtension :string) {
+  let className = classExtension === "" ? "User-picture" : "User-picture-" + classExtension
+  return (
+    <img src={profilePicURL} className={className} alt="logo" />
+  );
+}
+
 function UserPage (props:IState){
-        return(
-          <div>  
-              <Greeting isLoggedIn={props.isLoggedIn} username={props.username}/>
-              <img src={logo} className="App-logo" alt="logo" />
-              <p>
-                Bisse basse
-              </p>
-              <a
-                className="App-link"
-                href="https://reactjs.org"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Learn React
-              </a>
-          </div>
-        );
-    }
+  return(
+    <div className="User-page">
+      <Greeting isLoggedIn={props.isLoggedIn} username={props.username} email={props.email} profilePicURL={props.profilePicURL}/>
+      <div className="User-box-container">
+        <div className="User-box">  
+            {UserPicture(props.profilePicURL,"")}
+            <ul className="User-info">
+              {UserField("USERNAME",props.username)}
+              {UserField("E-MAIL",props.email)}                 
+            </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 
-export default UserPage;
+export {UserPage,UserPicture};
