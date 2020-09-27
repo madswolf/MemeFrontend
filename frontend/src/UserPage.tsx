@@ -1,22 +1,6 @@
 import React from 'react';
 import IState from './State';
 
-function UserGreeting(username:string){
-    return <h1>Welcome back {username}!</h1>
-}
-
-function GuestGreeting(){
-  return <h1>Hello you lonely crab</h1>
-}
-
-function Greeting({isLoggedIn,username}:IState){
-  if (isLoggedIn) {
-    return UserGreeting(username);
-  } else {
-    return GuestGreeting();
-    }
-}
-
 function UserField(name:string,value:string){
   return(
     <li className="User-field">
@@ -37,7 +21,6 @@ function UserPicture(profilePicURL:string, classExtension :string) {
 function UserPage (props:IState){
   return(
     <div className="User-page">
-      <Greeting isLoggedIn={props.isLoggedIn} username={props.username} email={props.email} profilePicURL={props.profilePicURL}/>
       <div className="User-box-container">
         <div className="User-box">  
             {UserPicture(props.profilePicURL,"")}
