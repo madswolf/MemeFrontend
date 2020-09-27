@@ -5,4 +5,4 @@ interface IState {
     profilePicURL: string
 }
 
-export default IState;
+export default IState; 
