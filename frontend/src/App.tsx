@@ -29,9 +29,9 @@ function navBar(props:IState){
   return (
     <Navbar appearance='default' className='App-header'>
     <Navbar.Header>
-      <Nav.Item componentClass={Link} to={'/'}>
+      <Link to='/' className='navbar-logo'>
         <img src={logo} alt='Mads.monster logo' className='App-logo'/>
-      </Nav.Item>
+      </Link>
     </Navbar.Header>
     <Navbar.Body>
       <Nav>

@@ -1,3 +1,4 @@
+@import '~@csstools/normalize.css';
 .App {
   text-align: center;
 }
@@ -9,6 +10,11 @@
   padding-right: 1vmin;
   pointer-events: none;
 
+}
+
+.navbar-logo {
+  padding: 8px;
+  display: inline-block;
 }
 
 .User-page {
