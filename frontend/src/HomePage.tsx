@@ -4,12 +4,16 @@ import {Button} from 'rsuite';
 import 'rsuite/dist/styles/rsuite-dark.css';
 
 function UserGreeting(username:string){
-    return <h1>Welcome back {username}!</h1>
+    return (
+      <div className='Greeting'>
+        <h1>Welcome back {username}!</h1>
+      </div>
+    );
 }
 
 function GuestGreeting(){
   return (
-    <div>
+    <div className='Greeting'>
       <h1>Hello you lonely crab</h1>
       <h1>Log in or sign up and maybe you won't be so lonely anymore</h1>
       <Button>Login</Button>

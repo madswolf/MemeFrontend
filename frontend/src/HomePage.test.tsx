@@ -1,3 +1,24 @@
 import React from 'react';
-import { renderer } from 'react-test-renderer';
-import App from './App';
+import { render} from '@testing-library/react';
+import HomePage from './HomePage';
+
+import { findRenderedDOMComponentWithClass, renderIntoDocument } from 'react-dom/test-utils';
+
+const state = {
+    isLoggedIn : true,
+    username: 'LoneliestCrab',
+    email: 'theLoneliestCrab@crabmail.com',
+    profilePicURL: "https://pbs.twimg.com/profile_images/1132302593521311744/pT5xEDTL_400x400.jpg"
+}
+
+test('HomePage renders with username', () => {
+    const {getByText} = render(<HomePage isLoggedIn={state.isLoggedIn} username={state.username} email = {state.email} profilePicURL={state.profilePicURL}/>);
+    const greeting = getByText(/Welcome back/);
+    expect(greeting.textContent).toBe('Welcome back ' + state.username + '!');
+});
+
+test('HomePage renders as guest', () => {
+    const {getByText} = render(<HomePage isLoggedIn={false} username={state.username} email = {state.email} profilePicURL={state.profilePicURL}/>);
+    const greeting = getByText(/Hello/);
+    expect(greeting.textContent).toBe('Hello you lonely crab');
+});

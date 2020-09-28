@@ -29,7 +29,7 @@ function navBar(props:IState){
   return (
     <Navbar appearance='default' className='App-header'>
     <Navbar.Header>
-      <Link to='/' className='navbar-logo'>
+      <Link to='/' className='Navbar-logo'>
         <img src={logo} alt='Mads.monster logo' className='App-logo'/>
       </Link>
     </Navbar.Header>
