@@ -1,8 +1,6 @@
 import React from 'react';
-import { render} from '@testing-library/react';
+import { render } from '@testing-library/react';
 import HomePage from './HomePage';
-
-import { findRenderedDOMComponentWithClass, renderIntoDocument } from 'react-dom/test-utils';
 
 const state = {
     isLoggedIn : true,
@@ -12,13 +10,13 @@ const state = {
 }
 
 test('HomePage renders with username', () => {
-    const {getByText} = render(<HomePage isLoggedIn={state.isLoggedIn} username={state.username} email = {state.email} profilePicURL={state.profilePicURL}/>);
+    const {getByText} = render(<HomePage isLoggedIn={state.isLoggedIn} username={state.username} />);
     const greeting = getByText(/Welcome back/);
     expect(greeting.textContent).toBe('Welcome back ' + state.username + '!');
 });
 
 test('HomePage renders as guest', () => {
-    const {getByText} = render(<HomePage isLoggedIn={false} username={state.username} email = {state.email} profilePicURL={state.profilePicURL}/>);
+    const {getByText} = render(<HomePage isLoggedIn={false} username={state.username}/>);
     const greeting = getByText(/Hello/);
     expect(greeting.textContent).toBe('Hello you lonely crab');
 });

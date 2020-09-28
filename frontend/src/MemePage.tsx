@@ -1,7 +1,10 @@
 import React from 'react';
-import IState from "./State";
 
-function MemePage(props:IState){
+interface MemePageProps {
+
+}
+
+function MemePage(props:MemePageProps){
     return (
         <p>
             Her kommer der til at være memes, din fuck
