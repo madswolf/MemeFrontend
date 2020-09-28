@@ -1,8 +1,8 @@
 import React from 'react';
+import { shallow } from 'enzyme';
 import { render,screen } from '@testing-library/react';
 import {UserPage} from './UserPage';
-import { scryRenderedDOMComponentsWithClass, renderIntoDocument } from 'react-dom/test-utils';
-import { Console } from 'console';
+
 
 const state = {
     isLoggedIn : true,
@@ -12,9 +12,16 @@ const state = {
 }
 
 test('Check if page renders',() => {
-    const {getByText} = render(<UserPage isLoggedIn={state.isLoggedIn} username={state.username} email = {state.email} profilePicURL={state.profilePicURL} />);
+    const {getByText} = render(<UserPage username={state.username} email = {state.email} profilePicURL={state.profilePicURL} />);
     const username = getByText(/USERNAME/);
     expect(username.textContent).toBe('USERNAME');
+});
+
+describe('UserPage', () => {
+    it('Renders link to Google', () => {
+      const link = shallow(<UserPage username={state.username} email = {state.email} profilePicURL={state.profilePicURL}/>);
+      expect(link).toMatchSnapshot();
+    });  
 });
 
 

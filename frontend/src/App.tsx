@@ -1,19 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import './App.css';
 import {UserPage,UserPicture} from './UserPage';
 import {LoginPage} from './LoginPage';
 import MemePage from './MemePage';
-import IState from './State';
 import { Dropdown, Nav, Navbar, } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-dark.css';
 import logo from './mads_monster_logo.png'; 
 import HomePage from './HomePage';
 
-interface IProps {
+interface HeaderProps {
+  isLoggedIn: boolean,
+  profilePicURL: string,
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-function navBar(props:IState){
+function Header(props:HeaderProps){
   let userLink;
   if (props.isLoggedIn){
     userLink = (
@@ -45,34 +47,25 @@ function navBar(props:IState){
   );
 }
 
-class App extends React.Component<IProps,IState> {
-  constructor(props:IState){
-    super(props);
-    this.state = {
-      isLoggedIn: true,
-      username: 'LoneliestCrab',
-      email: "theLoneliestCrab@crabmail.com",
-      profilePicURL: "https://pbs.twimg.com/profile_images/1132302593521311744/pT5xEDTL_400x400.jpg"
-    }
-  }
+function App (){
+  const [isLoggedIn,setIsLoggedIn] = useState(true);
+  const [username,setUserName] = useState('LoneliestCrab');
+  const [email,setEmail] = useState('theLoneliestCrab@crabmail.com');
+  const [profilePicURL,setProfilePicURL] = useState('https://pbs.twimg.com/profile_images/1132302593521311744/pT5xEDTL_400x400.jpg');
   
-  
-  render(){
-    return (
-      <Router>
+  return (
+    <Router>
         <div className="App">
-          {navBar(this.state)}
+          <Header isLoggedIn={isLoggedIn} profilePicURL={profilePicURL} setIsLoggedIn={setIsLoggedIn} />
           <body className="App-body">
-            <Route exact path ='/' render={() => (HomePage(this.state))}/>
-            <Route path='/Home' render={() => (HomePage(this.state))}/>
-            <Route path='/User' render={() => (this.state.isLoggedIn ? UserPage(this.state) : <Redirect to="/Login"/>)}/>
-            <Route path='/Login' render={() => (!this.state.isLoggedIn ? LoginPage(this.state) : <Redirect to="/User"/>)}/>
-            <Route path='/Memes' render={() => (MemePage(this.state))}/>
+            <Route exact path ='/' render={() => <HomePage isLoggedIn={isLoggedIn} username={username} />}/>
+            <Route path='/User' render={() => (isLoggedIn ? (<UserPage username={username} profilePicURL={profilePicURL} email={email}/>) : <Redirect to="/Login"/>)}/>
+            <Route path='/Login' render={() => (!isLoggedIn ? (<LoginPage />) : <Redirect to="/User"/>)}/>
+            <Route path='/Memes' render={() => (<MemePage />)}/>
           </body>
         </div>
       </Router>
-    );
-  }
+  );
 }
 
 

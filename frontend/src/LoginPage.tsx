@@ -1,7 +1,10 @@
 import React from 'react';
-import IState from './State';
 
-function LoginPage(props:IState) {
+interface LoginPageProps {
+
+}
+
+function LoginPage(props:LoginPageProps) {
     return(
         <h1>Her kommer du til at kunne logge ind</h1>
     );

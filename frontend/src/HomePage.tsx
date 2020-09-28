@@ -1,5 +1,4 @@
 import React from 'react';
-import IState from './State';
 import {Button} from 'rsuite';
 import 'rsuite/dist/styles/rsuite-dark.css';
 
@@ -21,7 +20,7 @@ function GuestGreeting(){
   );    
 }
 
-function Greeting({isLoggedIn,username}:IState){
+function Greeting({isLoggedIn,username}:HomePageProps){
   if (isLoggedIn) {
     return UserGreeting(username);
   } else {
@@ -29,7 +28,12 @@ function Greeting({isLoggedIn,username}:IState){
     }
 }
 
-function HomePage (props:IState){
+interface HomePageProps {
+  isLoggedIn:boolean,
+  username: string
+}
+
+function HomePage (props:HomePageProps){
     return(
       <div className="Home-page">
         {Greeting(props)}
