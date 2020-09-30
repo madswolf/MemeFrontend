@@ -1,10 +1,8 @@
 import React from 'react';
 
-interface MemePageProps {
 
-}
 
-function MemePage(props:MemePageProps){
+const MemePage :React.FC = (props) =>{
     return (
         <p>
             Her kommer der til at være memes, din fuck

@@ -1,4 +1,5 @@
 import React from 'react';
+import { email, profilePic, userName } from './State';
 
 function UserField(name:string,value:string){
   return(
@@ -17,13 +18,7 @@ function UserPicture(profilePicURL:string, classExtension :string) {
   );
 }
 
-interface UserPageProps {
-  username: string,
-  profilePicURL: string,
-  email: string,
-}
-
-function UserPage (props:UserPageProps){
+const UserPage:React.FC<(userName & email & profilePic)> = (props) => {
   return(
     <div className="User-page">
       <div className="User-box-container">

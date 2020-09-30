@@ -89,6 +89,19 @@
   color: #FFFFFF;
 }
 
+.Login-form{
+  font-size: calc(4px + 2vmin);
+  text-align: left; 
+}
+
+.Signup-link{
+  text-decoration: none;
+}
+
+.Signup-link:hover{
+  text-decoration: none;
+}
+
 .App-body {
   background-color: #282c34;
   min-height: 100vh;
