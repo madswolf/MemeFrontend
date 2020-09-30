@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {Button, ButtonToolbar, ControlLabel, Form, FormControl, FormGroup, HelpBlock} from 'rsuite';
 import 'rsuite/dist/styles/rsuite-dark.css';
 
-const LoginPage:React.FC = () =>  {
+const SignupPage:React.FC = () => {
     return (
     <Form className="Login-form">
         <FormGroup>
@@ -18,9 +18,9 @@ const LoginPage:React.FC = () =>  {
         </FormGroup>
         <FormGroup>
           <ButtonToolbar>
-            <Button block appearance="primary">Login</Button>
-            <Link to="/Signup" className="Signup-link">
-                <Button block appearance="ghost">Sign up</Button>
+            <Button block appearance="primary">Sign up</Button>
+            <Link to="/Login" className="Signup-link">
+                <Button block appearance="ghost">Login</Button>
             </Link>
           </ButtonToolbar>
         </FormGroup>
@@ -29,4 +29,4 @@ const LoginPage:React.FC = () =>  {
     
 }
 
-export {LoginPage};
+export {SignupPage};

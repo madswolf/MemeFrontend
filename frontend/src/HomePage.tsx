@@ -1,16 +1,17 @@
 import React from 'react';
 import {Button} from 'rsuite';
 import 'rsuite/dist/styles/rsuite-dark.css';
+import { isLoggedIn, userName } from './State';
 
-function UserGreeting(username:string){
+const UserGreeting:React.FC<userName> =  (props) =>{
     return (
       <div className='Greeting'>
-        <h1>Welcome back {username}!</h1>
+        <h1>Welcome back {props.username}!</h1>
       </div>
     );
 }
 
-function GuestGreeting(){
+const GuestGreeting:React.FC =  (props) =>{
   return (
     <div className='Greeting'>
       <h1>Hello you lonely crab</h1>
@@ -20,20 +21,15 @@ function GuestGreeting(){
   );    
 }
 
-function Greeting({isLoggedIn,username}:HomePageProps){
-  if (isLoggedIn) {
-    return UserGreeting(username);
+const Greeting:React.FC<(isLoggedIn & userName)> =  (props) =>{
+  if (props.isLoggedIn) {
+    return <UserGreeting username={props.username} />
   } else {
-    return GuestGreeting();
+    return <GuestGreeting />;
     }
 }
 
-interface HomePageProps {
-  isLoggedIn:boolean,
-  username: string
-}
-
-function HomePage (props:HomePageProps){
+const HomePage:React.FC<(isLoggedIn & userName)> =  (props) =>{
     return(
       <div className="Home-page">
         {Greeting(props)}

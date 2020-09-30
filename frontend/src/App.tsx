@@ -8,20 +8,17 @@ import { Dropdown, Nav, Navbar, } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-dark.css';
 import logo from './mads_monster_logo.png'; 
 import HomePage from './HomePage';
+import {isLoggedIn,profilePic,signout,useUserState} from './State'
+import { SignupPage } from './SignupPage';
 
-interface HeaderProps {
-  isLoggedIn: boolean,
-  profilePicURL: string,
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-function Header(props:HeaderProps){
+const Header:React.FC<(isLoggedIn & profilePic & signout)> = (props) => {
   let userLink;
   if (props.isLoggedIn){
     userLink = (
     <Dropdown title={UserPicture(props.profilePicURL,"navbar")}>
       <Dropdown.Item componentClass={Link} to={'/User'}>UserPage</Dropdown.Item>
       <Dropdown.Item>Settings</Dropdown.Item> 
+      <Dropdown.Item onSelect={props.signout}>Sign out</Dropdown.Item>
     </Dropdown>
     );
   } else {
@@ -47,21 +44,18 @@ function Header(props:HeaderProps){
   );
 }
 
-function App (){
-  const [isLoggedIn,setIsLoggedIn] = useState(true);
-  const [username,setUserName] = useState('LoneliestCrab');
-  const [email,setEmail] = useState('theLoneliestCrab@crabmail.com');
-  const [profilePicURL,setProfilePicURL] = useState('https://pbs.twimg.com/profile_images/1132302593521311744/pT5xEDTL_400x400.jpg');
-  
+const App:React.FC = () => {
+  const {username,isLoggedIn,email,profilePicURL,login,signout} = useUserState();
   return (
     <Router>
         <div className="App">
-          <Header isLoggedIn={isLoggedIn} profilePicURL={profilePicURL} setIsLoggedIn={setIsLoggedIn} />
+          <Header isLoggedIn={isLoggedIn} profilePicURL={profilePicURL} signout={signout} />
           <body className="App-body">
             <Route exact path ='/' render={() => <HomePage isLoggedIn={isLoggedIn} username={username} />}/>
             <Route path='/User' render={() => (isLoggedIn ? (<UserPage username={username} profilePicURL={profilePicURL} email={email}/>) : <Redirect to="/Login"/>)}/>
             <Route path='/Login' render={() => (!isLoggedIn ? (<LoginPage />) : <Redirect to="/User"/>)}/>
             <Route path='/Memes' render={() => (<MemePage />)}/>
+            <Route path='/Signup' render={() => (!isLoggedIn ? (<SignupPage />) : <Redirect to="/User"/>)}/>
           </body>
         </div>
       </Router>
