@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {Button} from 'rsuite';
 import 'rsuite/dist/styles/rsuite-dark.css';
 import { isLoggedIn, userName } from './State';
@@ -16,7 +17,9 @@ const GuestGreeting:React.FC =  (props) =>{
     <div className='Greeting'>
       <h1>Hello you lonely crab</h1>
       <h1>Log in or sign up and maybe you won't be so lonely anymore</h1>
-      <Button>Login</Button>
+      <Link to="/Login" className="Signup-link">
+        <Button size="lg" appearance="primary">Login</Button>
+      </Link>
     </div>
   );    
 }
