@@ -10,6 +10,8 @@ import logo from './mads_monster_logo.png';
 import HomePage from './HomePage';
 import {isLoggedIn,profilePic,signout,useUserState} from './State'
 import { SignupPage } from './SignupPage';
+import UploadPage from './UploadPage';
+
 
 const Header:React.FC<(isLoggedIn & profilePic & signout)> = (props) => {
   let userLink;
@@ -56,6 +58,7 @@ const App:React.FC = () => {
             <Route path='/Login' render={() => (!isLoggedIn ? (<LoginPage />) : <Redirect to="/User"/>)}/>
             <Route path='/Memes' render={() => (<MemePage />)}/>
             <Route path='/Signup' render={() => (!isLoggedIn ? (<SignupPage />) : <Redirect to="/User"/>)}/>
+            <Route exact path ="/Upload/Meme" render={() => <UploadPage />}/>
           </body>
         </div>
       </Router>

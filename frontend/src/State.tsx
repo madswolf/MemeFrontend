@@ -25,6 +25,7 @@ export type signout = {
     signout():void
 }
 
+
 export const useUserState = () : isLoggedIn & userName & profilePic & email & login & signout => {
     const [isLoggedIn,setIsLoggedIn] = useState(true);
     const [username,setUsername] = useState('LoneliestCrab');
@@ -48,3 +49,10 @@ export const useUserState = () : isLoggedIn & userName & profilePic & email & lo
 }
 
 
+export const useMemeState = () => {
+    const [toptext,setTopText] = useState("");
+    const [bottomtext,setBottomText] = useState("");
+    const [visualFile,setVisualFile] = useState<File>();
+    const [soundFile,setSoundFile] = useState<File>();
+  return {toptext,setTopText,bottomtext,setBottomText,visualFile,setVisualFile,soundFile,setSoundFile};  
+}
