@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Button, ButtonToolbar, ControlLabel, Form, FormControl, FormGroup, HelpBlock, Input, Schema } from 'rsuite';
 import { useMemeState } from './State';
+import {request} from 'http';
+import axios from 'axios';
 
 const UploadPage :React.FC = (props) =>{
   const {toptext,setTopText,bottomtext,setBottomText,visualFile,setVisualFile,soundFile,setSoundFile} = useMemeState();
 
   
   useEffect(() => {
+    const thing = document.getElementById('submit') as HTMLButtonElement;
     if (!visualFile) {
-      const thing = document.getElementById('submit') as HTMLButtonElement;
       thing.disabled = true;
+    }else {
+      thing.disabled = false;
     }
   })
 
@@ -22,6 +26,16 @@ const UploadPage :React.FC = (props) =>{
       if(soundFile){
         formdata.append("soundFile",soundFile);
       }
+      console.log(formdata);
+      axios.get('http://localhost:2000/memes').then((response) => console.log(response))
+      axios.post('http://localhost:2000/memes',formdata, {
+        headers: {
+          'Content-Type' : 'multipart/form-data'
+        }
+      }
+        ).then(function (response) {
+        console.log('response: ' + response);
+      });
       console.log(formdata);
     } 
   }
