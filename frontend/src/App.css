@@ -17,12 +17,6 @@
   display: inline-block;
 }
 
-.User-page {
-  width: 100%;
-  height: 100%;
-}
-
-
 .User-box-container {
   padding-left: 10vh;
 }
@@ -102,26 +96,19 @@
   text-decoration: none;
 }
 
+.App {
+  height: 100vh;
+  background-color: #282c34;
+  color: #424C55;
+}
+
 .App-body {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 94vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: #424C55;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
