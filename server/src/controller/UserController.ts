@@ -15,6 +15,7 @@ export class UserController {
     }
 
     async save(request: Request, response: Response, next: NextFunction) {
+        console.log(request.body);
         return this.userRepository.save(request.body);
     }
 
