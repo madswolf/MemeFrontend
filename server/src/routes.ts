@@ -27,29 +27,24 @@ export const Routes = [{
     route: "/memes",
     controller: MemeController,
     action: "all"
-}, {
+},{
     method: "get",
-    route: "/memevisuals",
+    route: "/memes/:id",
     controller: MemeController,
-    action: "allVisuals"
+    action: "one"
 }, {
-    method: "get",
-    route: "/memesounds",
+    method: "delete",
+    route: "/memes/:id",
     controller: MemeController,
-    action: "allSounds"
+    action: "remove"
 }, {
-    method: "get",
-    route: "/memetoptexts",
-    controller: MemeController,
-    action: "allToptexts"
-}, {
-    method: "get",
-    route: "/memebottomtexts",
-    controller: MemeController,
-    action: "allBottomtexts"
-},  {
     method: "post",
     route: "/memes",
     controller: MemeController,
     action: "save"
+}, {
+    method: "get",
+    route: "/randommeme",
+    controller: MemeController,
+    action: "random"
 }];
