@@ -1,8 +1,5 @@
-import { MemeBotttomtextController } from "./controller/MemeBottomtextController";
+
 import { MemeController } from "./controller/MemeController";
-import { MemeSoundController } from "./controller/MemeSoundController";
-import { MemeToptextController } from "./controller/MemeToptextController";
-import { MemeVisualController } from "./controller/MemeVisualController";
 import {UserController} from "./controller/UserController";
 
 export const Routes = [{
@@ -33,28 +30,23 @@ export const Routes = [{
 }, {
     method: "get",
     route: "/memevisuals",
-    controller: MemeVisualController,
-    action: "all"
+    controller: MemeController,
+    action: "allVisuals"
 }, {
     method: "get",
     route: "/memesounds",
-    controller: MemeSoundController,
-    action: "all"
+    controller: MemeController,
+    action: "allSounds"
 }, {
     method: "get",
     route: "/memetoptexts",
-    controller: MemeToptextController,
-    action: "all"
+    controller: MemeController,
+    action: "allToptexts"
 }, {
     method: "get",
     route: "/memebottomtexts",
-    controller: MemeBotttomtextController,
-    action: "all"
-}, {
-    method: "get",
-    route: "/random/memebottomtexts",
-    controller: MemeBotttomtextController,
-    action: "random"
+    controller: MemeController,
+    action: "allBottomtexts"
 },  {
     method: "post",
     route: "/memes",

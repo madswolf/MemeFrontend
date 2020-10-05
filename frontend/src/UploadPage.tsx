@@ -74,7 +74,7 @@ const UploadPage :React.FC = (props) =>{
         </FormGroup>
         <FormGroup>
           <ControlLabel>Optional soundfile</ControlLabel>
-          <Input type="file" name = "soundFile" accept=".mp3,.wav" onchange={fileChangeHandler}/>
+          <Input type="file" name = "soundFile" accept=".mp3,.wav" onChange={fileChangeHandler}/>
         </FormGroup>
         <FormGroup>
           <ButtonToolbar>
