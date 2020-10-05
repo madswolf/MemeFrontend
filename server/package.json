@@ -23,11 +23,13 @@
    "homepage": "https://github.com/Mcfishflaps/MemeServer#readme",
    "dependencies": {
       "@types/express": "^4.17.8",
+      "@types/express-fileupload": "^1.1.5",
       "@types/mocha": "^8.0.3",
       "@types/node": "^14.11.0",
       "body-parser": "^1.19.0",
       "cors": "^2.8.5",
       "express": "^4.15.4",
+      "express-fileupload": "^1.2.0",
       "morgan": "^1.10.0",
       "multer": "^1.4.2",
       "pg": "^8.3.3",

@@ -3,26 +3,30 @@ import {createConnection} from "typeorm";
 import * as express from "express";
 import * as logger from 'morgan'
 import * as bodyParser from "body-parser";
+import * as fileUpload from 'express-fileupload';
 import * as path from 'path';
 import {Request, Response} from "express";
 import {Routes} from "./routes";
-import * as multer from 'multer';
 import * as http from 'http';
 import * as cors from 'cors';
 import * as https from 'https'; 
 
+export const uploadfolder = 'public';
+export const visualsFolder = 'visual';
+export const soundsFolder = 'sound';
+
+
 createConnection().then(async connection => {
 
-    const upload = new multer({dest:'/upload'});
     // create express app
     const app = express()
     const port = 2000
     //const pathToCert = "/etc/letsencrypt/live/mads.monster/"
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({extended:true}))
-    app.use(upload.any())
-    app.use(cors())
 
+    app.use(cors())
+    app.use(fileUpload({createParentPath:true}))
     app.use(express.static(path.join(__dirname,'build')))
     app.use(express.static(__dirname, {dotfiles: 'allow'}))
     logger('tiny')

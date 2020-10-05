@@ -1,4 +1,4 @@
-import {getRepository} from "typeorm";
+import {getRepository, Index} from "typeorm";
 import {NextFunction, Request, Response} from "express";
 import {Meme} from "../entity/Meme";
 import { getFromTableRandom } from "./MemeControllerHelperMethods";
@@ -6,14 +6,7 @@ import { MemeVisual } from "../entity/MemeVisual";
 import { MemeSound } from "../entity/MemeSound";
 import { MemeToptext } from "../entity/MemeToptext";
 import { MemeBottomtext } from "../entity/MemeBottomText";
-
-export interface MulterFile {
-    key: string // Available using `S3`.
-    path: string // Available using `DiskStorage`.
-    mimetype: string
-    originalname: string
-    size: number
-  }
+import {uploadfolder,visualsFolder,soundsFolder} from '../index';
 
 type MemeTextBody = {
     toptext:string,
@@ -67,10 +60,16 @@ export class MemeController {
         return this.memeBottomtextRepository.findOne(request.params.id);
     }
 
-    async save(request: Request & {files:MulterFile[]}, response: Response, next: NextFunction) {
-
+    async save(request: Request , response: Response, next: NextFunction) {
+        const thing = request.files.visualFile
+        const other = request.files.soundFile
+        console.log(thing)
+        console.log(other)
+        console.log(uploadfolder)
+        request.files.visualFile.mv(uploadfolder + '/' + visualsFolder + '/' + request.files.visualFile.name)
+        
         const body = request.body as MemeTextBody 
-        const memevisual = await this.memeVisualRepository.save({filename:request.files[0].originalname})
+        const memevisual = await this.memeVisualRepository.save({filename:request.files.visualFile.name})
         var meme = {visual:memevisual};
         
         if (body.toptext !== ""){
@@ -81,11 +80,12 @@ export class MemeController {
             const memebottomtext =  await this.memeBottomtextRepository.save({memetext:body.bottomtext}) 
             meme['bottomtext'] = memebottomtext
         }
-        if (request.files.length > 1){
-            const memesound = await this.memeSoundRepository.save({filename:request.files[1].originalname})
+        if (request.files.soundFile){
+            console.log("hoopy")
+            request.files.soundFile.mv(uploadfolder + '/' + soundsFolder + '/' + request.files.soundFile.name)
+            const memesound = await this.memeSoundRepository.save({filename:request.files.soundFile.name})
             meme['sound'] = memesound
         }
-    
         return this.memeRepository.save(meme);
     }
 
