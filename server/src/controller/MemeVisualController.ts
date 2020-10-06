@@ -35,7 +35,7 @@ export class MemeVisualController {
             pathname: ( `${uploadfolder}/${visualsFolder}/${memeVisual.filename}`)
         });
         console.log(memeURL)
-        return {url:memeURL};
+        return {data:memeURL};
     }
 
 
