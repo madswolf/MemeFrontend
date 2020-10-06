@@ -2,6 +2,8 @@ import {getRepository} from "typeorm";
 import {NextFunction, Request, Response} from "express";
 import { MemeSound } from "../entity/MemeSound";
 import { getFromTableRandom } from "./MemeControllerHelperMethods";
+import * as url from 'url';
+import {uploadfolder, soundsFolder} from '../index'
 
 export class MemeSoundController {
 
@@ -26,7 +28,14 @@ export class MemeSoundController {
 
     async random(request: Request, response: Response, next: NextFunction) {
         let allMemeSounds = await this.memeSoundRepository.find();
-        return getFromTableRandom(allMemeSounds) as MemeSound;
+        let memeSound =  getFromTableRandom(allMemeSounds) as MemeSound
+        let memeURL = url.format({
+            protocol:request.protocol,
+            host:request.get('host'),
+            pathname: ( `${uploadfolder}/${soundsFolder}/${memeSound.filename}`)
+        });
+        console.log(memeURL)
+        return {url:memeURL};
     }
 
 }

@@ -6,8 +6,10 @@ import axios from 'axios';
 
 const UploadPage :React.FC = (props) =>{
   const {toptext,setTopText,bottomtext,setBottomText,visualFile,setVisualFile,soundFile,setSoundFile} = useMemeState();
-
   
+  //hacky way to force rerender without using document to reset the form manually
+  var [reset,setReset] = useState("reset");
+
   useEffect(() => {
     const thing = document.getElementById('submit') as HTMLButtonElement;
     if (!visualFile) {
@@ -32,14 +34,24 @@ const UploadPage :React.FC = (props) =>{
         headers: {
           'Content-Type' : 'multipart/form-data'
         }
-      }
-        ).then(function (response) {
-        console.log('response: ' + response);
-      });
-      console.log(formdata);
+      }).then(response => {
+        setTopText("");
+        setBottomText("");
+        setVisualFile(undefined);
+        setSoundFile(undefined);
+        setReset("");
+        
+      }).then(() => setReset("reset"));
+      console.log(reset);
     } 
   }
 
+  type fileInputProps ={
+    reset:boolean,
+    name:string, 
+    accept:string, 
+    onChange(v:string, event:React.SyntheticEvent<HTMLElement>):void
+  }
 
   function fileChangeHandler(v:string,event:React.SyntheticEvent<HTMLElement>){
     const target = ((event.currentTarget as HTMLInputElement))
@@ -57,8 +69,8 @@ const UploadPage :React.FC = (props) =>{
 
 
   return (
-    <Form className="Login-form">
-        <FormGroup>
+    <Form key={reset} className="Login-form">
+        <FormGroup >
           <ControlLabel>Toptext</ControlLabel>
           <FormControl name="toptext" onChange={(v,e) => setTopText(v)}/>
           <HelpBlock tooltip>The toptext of your dank meme</HelpBlock>
