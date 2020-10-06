@@ -25,7 +25,8 @@ export class MemeBotttomtextController {
     }
 
     async random(request: Request, response: Response, next: NextFunction) {
-        let allMemeBottomTexts = await this.memeBottomtextRepository.find();
-        return getFromTableRandom(allMemeBottomTexts) as MemeBottomtext;
+        let allMemeBottomtexts = await this.memeBottomtextRepository.find();
+        let bottomtext = getFromTableRandom(allMemeBottomtexts) as MemeBottomtext;
+        return {text:bottomtext.memetext};
     }
 }

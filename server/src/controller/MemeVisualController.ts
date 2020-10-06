@@ -2,6 +2,8 @@ import {getRepository} from "typeorm";
 import {NextFunction, Request, Response} from "express";
 import { MemeVisual } from "../entity/MemeVisual";
 import { getFromTableRandom } from "./MemeControllerHelperMethods";
+import * as url from "url";
+import {uploadfolder, visualsFolder} from '../index'
 
 export class MemeVisualController {
 
@@ -26,7 +28,14 @@ export class MemeVisualController {
 
     async random(request: Request, response: Response, next: NextFunction) {
         let allMemeVisuals = await this.memeVisualRepository.find();
-        return getFromTableRandom(allMemeVisuals) as MemeVisual;
+        let memeVisual =  getFromTableRandom(allMemeVisuals) as MemeVisual
+        let memeURL = url.format({
+            protocol:request.protocol,
+            host:request.get('host'),
+            pathname: ( `${uploadfolder}/${visualsFolder}/${memeVisual.filename}`)
+        });
+        console.log(memeURL)
+        return {url:memeURL};
     }
 
 

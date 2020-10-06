@@ -31,10 +31,11 @@ createConnection().then(async connection => {
     app.use(express.static(__dirname, {dotfiles: 'allow'}))
     logger('tiny')
     app.use(logger('dev'))
-
+    
     app.get('/',function(req,res){
         res.sendFile(path.join(__dirname,'build','index.html'))
     })
+    app.use('/public', express.static(`${uploadfolder}`))
 
     // register express routes from defined application routes
     Routes.forEach(route => {

@@ -54,5 +54,14 @@ export const useMemeState = () => {
     const [bottomtext,setBottomText] = useState("");
     const [visualFile,setVisualFile] = useState<File>();
     const [soundFile,setSoundFile] = useState<File>();
-  return {toptext,setTopText,bottomtext,setBottomText,visualFile,setVisualFile,soundFile,setSoundFile};  
+    const [visualFileURL,setVisualFileURL] = useState("");
+    const [soundFileURL,setSoundFileURL] = useState("");
+  return {
+        toptext,setTopText,
+        bottomtext,setBottomText,
+        visualFile,setVisualFile,
+        soundFile,setSoundFile,
+        visualFileURL,setVisualFileURL,
+        soundFileURL,setSoundFileURL
+    };  
 }

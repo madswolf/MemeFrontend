@@ -21,11 +21,6 @@ export class MemeController {
     private memeToptextRepository = getRepository(MemeToptext);
     private memeBottomtextRepository = getRepository(MemeBottomtext);
 
-    private CHANCE_OF_TOPTEXT = 25;
-    private CHANCE_OF_SOUND = 50;
-    private chance_OF_BOTTOMTEXT = 25;
-
-
     async all(request: Request, response: Response, next: NextFunction) {
         return this.memeRepository.find();
     }
@@ -60,7 +55,6 @@ export class MemeController {
         return this.memeRepository.save(meme);
     }
 
-    //return this.memeRepository.save(request.body);
     async remove(request: Request, response: Response, next: NextFunction) {
         let memeToRemove = await this.memeRepository.findOne(request.params.id);
         await this.memeRepository.remove(memeToRemove);

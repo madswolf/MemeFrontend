@@ -5,19 +5,46 @@ import { useMemeState } from './State';
 
 const MemePage :React.FC = (props) =>{
     const canvasRef = React.useRef(null);
-    const {toptext,setTopText,bottomtext,setBottomText,visualFile,setVisualFile,soundFile,setSoundFile} = useMemeState();
-    async function test(){
-        const fileReader = new FileReader();
-        fetch('http://localhost:2000/randommeme',{method:'GET'})
+    const CHANCE_OF_TOPTEXT = 25;
+    const CHANCE_OF_SOUND = 50;
+    const chance_OF_BOTTOMTEXT = 25;
+    const {
+        toptext,setTopText,
+        bottomtext,setBottomText,
+        visualFileURL,setVisualFileURL,
+        soundFileURL,setSoundFileURL
+    } = useMemeState();
+    async function getRandom(){
+        fetch('http://localhost:2000/random/visual',{method:'GET'})
         .then(response => response.json())
-        .then(data => console.log(data));
+        .then(data => setVisualFileURL(data.url));
+        //[Math.floor(Math.random() * table.length
+        if( Math.floor(Math.random() * 100) > CHANCE_OF_SOUND){
+            fetch('http://localhost:2000/random/sound',{method:'GET'})
+            .then(response => response.json())
+            .then(data => setSoundFileURL(data.url));
+        }else {
+            setSoundFileURL("");
+        }
+        
+        fetch('http://localhost:2000/random/toptext',{method:'GET'})
+        .then(response => response.json())
+        .then(data => setTopText(data.text));
+        fetch('http://localhost:2000/random/bottomtext',{method:'GET'})
+        .then(response => response.json())
+        .then(data => setBottomText(data.text));
     }
     return (
         <div>
-            <canvas ref={canvasRef}>
+            <div>
+    <           h1>{toptext}</h1>
+                <img src={visualFileURL}></img>
+    <           h1>{bottomtext}</h1>
+            </div>
+                <canvas ref={canvasRef}>
 
             </canvas>
-            <Button onClick={test}>
+            <Button onClick={getRandom}>
                 click
             </Button>
             <Link to="/Upload/Meme" className="Signup-link">
