@@ -35,7 +35,7 @@ export class MemeSoundController {
             pathname: ( `${uploadfolder}/${soundsFolder}/${memeSound.filename}`)
         });
         console.log(memeURL)
-        return {url:memeURL};
+        return {data:memeURL};
     }
 
 }
