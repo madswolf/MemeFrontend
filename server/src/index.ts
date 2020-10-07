@@ -21,8 +21,8 @@ createConnection().then(async connection => {
 
     // create express app
     const app = express()
-    const port = 2000
-    const pathToCert = "/etc/letsencrypt/live/mads.monster/"
+    const port = 80
+    //const pathToCert = "/etc/letsencrypt/live/mads.monster/"
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({extended:true}))
 
@@ -53,23 +53,23 @@ createConnection().then(async connection => {
 
     // setup express app here
     // setup https
-    const privateKey = fs.readFileSync(path.join(pathToCert,'privkey.pem'), 'utf8');
-    const certificate = fs.readFileSync(path.join(pathToCert,'cert.pem'), 'utf8');
-    const ca = fs.readFileSync(path.join(pathToCert,'chain.pem'), 'utf8');
+    //const privateKey = fs.readFileSync(path.join(pathToCert,'privkey.pem'), 'utf8');
+    //const certificate = fs.readFileSync(path.join(pathToCert,'cert.pem'), 'utf8');
+    //const ca = fs.readFileSync(path.join(pathToCert,'chain.pem'), 'utf8');
 
-    const credentials = {
-	    key: privateKey,
-	    cert: certificate,
-	    ca: ca
-    };
+//    const credentials = {
+//	    key: privateKey,
+//	    cert: certificate,
+//	    ca: ca
+//    };
 
     const httpServer = http.createServer(app);
-    const httpsServer = https.createServer(credentials, app);
+  //  const httpsServer = https.createServer(credentials, app);
 
     // start express server
 
     httpServer.listen(port);
-    httpsServer.listen(443);
+    //httpsServer.listen(443);
 
     console.log(`Express server has started on port ${port}. Open http://localhost:${port}/users to see results`);
 

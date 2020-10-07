@@ -49,6 +49,11 @@ export const useUserState = () : isLoggedIn & userName & profilePic & email & lo
 }
 
 
+export const useMemeCanvasState = () => {
+    const [memeState,setMemeState] = useState({toptext:"",bottomtext:"",visualFileURL:"",soundFileURL:""});
+    return {memeState,setMemeState};
+}
+
 export const useMemeState = () => {
     const [toptext,setTopText] = useState("");
     const [bottomtext,setBottomText] = useState("");

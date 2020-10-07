@@ -100,6 +100,13 @@
   text-align: left;
 }
 
+.Meme-preview-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .Meme-container {
   height: 92vh;
   display: flex;
@@ -111,12 +118,17 @@
 .Meme-canvas-container {
   height: 400px;
   width: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
 
 .Upload-page {
   height: 94vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap-reverse;
   align-items: center;
   justify-content: center;
 }
