@@ -43,7 +43,7 @@ export const Routes = [{
     action: "remove"
 }, {
     method: "post",
-    route: "/memes",
+    route: "/upload/memes",
     controller: MemeController,
     action: "save"
 }, {
