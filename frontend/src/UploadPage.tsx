@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Button, ButtonToolbar, ControlLabel, Form, FormControl, FormGroup, HelpBlock, Input, Schema } from 'rsuite';
 import { useMemeState } from './State';
 import axios from 'axios';
+import { MemeCanvas } from './MemeCanvas';
 
 const UploadPage :React.FC = (props) =>{
   const {toptext,setTopText,bottomtext,setBottomText,visualFile,setVisualFile,soundFile,setSoundFile} = useMemeState();
-  
-  //hacky way to force rerender without using document to reset the form manually
-  var [reset,setReset] = useState("reset");
+  const [visualFileURL,setVisualFileURL] = useState("");
+  const [soundFIleURL,setSoundFileURL] = useState("");
+
+  //hacky way to force rerender since form.reset does not work
+  const [reset,setReset] = useState("reset");
 
   useEffect(() => {
     const thing = document.getElementById('submit') as HTMLButtonElement;
@@ -37,6 +40,8 @@ const UploadPage :React.FC = (props) =>{
         setBottomText("");
         setVisualFile(undefined);
         setSoundFile(undefined);
+        setVisualFileURL("");
+        setSoundFileURL("");
         setReset("");
         
       }).then(() => setReset("reset"));
@@ -46,13 +51,19 @@ const UploadPage :React.FC = (props) =>{
   function fileChangeHandler(v:string,event:React.SyntheticEvent<HTMLElement>){
     const target = ((event.currentTarget as HTMLInputElement))
     if (target.files){
+      var fr = new FileReader();
       if(target.name === 'visualFile')
       {
+        fr.onload = () => setVisualFileURL(fr.result as string);
         setVisualFile(target.files[0])
+
       } 
       else if (target.name === 'soundFile') {
+        fr.onload = () => setSoundFileURL(fr.result as string);
         setSoundFile(target.files[0])
       }
+
+      fr.readAsDataURL(target.files[0]);
     }
   }
 
@@ -85,6 +96,7 @@ const UploadPage :React.FC = (props) =>{
             </ButtonToolbar>
           </FormGroup>
       </Form>
+      <MemeCanvas className="Meme-preview-container" memeState={{toptext:toptext,bottomtext:bottomtext,visualFileURL:visualFileURL,soundFileURL:soundFIleURL}}/>
     </div>
     );
 }
