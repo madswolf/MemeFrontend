@@ -11,6 +11,7 @@ import * as http from 'http';
 import * as cors from 'cors';
 import * as https from 'https'; 
 import * as fs from 'fs';
+
 export const uploadfolder = 'public';
 export const visualsFolder = 'visual';
 export const soundsFolder = 'sound';
