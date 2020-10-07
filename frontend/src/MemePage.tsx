@@ -105,10 +105,10 @@ const MemePage :React.FC = (props) =>{
     }
 
     async function getRandom(){
-        const visualResource = await getResourceOnChance('http://localhost:2000/random/visual',100);
-        const soundResource = await getResourceOnChance('http://localhost:2000/random/sound',CHANCE_OF_SOUND);
-        const toptextResource = await getResourceOnChance('http://localhost:2000/random/toptext',CHANCE_OF_TOPTEXT);
-        const bottomtextResource = await getResourceOnChance('http://localhost:2000/random/bottomtext',chance_OF_BOTTOMTEXT);
+        const visualResource = await getResourceOnChance(`${window.location.href}/random/visual`,100);
+        const soundResource = await getResourceOnChance(`${window.location.href}/random/sound`,CHANCE_OF_SOUND);
+        const toptextResource = await getResourceOnChance(`${window.location.href}/random/toptext`,CHANCE_OF_TOPTEXT);
+        const bottomtextResource = await getResourceOnChance(`${window.location.href}/random/bottomtext`,chance_OF_BOTTOMTEXT);
         setMemeState({toptext:toptextResource,bottomtext:bottomtextResource,visualFileURL:visualResource,soundFileURL:soundResource})
     }
     return (
