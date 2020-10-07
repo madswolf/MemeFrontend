@@ -28,8 +28,6 @@ const UploadPage :React.FC = (props) =>{
       if(soundFile){
         formdata.append("soundFile",soundFile);
       }
-      console.log(formdata);
-      axios.get('http://localhost:2000/memes').then((response) => console.log(response))
       axios.post('http://localhost:2000/memes',formdata, {
         headers: {
           'Content-Type' : 'multipart/form-data'
@@ -42,7 +40,6 @@ const UploadPage :React.FC = (props) =>{
         setReset("");
         
       }).then(() => setReset("reset"));
-      console.log(reset);
     } 
   }
 
