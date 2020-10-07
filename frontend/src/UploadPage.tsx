@@ -66,31 +66,33 @@ const UploadPage :React.FC = (props) =>{
 
 
   return (
-    <Form key={reset} className="Login-form">
-        <FormGroup >
-          <ControlLabel>Toptext</ControlLabel>
-          <FormControl name="toptext" onChange={(v,e) => setTopText(v)}/>
-          <HelpBlock tooltip>The toptext of your dank meme</HelpBlock>
-        </FormGroup>
-        <FormGroup>
-          <ControlLabel>Bottomtext</ControlLabel>
-          <FormControl name="bottomtext"  onChange={(v,e) => setBottomText(v)}/>
-          <HelpBlock tooltip>Pretty self explanatory tbh</HelpBlock>
-        </FormGroup>
-        <FormGroup>
-          <ControlLabel>Meme</ControlLabel>
-          <Input type="file" name = "visualFile" accept=".png,.jpg,.jpeg,.mp4,.gif" onChange={fileChangeHandler}/>
-        </FormGroup>
-        <FormGroup>
-          <ControlLabel>Optional soundfile</ControlLabel>
-          <Input type="file" name = "soundFile" accept=".mp3,.wav" onChange={fileChangeHandler}/>
-        </FormGroup>
-        <FormGroup>
-          <ButtonToolbar>
-            <Button block id="submit" appearance="primary" onClick={handleUpload}>Upload</Button>  
-          </ButtonToolbar>
-        </FormGroup>
-    </Form>
+    <div className="Upload-page">
+      <Form key={reset} className="Login-form">
+          <FormGroup >
+            <ControlLabel>Toptext</ControlLabel>
+            <FormControl name="toptext" onChange={(v,e) => setTopText(v)}/>
+            <HelpBlock tooltip>The toptext of your dank meme</HelpBlock>
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>Bottomtext</ControlLabel>
+            <FormControl name="bottomtext"  onChange={(v,e) => setBottomText(v)}/>
+            <HelpBlock tooltip>Pretty self explanatory tbh</HelpBlock>
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>Meme</ControlLabel>
+            <Input type="file" name = "visualFile" accept=".png,.jpg,.jpeg,.mp4,.gif" onChange={fileChangeHandler}/>
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>Optional soundfile</ControlLabel>
+            <Input type="file" name = "soundFile" accept=".mp3,.wav" onChange={fileChangeHandler}/>
+          </FormGroup>
+          <FormGroup>
+            <ButtonToolbar>
+              <Button block id="submit" appearance="primary" onClick={handleUpload}>Upload</Button>  
+            </ButtonToolbar>
+          </FormGroup>
+      </Form>
+    </div>
     );
 }
 

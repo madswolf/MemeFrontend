@@ -9,7 +9,6 @@
   padding-left: 1vmin;
   padding-right: 1vmin;
   pointer-events: none;
-
 }
 
 .Navbar-logo {
@@ -96,6 +95,55 @@
   text-decoration: none;
 }
 
+.Meme-upload-bar{
+  height: 5vh;
+  text-align: left;
+}
+
+.Meme-container {
+  height: 92vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Meme-canvas-container {
+  height: 400px;
+  width: 400px;
+}
+
+.Upload-page {
+  height: 94vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Login-page {
+  height: 94vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Home-page {
+  height: 94vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.User-page {
+  height: 94vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .App {
   height: 100vh;
   background-color: #282c34;
@@ -105,10 +153,6 @@
 .App-body {
   background-color: #282c34;
   min-height: 94vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
   color: #424C55;
 }

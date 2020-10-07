@@ -113,15 +113,22 @@ const MemePage :React.FC = (props) =>{
     }
     return (
         <div>
-            <canvas ref={canvasRef}>
-
-            </canvas>
-            <Button onClick={getRandom}>
-                click
-            </Button>
-            <Link to="/Upload/Meme" className="Signup-link">
-                <Button appearance="ghost">Upload memes</Button>
-            </Link>
+            <div className="Meme-upload-bar"> 
+                <h3>
+                    Think these memes are stinky? 
+                    <Link to="/Upload/Meme" className="Signup-link">
+                        upload your own
+                    </Link>
+                </h3>
+            </div>
+            <div className="Meme-container">
+                <div className="Meme-canvas-container">
+                    <canvas ref={canvasRef}/>
+                </div>
+                <Button appearance="primary" onClick={getRandom}>
+                    New meme
+                </Button>
+            </div>
         </div>
     );
 }
