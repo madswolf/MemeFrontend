@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, ButtonToolbar, ControlLabel, Form, FormControl, FormGroup, HelpBlock, Input, Schema } from 'rsuite';
 import { useMemeState } from './State';
-import {request} from 'http';
 import axios from 'axios';
 
 const UploadPage :React.FC = (props) =>{
@@ -28,7 +27,8 @@ const UploadPage :React.FC = (props) =>{
       if(soundFile){
         formdata.append("soundFile",soundFile);
       }
-      axios.post('http://localhost:2000/memes',formdata, {
+      console.log(window.location.href +'s')
+      axios.post(window.location.href +'s',formdata, {
         headers: {
           'Content-Type' : 'multipart/form-data'
         }
@@ -41,13 +41,6 @@ const UploadPage :React.FC = (props) =>{
         
       }).then(() => setReset("reset"));
     } 
-  }
-
-  type fileInputProps ={
-    reset:boolean,
-    name:string, 
-    accept:string, 
-    onChange(v:string, event:React.SyntheticEvent<HTMLElement>):void
   }
 
   function fileChangeHandler(v:string,event:React.SyntheticEvent<HTMLElement>){
@@ -66,8 +59,8 @@ const UploadPage :React.FC = (props) =>{
 
 
   return (
-    <div className="Upload-page">
-      <Form key={reset} className="Login-form">
+    <div key={reset} className="Upload-page">
+      <Form className="Login-form">
           <FormGroup >
             <ControlLabel>Toptext</ControlLabel>
             <FormControl name="toptext" onChange={(v,e) => setTopText(v)}/>
