@@ -53,20 +53,3 @@ export const useMemeCanvasState = () => {
     const [memeState,setMemeState] = useState({toptext:"",bottomtext:"",visualFileURL:"",soundFileURL:""});
     return {memeState,setMemeState};
 }
-
-export const useMemeState = () => {
-    const [toptext,setTopText] = useState("");
-    const [bottomtext,setBottomText] = useState("");
-    const [visualFile,setVisualFile] = useState<File>();
-    const [soundFile,setSoundFile] = useState<File>();
-    const [visualFileURL,setVisualFileURL] = useState("");
-    const [soundFileURL,setSoundFileURL] = useState("");
-  return {
-        toptext,setTopText,
-        bottomtext,setBottomText,
-        visualFile,setVisualFile,
-        soundFile,setSoundFile,
-        visualFileURL,setVisualFileURL,
-        soundFileURL,setSoundFileURL
-    };  
-}

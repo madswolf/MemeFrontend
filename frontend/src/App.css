@@ -101,6 +101,8 @@
 }
 
 .Meme-preview-container {
+  height: 400px;
+  width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
