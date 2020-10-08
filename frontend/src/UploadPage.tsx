@@ -6,10 +6,13 @@ import { MemeCanvas } from './MemeCanvas';
 import ReactTooltip from 'react-tooltip';
 
 const UploadPage :React.FC = (props) =>{
+  //hooks for state of the form
   const{memeState,setMemeState} = useMemeCanvasState();
-  const [isLoading,setIsLoading] = useState(false);
   const [visualFile,setVisualFile] = useState<File>();
   const [soundFile,setSoundFile] = useState<File>();
+
+  //utillity hooks
+  const [isLoading,setIsLoading] = useState(false);
   const [readyToUpload, setReadyToUpload] = useState(false);
   const [toolTipString,setToolTipString] = useState("");
 
