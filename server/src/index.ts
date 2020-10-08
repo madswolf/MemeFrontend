@@ -68,7 +68,7 @@ createConnection().then(async connection => {
     // start express server
 
     httpServer.listen(port);
-    //httpsServer.listen(443);
+    httpsServer.listen(443);
 
     console.log(`Express server has started on port ${port}. Open http://localhost:${port}/users to see results`);
 
