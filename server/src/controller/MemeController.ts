@@ -1,7 +1,7 @@
 import {getRepository, Index} from "typeorm";
 import {NextFunction, Request, Response} from "express";
 import {Meme} from "../entity/Meme";
-import { getFromTableRandom } from "./MemeControllerHelperMethods";
+import { getFromTableRandom, saveAndCompress } from "./MemeControllerHelperMethods";
 import { MemeVisual } from "../entity/MemeVisual";
 import { MemeSound } from "../entity/MemeSound";
 import { MemeToptext } from "../entity/MemeToptext";
@@ -30,10 +30,8 @@ export class MemeController {
     }
 
     async save(request: Request , response: Response, next: NextFunction) {
-        const thing = request.files.visualFile
-        const other = request.files.soundFile
 
-        request.files.visualFile.mv(uploadfolder + '/' + visualsFolder + '/' + request.files.visualFile.name)
+        saveAndCompress(`${uploadfolder}/${visualsFolder}/`,request.files.visualFile);
         
         const body = request.body as MemeTextBody 
         const memevisual = await this.memeVisualRepository.save({filename:request.files.visualFile.name})
