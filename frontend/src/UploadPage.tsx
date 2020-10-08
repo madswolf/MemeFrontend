@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Button, ButtonToolbar, ControlLabel, Form, FormControl, FormGroup, HelpBlock, Input, Schema } from 'rsuite';
+import { Button, ButtonToolbar, ControlLabel, Form, FormControl, FormGroup, HelpBlock, Input, Loader, Schema } from 'rsuite';
 import { useMemeState } from './State';
 import axios from 'axios';
 import { MemeCanvas } from './MemeCanvas';
 
 const UploadPage :React.FC = (props) =>{
   const {toptext,setTopText,bottomtext,setBottomText,visualFile,setVisualFile,soundFile,setSoundFile} = useMemeState();
+  const [isLoading,setIsLoading] = useState(false);
   const [visualFileURL,setVisualFileURL] = useState("");
   const [soundFIleURL,setSoundFileURL] = useState("");
 
@@ -31,6 +32,7 @@ const UploadPage :React.FC = (props) =>{
         formdata.append("soundFile",soundFile);
       }
       console.log(window.location.href +'s')
+      setIsLoading(true);
       axios.post(window.location.href +'s',formdata, {
         headers: {
           'Content-Type' : 'multipart/form-data'
@@ -43,8 +45,10 @@ const UploadPage :React.FC = (props) =>{
         setVisualFileURL("");
         setSoundFileURL("");
         setReset("");
-        
-      }).then(() => setReset("reset"));
+        setIsLoading(false);
+      }).then(() => {
+        setReset("reset");
+      });
     } 
   }
 
@@ -67,7 +71,10 @@ const UploadPage :React.FC = (props) =>{
     }
   }
 
-
+  const MemeLoader:React.FC<{isloading:boolean}> = (props) => {
+    const loader = props.isloading ? (<Loader backdrop content="sending..." vertical/>) : <div></div>
+    return (loader);
+  }
 
   return (
     <div key={reset} className="Upload-page">
@@ -95,6 +102,7 @@ const UploadPage :React.FC = (props) =>{
               <Button block id="submit" appearance="primary" onClick={handleUpload}>Upload</Button>  
             </ButtonToolbar>
           </FormGroup>
+          <MemeLoader isloading={isLoading}/>
       </Form>
       <MemeCanvas className="Meme-preview-container" memeState={{toptext:toptext,bottomtext:bottomtext,visualFileURL:visualFileURL,soundFileURL:soundFIleURL}}/>
     </div>
