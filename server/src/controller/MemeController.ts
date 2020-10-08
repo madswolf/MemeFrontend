@@ -43,7 +43,7 @@ export class MemeController {
             fs.unlinkSync(`${uploadfolder}/${visualsFolder}/`+ '/temp/' + request.files.visualFile.name);
             response.status(415)
             //unsure if this is improper form for returning errors
-            return {error:"Mismatch of file mimetype and extension"};
+            return {error:"Mismatch between file mimetype and file extension"};
         }
 
         compressImage(`${uploadfolder}/${visualsFolder}/temp/`,`${uploadfolder}/${visualsFolder}/`,request.files.visualFile);
