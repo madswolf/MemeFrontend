@@ -1,7 +1,0 @@
-File from: [public/visual/temp/gottem.jpg]
-
-File to: [public/visual/gottem.jpg]
-
-Compression algorithm: [-]
-
-Description: File does not exist!
