@@ -7,9 +7,9 @@ import { useMemeCanvasState } from './State';
 
 const MemePage :React.FC = (props) =>{
     
-    const CHANCE_OF_TOPTEXT = 50;
+    const CHANCE_OF_TOPTEXT = 75;
     const CHANCE_OF_SOUND = 25;
-    const chance_OF_BOTTOMTEXT = 50;
+    const chance_OF_BOTTOMTEXT = 75;
     const {memeState,setMemeState} = useMemeCanvasState();
 
     async function getResourceOnChance(fetchURL:string,chance:number):Promise<string>{
