@@ -91,8 +91,8 @@ export const MemeCanvas :React.FC<{memeState:{toptext:string,bottomtext:string,v
         <div className={props.className}>
             <div className="Meme-canvas-container">
                 <canvas ref={canvasRef}/>
-                {props.children}
             </div>
+            {props.children}
         </div>
     );
 }
