@@ -6,7 +6,7 @@ import { MemeVisual } from "../entity/MemeVisual";
 import { MemeSound } from "../entity/MemeSound";
 import { MemeToptext } from "../entity/MemeToptext";
 import { MemeBottomtext } from "../entity/MemeBottomText";
-import {uploadfolder,visualsFolder,soundsFolder} from '../index';
+import {uploadfolder,visualsFolder,soundsFolder, fileSizeLimit} from '../index';
 import * as FileType from 'file-type';
 import * as fs from "fs";
 import * as MimeTypes from 'mime-types';
@@ -33,7 +33,16 @@ export class MemeController {
     }
 
     async save(request: Request , response: Response, next: NextFunction) {
-
+        //check if any one component is too large
+        if (request.files.visualFile.data.length > fileSizeLimit || request.files.soundFile.data.length > fileSizeLimit){
+            response.status(413);
+            return {error:"Filesize too large"};
+        }
+        if(request.body.toptext.length > 512 || request.body.bottomtext.length > 512){
+            response.status(413);
+            return {error:"Top/Bottomtext too long"};
+        }
+        
         request.files.visualFile.mv(`${uploadfolder}/${visualsFolder}/temp/` + request.files.visualFile.name);
 
         const type = await FileType.fromFile(`${uploadfolder}/${visualsFolder}/`+ '/temp/' + request.files.visualFile.name)

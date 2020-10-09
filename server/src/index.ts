@@ -15,6 +15,7 @@ import * as fs from 'fs';
 export const uploadfolder = 'public';
 export const visualsFolder = 'visual';
 export const soundsFolder = 'sound';
+export const fileSizeLimit = 5000000;
 
 createConnection().then(async connection => {
 
