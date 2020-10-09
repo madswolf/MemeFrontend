@@ -11,6 +11,7 @@ import * as http from 'http';
 import * as cors from 'cors';
 import * as https from 'https'; 
 import * as fs from 'fs';
+import { compressImage } from "./controller/MemeControllerHelperMethods";
 
 export const uploadfolder = 'public';
 export const visualsFolder = 'visual';
@@ -50,6 +51,7 @@ createConnection().then(async connection => {
             }
         });
     });
+    //compressImage(`${uploadfolder}/${visualsFolder}/temp/`,`${uploadfolder}/${visualsFolder}`,"MALDIVERNE.png")
 
     // setup express app here
     // setup https
@@ -63,13 +65,15 @@ createConnection().then(async connection => {
 	    ca: ca
     };
 
-    const httpServer = http.createServer(app);
+
     const httpsServer = https.createServer(credentials, app);
-
+    
     // start express server
-
-    httpServer.listen(port);
+    
     httpsServer.listen(443);
+    
+    const httpServer = http.createServer(app);
+    httpServer.listen(port);
 
     console.log(`Express server has started on port ${port}. Open http://localhost:${port}/users to see results`);
 
