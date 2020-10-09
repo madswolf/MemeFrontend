@@ -1,4 +1,4 @@
-import {getRepository, Index} from "typeorm";
+import {getRepository} from "typeorm";
 import {NextFunction, Request, Response} from "express";
 import {Meme} from "../entity/Meme";
 import { getFromTableRandom, compressImage } from "./MemeControllerHelperMethods";
@@ -43,7 +43,7 @@ export class MemeController {
             return {error:"Top/Bottomtext too long"};
         }
         
-        request.files.visualFile.mv(`${uploadfolder}/${visualsFolder}/temp/` + request.files.visualFile.name);
+        await request.files.visualFile.mv(`${uploadfolder}/${visualsFolder}/temp/` + request.files.visualFile.name);
 
         const type = await FileType.fromFile(`${uploadfolder}/${visualsFolder}/`+ '/temp/' + request.files.visualFile.name)
 
