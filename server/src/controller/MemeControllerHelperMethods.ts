@@ -39,6 +39,12 @@ export function compressImage(srcPath:string,outPath:string,fileName:string){
             console.log(statistic);
             console.log("-------------");
         }
+        
     );
+    
+    return fileName;
+
+
+    
     
 }

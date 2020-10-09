@@ -55,10 +55,10 @@ export class MemeController {
             return {error:"Mismatch between file mimetype and file extension"};
         }
 
-        compressImage(`${uploadfolder}/${visualsFolder}/temp/`,`${uploadfolder}/${visualsFolder}/`,request.files.visualFile.name);
+        var fileName = compressImage(`${uploadfolder}/${visualsFolder}/temp/`,`${uploadfolder}/${visualsFolder}/`,request.files.visualFile.name);
         
         const body = request.body as MemeTextBody 
-        const memevisual = await this.memeVisualRepository.save({filename:request.files.visualFile.name})
+        const memevisual = await this.memeVisualRepository.save({filename:fileName})
         var meme = {visual:memevisual};
         
         if (body.toptext !== ""){
