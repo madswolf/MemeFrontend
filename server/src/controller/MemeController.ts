@@ -55,7 +55,7 @@ export class MemeController {
             return {error:"Mismatch between file mimetype and file extension"};
         }
 
-        compressImage(`${uploadfolder}/${visualsFolder}/temp/`,`${uploadfolder}/${visualsFolder}/`,request.files.visualFile);
+        compressImage(`${uploadfolder}/${visualsFolder}/temp/`,`${uploadfolder}/${visualsFolder}/`,request.files.visualFile.name);
         
         const body = request.body as MemeTextBody 
         const memevisual = await this.memeVisualRepository.save({filename:request.files.visualFile.name})

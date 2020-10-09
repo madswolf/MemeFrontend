@@ -17,9 +17,7 @@ function makeid(length) {
     return result;
  }
 
-export function compressImage(srcPath:string,outPath:string,file:UploadedFile){
-
-    var fileName = file.name;    
+export function compressImage(srcPath:string,outPath:string,fileName:string){
     if(fs.existsSync(srcPath + fileName)){
         const id = makeid(5);
         fs.renameSync(srcPath + fileName, srcPath + id + fileName);
