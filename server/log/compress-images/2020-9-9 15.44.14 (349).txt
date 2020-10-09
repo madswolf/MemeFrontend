@@ -1,7 +1,0 @@
-File from: [public/visual/temp/9LRqJgottem.jpg]
-
-File to: [public/visual/9LRqJgottem.jpg]
-
-Compression algorithm: [-]
-
-Description: File does not exist!
