@@ -26,6 +26,26 @@ export const Routes = [{
     route: "/users/:id",
     controller: UserController,
     action: "remove"
+},{
+    method: "get",
+    route: "/meme/visuals",
+    controller: MemeVisualController,
+    action: "all"
+}, {
+    method: "get",
+    route: "/meme/visuals/:id",
+    controller: MemeVisualController,
+    action: "one"
+}, {
+    method: "post",
+    route: "/meme/visuals",
+    controller: MemeVisualController,
+    action: "save"
+}, {
+    method: "delete",
+    route: "/meme/visuals/:id",
+    controller: MemeVisualController,
+    action: "remove"
 }, {
     method: "get",
     route: "/memes",
