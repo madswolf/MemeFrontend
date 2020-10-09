@@ -34,7 +34,7 @@ export class MemeController {
 
     async save(request: Request , response: Response, next: NextFunction) {
         //check if any one component is too large
-        if (request.files.visualFile.data.length > fileSizeLimit || request.files.soundFile.data.length > fileSizeLimit){
+        if (request.files.visualFile.data.length > fileSizeLimit || (request.files.soundFile && request.files.soundFile.data.length > fileSizeLimit)){
             response.status(413);
             return {error:"Filesize too large"};
         }
