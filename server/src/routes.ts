@@ -42,11 +42,6 @@ export const Routes = [{
     controller: MemeVisualController,
     action: "save"
 }, {
-    method: "delete",
-    route: "/meme/visuals/:id",
-    controller: MemeVisualController,
-    action: "remove"
-}, {
     method: "get",
     route: "/memes",
     controller: MemeController,
@@ -56,11 +51,6 @@ export const Routes = [{
     route: "/memes/:id",
     controller: MemeController,
     action: "one"
-}, {
-    method: "delete",
-    route: "/memes/:id",
-    controller: MemeController,
-    action: "remove"
 }, {
     method: "post",
     route: "/upload/memes",
