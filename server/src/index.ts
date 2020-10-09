@@ -51,7 +51,7 @@ createConnection().then(async connection => {
             }
         });
     });
-    //compressImage(`${uploadfolder}/${visualsFolder}/temp/`,`${uploadfolder}/${visualsFolder}`,"MALDIVERNE.png")
+    //console.log(compressImage(`${uploadfolder}/${visualsFolder}/temp/`,`${uploadfolder}/${visualsFolder}/`,"Untitled.png"));
 
     // setup express app here
     // setup https
@@ -70,7 +70,7 @@ createConnection().then(async connection => {
     
     // start express server
     
-    httpsServer.listen(443);
+    //httpsServer.listen(443);
     
     const httpServer = http.createServer(app);
     httpServer.listen(port);
