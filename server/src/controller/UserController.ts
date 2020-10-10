@@ -20,8 +20,13 @@ export class UserController {
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
+        if (request.body.SECRET !== process.env.SECRET){
+            response.status(403);
+            return {you:"suck"};
+        }
+
         let userToRemove = await this.userRepository.findOne(request.params.id);
-        await this.userRepository.remove(userToRemove);
+        return await this.userRepository.remove(userToRemove);
     }
 
 }
