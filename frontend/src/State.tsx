@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 export type isLoggedIn = {
     isLoggedIn:boolean,
@@ -48,8 +48,61 @@ export const useUserState = () : isLoggedIn & userName & profilePic & email & lo
     return {isLoggedIn,username,email,profilePicURL,login,signout}
 }
 
+export type MemeCanvasState = {
+    toptext: string;
+    bottomtext: string;
+    visualFileURL: string;
+    soundFileURL: string;
+}
 
 export const useMemeCanvasState = () => {
     const [memeState,setMemeState] = useState({toptext:"",bottomtext:"",visualFileURL:"",soundFileURL:""});
     return {memeState,setMemeState};
+}
+
+export const useMemeStackState = () => {
+
+
+    const {memeState, setMemeState} = useMemeCanvasState();
+    const [memeStackState,setMemeStackState] = useState<MemeCanvasState[]>([memeState]);
+
+
+    const [memeStackPointer,setMemeStackPointer] = useState(0);
+    const [canGoBack,setCanGoBack] = useState(false);
+    const [canGoForward,setcanGoForward] = useState(false);
+
+    useEffect(() => {
+        setMemeState(memeStackState[memeStackPointer])
+    });
+    
+    useEffect(() =>{
+        setCanGoBack(memeStackPointer !== 0);
+    })
+
+    useEffect(() =>{
+        setcanGoForward(memeStackPointer !== (memeStackState.length - 1));
+    })
+
+    function append(memeState:MemeCanvasState){
+        console.log(memeStackState)
+        if(memeStackState[0].visualFileURL === ""){
+            console.log("replace")
+            setMemeStackState([memeState]);
+        }  else {
+            console.log("append")
+            var copy = [...memeStackState,memeState];
+            setMemeStackState(copy);
+            setMemeStackPointer(copy.length - 1);
+        }
+    }
+
+    function goBack(){
+        setMemeStackPointer(memeStackPointer - 1);
+    }
+
+    function goForward(){
+        setMemeStackPointer(memeStackPointer + 1); 
+    }
+
+    return {memeState,memeStackPointer,canGoBack,canGoForward,append,goBack,goForward};
 }

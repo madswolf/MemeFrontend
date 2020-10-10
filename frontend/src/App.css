@@ -117,6 +117,16 @@
   justify-content: center;
 }
 
+.Meme-button-container {
+  display: flex;
+  flex-direction: row;
+  margin: 0 -5px;
+}
+
+.Meme-button {
+  margin: 0 5px;
+}
+
 .Meme-canvas-container {
   height: 400px;
   width: 400px;
