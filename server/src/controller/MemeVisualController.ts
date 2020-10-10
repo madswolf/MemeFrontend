@@ -22,8 +22,13 @@ export class MemeVisualController {
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
+        if (request.body.SECRET !== process.env.SECRET){
+            response.status(403);
+            return {you:"suck"};
+        }
+
         let visualToRemove = await this.memeVisualRepository.findOne(request.params.id);
-        await this.memeVisualRepository.remove(visualToRemove);
+        return await this.memeVisualRepository.remove(visualToRemove);
     }
 
     async random(request: Request, response: Response, next: NextFunction) {

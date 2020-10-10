@@ -22,8 +22,13 @@ export class MemeSoundController {
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
+        if (request.body.SECRET !== process.env.SECRET){
+            response.status(403);
+            return {you:"suck"};
+        }
+        
         let soundToRemove = await this.memeSoundRepository.findOne(request.params.id);
-        await this.memeSoundRepository.remove(soundToRemove);
+        return await this.memeSoundRepository.remove(soundToRemove);
     }
 
     async random(request: Request, response: Response, next: NextFunction) {

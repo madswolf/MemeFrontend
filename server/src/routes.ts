@@ -26,7 +26,7 @@ export const Routes = [{
     route: "/users/:id",
     controller: UserController,
     action: "remove"
-},{
+}, {
     method: "get",
     route: "/meme/visuals",
     controller: MemeVisualController,
@@ -41,6 +41,71 @@ export const Routes = [{
     route: "/meme/visuals",
     controller: MemeVisualController,
     action: "save"
+}, {
+    method: "delete",
+    route: "/meme/visuals/:id",
+    controller: MemeVisualController,
+    action: "remove"
+}, {
+    method: "get",
+    route: "/meme/sounds",
+    controller: MemeSoundController,
+    action: "all"
+}, {
+    method: "get",
+    route: "/meme/sounds/:id",
+    controller: MemeSoundController,
+    action: "one"
+}, {
+    method: "post",
+    route: "/meme/sounds",
+    controller: MemeSoundController,
+    action: "save"
+}, {
+    method: "delete",
+    route: "/meme/sounds/:id",
+    controller: MemeSoundController,
+    action: "remove"
+}, {
+    method: "get",
+    route: "/meme/toptexts/:id",
+    controller: MemeToptextController,
+    action: "one"
+}, {
+    method: "post",
+    route: "/meme/toptexts",
+    controller: MemeToptextController,
+    action: "save"
+},{
+    method: "delete",
+    route: "/meme/toptexts/:id",
+    controller: MemeToptextController,
+    action: "remove"
+}, {
+    method: "get",
+    route: "/meme/bottomtexts",
+    controller: MemeToptextController,
+    action: "all"
+}, {
+    method: "get",
+    route: "/meme/toptexts",
+    controller: MemeBotttomtextController,
+    action: "all"
+}, {
+    method: "get",
+    route: "/meme/bottomtexts/:id",
+    controller: MemeBotttomtextController,
+    action: "one"
+}, {
+    method: "post",
+    route: "/meme/bottomtexts",
+    controller: MemeBotttomtextController,
+    action: "save"
+},{
+    method: "delete",
+    route: "/meme/bottomtexts/:id",
+    controller: MemeBotttomtextController,
+    action: "remove"
 }, {
     method: "get",
     route: "/memes",

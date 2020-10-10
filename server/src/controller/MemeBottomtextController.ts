@@ -20,8 +20,15 @@ export class MemeBotttomtextController {
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
+
+        if (request.body.SECRET !== process.env.SECRET){
+            response.status(403);
+            return {you:"suck"};
+        }
+
         let bottomtextToRemove = await this.memeBottomtextRepository.findOne(request.params.id);
-        await this.memeBottomtextRepository.remove(bottomtextToRemove);
+        return await this.memeBottomtextRepository.remove(bottomtextToRemove);
+
     }
 
     async random(request: Request, response: Response, next: NextFunction) {
