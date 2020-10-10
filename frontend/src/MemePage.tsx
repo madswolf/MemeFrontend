@@ -11,7 +11,7 @@ const MemeControleButton : React.FC<{isAllowed:boolean,className:string,isRight:
     var button;
     if(props.isAllowed){
         button =  
-        <IconButton className={props.className} icon ={iconToUse} appearance="primary" onClick={props.onClick} >
+        <IconButton className={props.className} icon ={iconToUse} appearance="primary" onClick={props.onClick} placement={props.isRight ? "right" : "left"}>
             {props.isRight ? "forward" : "back"}
         </IconButton>
     } else {
