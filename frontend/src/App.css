@@ -127,6 +127,29 @@
   margin: 0 5px;
 }
 
+
+.Meme-gif-container {
+  position: relative;
+}
+
+.Meme-gif-toptext {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  -webkit-text-stroke: 1px black;
+}
+
+.Meme-gif-bottomtext {
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    -webkit-text-stroke: 1px black;
+}
+
 .Meme-canvas-container {
   height: 400px;
   width: 400px;
@@ -134,6 +157,11 @@
   align-items: center;
   flex-direction: column;
   justify-content: center;
+}
+
+.Meme-gif {
+  max-width: 400px;
+  max-height: 400px;
 }
 
 

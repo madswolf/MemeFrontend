@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Button, ButtonToolbar, ControlLabel, Form, FormControl, FormGroup, HelpBlock, Input, Loader} from 'rsuite';
 import { useMemeCanvasState } from './State';
 import axios from 'axios';
-import { MemeCanvas } from './MemeCanvas';
 import ReactTooltip from 'react-tooltip';
+import { MemeDisplayer } from './MemeDisplayer';
 
 const UploadPage :React.FC = (props) =>{
   //hooks for state of the form/preview
@@ -50,7 +50,7 @@ const UploadPage :React.FC = (props) =>{
           'Content-Type' : 'multipart/form-data'
         }
       }).then(response => {
-        setMemeState({toptext:"",bottomtext:"",visualFileURL:"",soundFileURL:""})
+        setMemeState({toptext:"",bottomtext:"",visualFileURL:"",soundFileURL:"",isGif:false})
         setVisualFile(undefined);
         setSoundFile(undefined);
         setReset("");
@@ -67,9 +67,10 @@ const UploadPage :React.FC = (props) =>{
       var fr = new FileReader();
       if(target.name === 'visualFile')
       {
-        fr.onload = () => setMemeState({...memeState,visualFileURL:(fr.result as string)});
+        fr.onload = () => {
+          setMemeState({...memeState,visualFileURL:(fr.result as string),isGif:(fr.result as string).startsWith('data:image/gif;') })
+        };
         setVisualFile(target.files[0])
-
       } 
       else if (target.name === 'soundFile') {
         fr.onload = () => setMemeState({...memeState,soundFileURL:(fr.result as string)});
@@ -127,7 +128,7 @@ const UploadPage :React.FC = (props) =>{
           </FormGroup>
           <MemeLoader isloading={isLoading}/>
       </Form>
-      <MemeCanvas className="Meme-preview-container" memeState={memeState}/>
+      <MemeDisplayer className="Meme-preview-container" memeState={memeState}></MemeDisplayer>
       <ReactTooltip id="submit" place="top" effect="solid">
         {toolTipString}
       </ReactTooltip>
