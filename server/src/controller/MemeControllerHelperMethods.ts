@@ -29,7 +29,7 @@ export function compressImage(srcPath:string,outPath:string,fileName:string){
         { jpg: { engine: "mozjpeg", command: ["-quality", "60"] } },
         { png: { engine: "pngquant", command: ["--quality=20-50", "-o"] } },
         { svg: { engine: "svgo", command: "--multipass" } },
-        { gif: { engine: "gifsicle", command: ["--colors", "64", "--use-col=web"] } },
+        { gif: { engine: "giflossy", command: ['--lossy=80'] } },
         function (error, completed, statistic) {
             //delete temp file and log result
             fs.unlinkSync(srcPath + fileName);
