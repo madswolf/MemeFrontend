@@ -6,13 +6,16 @@ import * as bodyParser from "body-parser";
 import * as fileUpload from 'express-fileupload';
 import * as path from 'path';
 import {Request, Response} from "express";
-import {Routes} from "./routes";
+import {Routes} from "./routes/routes";
+import AuthRoutes from './routes/AuthRoutes'
+import UserRoutes from './routes/UserRoutes'
 import * as http from 'http';
 import * as cors from 'cors';
+import * as helmet from "helmet";
 import * as https from 'https'; 
 import * as fs from 'fs';
-import { compressImage } from "./controller/MemeControllerHelperMethods";
 import * as dotenv from 'dotenv';
+
 
 export const uploadfolder = 'public';
 export const visualsFolder = 'visual';
@@ -27,7 +30,7 @@ createConnection().then(async connection => {
 
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({extended:true}))
-
+    app.use(helmet());
     app.use(cors())
     app.use(fileUpload({createParentPath:true}))
     app.use(express.static(path.join(__dirname,'build')))
@@ -52,6 +55,9 @@ createConnection().then(async connection => {
             }
         });
     });
+
+    app.use('/auth',AuthRoutes);
+    app.use('/user', UserRoutes);
     //console.log(compressImage(`${uploadfolder}/${visualsFolder}/temp/`,`${uploadfolder}/${visualsFolder}/`,"Untitled.png"));
 
     // setup express app here
