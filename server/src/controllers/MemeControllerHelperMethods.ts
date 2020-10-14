@@ -7,7 +7,7 @@ export function getFromTableRandom(table:Object[]) {
     return table[Math.floor(Math.random() * table.length)];
 }
 
-function makeid(length) {
+export function randomStringOfLength(length) {
     var result           = '';
     var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
@@ -19,7 +19,7 @@ function makeid(length) {
 
 export function compressImage(srcPath:string,outPath:string,fileName:string){
     if(fs.existsSync(outPath + fileName)){
-        const id = makeid(5);
+        const id = randomStringOfLength(5);
         fs.renameSync(srcPath + fileName, srcPath + id + fileName);
         fileName = id + fileName;
     }
