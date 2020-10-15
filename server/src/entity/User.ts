@@ -7,10 +7,10 @@ import {
     UpdateDateColumn,
     Unique
 } from "typeorm";
-import * as bcrypt from "bcryptjs";
 
 @Entity()
 @Unique(["username"])
+@Unique(['email'])
 export class User {
 
     @PrimaryGeneratedColumn()
@@ -21,10 +21,18 @@ export class User {
     username: string;
 
     @Column()
+    @Length(1,100)
+    profilePicFileName: string;
+
+    @Column()
+    email: string;
+
+    @Column()
     @Length(7,100)
     password: string;
 
     @Column()
+    @Length(25)
     salt: string;
 
     @Column()
@@ -40,13 +48,5 @@ export class User {
     @Column()
     @UpdateDateColumn()
     updatedAt: Date;
-
-    hashPassword() {
-        this.password = bcrypt.hashSync(this.password + this.salt, 8);
-    }
-
-    checkIfUnencryptedPasswordIsValid(unencryptedPassword: string) {
-        return bcrypt.compareSync(unencryptedPassword + this.salt, this.password);
-    }
 
 }

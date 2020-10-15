@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import {createConnection} from "typeorm";
+import {createConnection, getRepository} from "typeorm";
 import * as express from "express";
 import * as logger from 'morgan'
 import * as bodyParser from "body-parser";
@@ -7,14 +7,16 @@ import * as fileUpload from 'express-fileupload';
 import * as path from 'path';
 import {Request, Response} from "express";
 import {Routes} from "./routes/routes";
-import AuthRoutes from './routes/AuthRoutes'
-import UserRoutes from './routes/UserRoutes'
+import UserRoutes from './routes/UserRoutes';
 import * as http from 'http';
 import * as cors from 'cors';
 import * as helmet from "helmet";
 import * as https from 'https'; 
 import * as fs from 'fs';
 import * as dotenv from 'dotenv';
+import { User } from "./entity/User";
+import { randomStringOfLength } from "./controllers/MemeControllerHelperMethods";
+import UserController from "./controllers/UserController";
 
 
 export const uploadfolder = 'public';
@@ -56,13 +58,31 @@ createConnection().then(async connection => {
         });
     });
 
-    app.use('/auth',AuthRoutes);
     app.use('/user', UserRoutes);
-    //console.log(compressImage(`${uploadfolder}/${visualsFolder}/temp/`,`${uploadfolder}/${visualsFolder}/`,"Untitled.png"));
 
-    // setup express app here
-    // setup https
+    if(process.env.ADMIN_USERNAME){
+        let user = new User();
+        user.username = process.env.ADMIN_USERNAME;
+        user.email = process.env.ADMIN_EMAIL;
+        user.profilePicFileName = process.env.ADMIN_PROFILEPIC;
+        user.salt = randomStringOfLength(25);
+        user.password = UserController.hashPassword(process.env.ADMIN_PASSWORD,user.salt);
 
+        
+        user.role = "ADMIN";
+        const userRepository = getRepository(User);
+        try {
+            await userRepository.save(user);
+          } catch (e) {
+            console.log(e);
+            return;
+        }
+        console.log(user);
+
+    }else {
+        console.log("not")
+    }
+    
     if (process.env.PATH_TO_CERT){
         const privateKey = fs.readFileSync(path.join(process.env.PATH_TO_CERT,'privkey.pem'), 'utf8');
         const certificate = fs.readFileSync(path.join(process.env.PATH_TO_CERT,'cert.pem'), 'utf8');
@@ -77,11 +97,6 @@ createConnection().then(async connection => {
         const httpsServer = https.createServer(credentials, app);
         httpsServer.listen(443);
     }
-
-
-    
-    // start express server
-    
     
     const httpServer = http.createServer(app);
     httpServer.listen(process.env.PORT);
