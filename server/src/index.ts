@@ -21,6 +21,7 @@ import UserController from "./controllers/UserController";
 export const uploadfolder = 'public';
 export const visualsFolder = 'visual';
 export const soundsFolder = 'sound';
+export const profilePicFolder = 'profilePictures';
 export const fileSizeLimit = 5000000;
 
 createConnection().then(async connection => {

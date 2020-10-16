@@ -1,6 +1,10 @@
 import { UploadedFile } from "express-fileupload";
 import * as compress_images from 'compress-images';
 import * as fs from 'fs';
+import {uploadfolder,visualsFolder,soundsFolder, fileSizeLimit} from '../index';
+import * as FileType from 'file-type';
+import * as MimeTypes from 'mime-types';
+import { Response } from "express";
 
 
 export function getFromTableRandom(table:Object[]) {
@@ -43,8 +47,25 @@ export function compressImage(srcPath:string,outPath:string,fileName:string){
     );
     
     return fileName;
+}
 
+export async function saveVerifyCompress(file:UploadedFile,folder:string,res:Response){
+    var fileName;
+    if (file.name.length > 100){
+        fileName = file.name.substring(0,95);
+    }
+    
+    await file.mv(`${uploadfolder}/${folder}/temp/` + file.name);
 
-    
-    
+    const type = await FileType.fromFile(`${uploadfolder}/${folder}/`+ '/temp/' + file.name)
+
+        //validation of file type
+    if (type.mime.toString() !== file.mimetype || MimeTypes.lookup(file.name) !== type.mime.toString() ){
+        fs.unlinkSync(`${uploadfolder}/${folder}/`+ '/temp/' + file.name);
+        res.status(415)
+        //unsure if this is improper form for returning errors
+        return {error:"Mismatch between file mimetype and file extension"};
+    }
+    fileName = compressImage(`${uploadfolder}/${folder}/temp/`,`${uploadfolder}/${folder}/`,file.name);
+    return {filename:fileName};
 }

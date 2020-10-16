@@ -18,7 +18,7 @@ router.post("/signup", UserController.save);
 router.patch(
   "/:id([0-9]+)",
   [checkJwt, checkRole(["ADMIN"])],
-  UserController.update
+  UserController.updateRole
 );
 
 router.delete(
@@ -29,7 +29,7 @@ router.delete(
 
 router.post("/login", UserController.login);
 
-router.post("/change-password", [checkJwt], UserController.changePassword);
+router.post("/change-password", [checkJwt], UserController.updatePassword);
 
 router.post("/forgot-password", UserController.recoverPassword);
 
