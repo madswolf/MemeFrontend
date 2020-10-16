@@ -43,7 +43,7 @@ class UserController{
   
   static save = async (req: Request, res: Response) => {
     
-    let { username, password,email} = req.body;
+    let { username, password, email} = req.body;
     let user = new User();
     user.username = username;
     user.email = email;
@@ -119,7 +119,7 @@ class UserController{
   };
 
   static login = async (req: Request, res: Response) => {
-    
+
     let { username, password } = req.body;
     if (!(username && password)) {
       res.status(400).send();
@@ -129,8 +129,12 @@ class UserController{
     let user: User;
     try {
       console.log(await userRepository.find());
-      user = await userRepository.findOneOrFail({ where: { username } });
-
+      user = await userRepository.findOneOrFail({ 
+        where: [
+          { username: username },
+          { email: username }
+        ]
+       });
     } catch (error) {
       console.log(error)
       res.status(401).send();
@@ -150,7 +154,7 @@ class UserController{
       { expiresIn: "1h" }
       );
       
-      res.send(token);
+      res.send({token:token,username:user.username,profilePic:user.profilePicFileName,email:user.email});
     };
     
   static changePassword = async (req: Request, res: Response) => {

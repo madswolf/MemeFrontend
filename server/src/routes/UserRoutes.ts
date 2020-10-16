@@ -13,7 +13,7 @@ router.get(
   UserController.one
 );
 
-router.post("/", UserController.save);
+router.post("/signup", UserController.save);
 
 router.patch(
   "/:id([0-9]+)",

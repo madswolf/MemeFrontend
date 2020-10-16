@@ -28,7 +28,7 @@ const MemePage :React.FC = (props) =>{
     const CHANCE_OF_TOPTEXT = 75;
     const CHANCE_OF_SOUND = 25;
     const chance_OF_BOTTOMTEXT = 75;
-    //const {memeState,setMemeState} = useMemeCanvasState();
+    
     const {memeState,memeStackPointer,canGoBack,canGoForward,append,goBack,goForward} = useMemeStackState();
     async function getResourceOnChance(fetchURL:string,chance:number):Promise<string>{
         if( Math.floor(Math.random() * 100) < chance){

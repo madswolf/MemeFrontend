@@ -24,7 +24,7 @@ const Header:React.FC<(isLoggedIn & profilePic & signout)> = (props) => {
     </Dropdown>
     );
   } else {
-    userLink = (<Nav.Item componentClass={Link} to='/Login'>Login</Nav.Item>);
+    userLink = (<Nav.Item componentClass={Link} to='/user/Login'>Login</Nav.Item>);
   }
 
   return (
@@ -47,17 +47,17 @@ const Header:React.FC<(isLoggedIn & profilePic & signout)> = (props) => {
 }
 
 const App:React.FC = () => {
-  const {username,isLoggedIn,email,profilePicURL,login,signout} = useUserState();
+  const {userState,login,signout} = useUserState();
   return (
     <Router>
         <div className="App">
-          <Header isLoggedIn={isLoggedIn} profilePicURL={profilePicURL} signout={signout} />
+          <Header isLoggedIn={userState.isLoggedIn} token={userState.token} profilePicURL={userState.profilePicURL} signout={signout}/>
           <body className="App-body">
-            <Route exact path ='/' render={() => <HomePage isLoggedIn={isLoggedIn} username={username} />}/>
-            <Route path='/User' render={() => (isLoggedIn ? (<UserPage username={username} profilePicURL={profilePicURL} email={email}/>) : <Redirect to="/Login"/>)}/>
-            <Route path='/Login' render={() => (!isLoggedIn ? (<LoginPage />) : <Redirect to="/User"/>)}/>
+            <Route exact path ='/' render={() => <HomePage isLoggedIn={userState.isLoggedIn} token={userState.token} username={userState.username} />}/>
+            <Route exact path='/User' render={() => (userState.isLoggedIn ? (<UserPage username={userState.username} profilePicURL={userState.profilePicURL} email={userState.email}/>) : <Redirect to="/Login"/>)}/>
+            <Route path='/user/Login' render={() => (!userState.isLoggedIn ? (<LoginPage login={login} />) : <Redirect to="/User"/>)}/>
             <Route path='/Memes' render={() => (<MemePage />)}/>
-            <Route path='/Signup' render={() => (!isLoggedIn ? (<SignupPage />) : <Redirect to="/User"/>)}/>
+            <Route exact path='/user/Signup' render={() => (!userState.isLoggedIn ? (<SignupPage login={login} />) : <Redirect to="/User"/>)}/>
             <Route exact path ="/Upload/Meme" render={() => <UploadPage />}/>
           </body>
         </div>

@@ -14,7 +14,7 @@ function UserField(name:string,value:string){
 function UserPicture(profilePicURL:string, classExtension :string) {
   let className = classExtension === "" ? "User-picture" : "User-picture-" + classExtension
   return (
-    <img src={profilePicURL} className={className} alt="logo" />
+    <img src={profilePicURL} className={className} alt="user-profile-picture" />
   );
 }
 
