@@ -10,7 +10,6 @@ import {Routes} from "./routes/routes";
 import UserRoutes from './routes/UserRoutes';
 import * as http from 'http';
 import * as cors from 'cors';
-import * as helmet from "helmet";
 import * as https from 'https'; 
 import * as fs from 'fs';
 import * as dotenv from 'dotenv';
@@ -32,7 +31,6 @@ createConnection().then(async connection => {
 
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({extended:true}))
-    app.use(helmet());
     app.use(cors())
     app.use(fileUpload({createParentPath:true}))
     app.use(express.static(path.join(__dirname,'build')))
