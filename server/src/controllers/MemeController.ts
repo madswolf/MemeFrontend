@@ -1,7 +1,7 @@
 import {getRepository} from "typeorm";
 import {NextFunction, Request, Response} from "express";
 import {Meme} from "../entity/Meme";
-import { getFromTableRandom, compressImage } from "./MemeControllerHelperMethods";
+import { getFromTableRandom, compressImage, saveVerifyCompress } from "./MemeControllerHelperMethods";
 import { MemeVisual } from "../entity/MemeVisual";
 import { MemeSound } from "../entity/MemeSound";
 import { MemeToptext } from "../entity/MemeToptext";
@@ -43,22 +43,12 @@ export class MemeController {
             return {error:"Top/Bottomtext too long"};
         }
         
-        await request.files.visualFile.mv(`${uploadfolder}/${visualsFolder}/temp/` + request.files.visualFile.name);
-
-        const type = await FileType.fromFile(`${uploadfolder}/${visualsFolder}/`+ '/temp/' + request.files.visualFile.name)
-
-        //validation of file type
-        if (type.mime.toString() !== request.files.visualFile.mimetype || MimeTypes.lookup(request.files.visualFile.name) !== type.mime.toString() ){
-            fs.unlinkSync(`${uploadfolder}/${visualsFolder}/`+ '/temp/' + request.files.visualFile.name);
-            response.status(415)
-            //unsure if this is improper form for returning errors
-            return {error:"Mismatch between file mimetype and file extension"};
+        let result = await saveVerifyCompress(request.files.visualFile,visualsFolder,response)
+        if(result.error){
+            return result;
         }
-
-        var fileName = compressImage(`${uploadfolder}/${visualsFolder}/temp/`,`${uploadfolder}/${visualsFolder}/`,request.files.visualFile.name);
-        
         const body = request.body as MemeTextBody 
-        const memevisual = await this.memeVisualRepository.save({filename:fileName})
+        const memevisual = await this.memeVisualRepository.save({filename:result.filename})
         var meme = {visual:memevisual};
         
         if (body.toptext !== ""){
