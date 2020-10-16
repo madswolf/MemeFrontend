@@ -16,6 +16,15 @@ class UserController{
   static checkIfUnencryptedPasswordIsValid(unencryptedPassword: string,user:User) {
     return bcrypt.compareSync(unencryptedPassword + user.salt, user.password);
   };
+
+  static signToken(user:User){
+    const token = jwt.sign(
+      { userId: user.id, username: user.username },
+      process.env.JWTSECRET,
+      { expiresIn: "1h" }
+      );
+    return token;
+  }
   
   static all = async (req: Request, res: Response) => {
     const userRepository = getRepository(User);
@@ -62,11 +71,13 @@ class UserController{
     try {
       await userRepository.save(user);
     } catch (e) {
-      res.status(409).send("username already in use");
+      res.status(409).send("username or email already in use");
       return;
     }
+
+    const token = UserController.signToken(user);
     
-    res.status(201).send("User created");
+    res.status(201).send({token:token,username:user.username,profilePic:user.profilePicFileName,email:user.email});
   };
   
   static update = async (req: Request, res: Response) => {
@@ -148,11 +159,7 @@ class UserController{
       return;
     }
     
-    const token = jwt.sign(
-      { userId: user.id, username: user.username },
-      process.env.JWTSECRET,
-      { expiresIn: "1h" }
-      );
+    const token = UserController.signToken(user);
       
       res.send({token:token,username:user.username,profilePic:user.profilePicFileName,email:user.email});
     };

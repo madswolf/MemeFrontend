@@ -22,8 +22,8 @@ const SignupPage:React.FC<login> = (props) => {
           'Content-Type' : 'application/json'
         }
       }).then(response => {
-        if(response.status === 200){
-          props.login({...response.data,isLoggedIn:true})
+        if(response.status === 201){
+          props.login({...response.data,isLoggedIn:true,profilePicURL:`/public/${response.data.profilePic}`})
         }else{
           console.log("wrong username or password");
         }
