@@ -29,6 +29,8 @@ router.delete(
 
 router.post("/login", UserController.login);
 
+router.post("/update",[checkJwt], UserController.update);
+
 router.post("/change-password", [checkJwt], UserController.updatePassword);
 
 router.post("/forgot-password", UserController.recoverPassword);

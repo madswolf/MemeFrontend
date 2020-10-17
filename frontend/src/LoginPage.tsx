@@ -18,7 +18,7 @@ const LoginPage:React.FC<login> = (props) =>  {
       }
     }).then(response => {
       if(response.status === 200){
-        props.login({...response.data,isLoggedIn:true,profilePicURL:`/public/${response.data.profilePic}`})
+        props.login({...response.data,isLoggedIn:true,profilePicURL:`/public/${response.data.profilePicFileName}`,token:response.headers['token']})
       }else{
         console.log("wrong username or password");
       }
