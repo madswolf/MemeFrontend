@@ -17,7 +17,7 @@ const GuestGreeting:React.FC =  (props) =>{
     <div className='Greeting'>
       <h1>Hello you lonely crab</h1>
       <h1>Log in or sign up and maybe you won't be so lonely anymore</h1>
-      <Link to="/Login" className="Signup-link">
+      <Link to="/user/Login" className="Signup-link">
         <Button size="lg" appearance="primary">Login</Button>
       </Link>
     </div>

@@ -48,13 +48,14 @@ const Header:React.FC<(isLoggedIn & profilePic & signout)> = (props) => {
 
 const App:React.FC = () => {
   const {userState,login,signout} = useUserState();
+ 
   return (
     <Router>
         <div className="App">
           <Header isLoggedIn={userState.isLoggedIn} token={userState.token} profilePicURL={userState.profilePicURL} signout={signout}/>
           <body className="App-body">
             <Route exact path ='/' render={() => <HomePage isLoggedIn={userState.isLoggedIn} token={userState.token} username={userState.username} />}/>
-            <Route exact path='/User' render={() => (userState.isLoggedIn ? (<UserPage username={userState.username} profilePicURL={userState.profilePicURL} email={userState.email}/>) : <Redirect to="/Login"/>)}/>
+            <Route exact path='/User' render={() => (userState.isLoggedIn ? (<UserPage isLoggedIn={userState.isLoggedIn} token={userState.token} username={userState.username} profilePicURL={userState.profilePicURL} email={userState.email} login={login}/>) : <Redirect to="/Login"/>)}/>
             <Route path='/user/Login' render={() => (!userState.isLoggedIn ? (<LoginPage login={login} />) : <Redirect to="/User"/>)}/>
             <Route path='/Memes' render={() => (<MemePage />)}/>
             <Route exact path='/user/Signup' render={() => (!userState.isLoggedIn ? (<SignupPage login={login} />) : <Redirect to="/User"/>)}/>

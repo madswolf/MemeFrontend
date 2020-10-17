@@ -5,6 +5,25 @@ import axios from 'axios';
 import ReactTooltip from 'react-tooltip';
 import { MemeDisplayer } from './MemeDisplayer';
 
+export const MemeLoader:React.FC<{isloading:boolean}> = (props) => {
+  const loader = props.isloading ? (<Loader backdrop content="sending..." vertical/>) : <div></div>
+  return (loader);
+}
+
+export const UpLoadButton:React.FC<{toolTipString:string,readyForUpload:boolean,handleUpload():void}> =(props) => {
+  var upLoadButton;
+  if (props.toolTipString){
+    upLoadButton = (<Button disabled data-tip data-for="submit" block appearance="primary" onClick={props.handleUpload}>Upload</Button>  );
+  }else {
+    if(!props.readyForUpload){
+      upLoadButton = (<Button disabled  block appearance="primary" onClick={props.handleUpload}>Upload</Button>);
+    } else {
+      upLoadButton = (<Button block appearance="primary" onClick={props.handleUpload}>Upload</Button>);
+    } 
+  }
+  return (upLoadButton);
+}
+
 const UploadPage :React.FC = (props) =>{
   //hooks for state of the form/preview
   const{memeState,setMemeState} = useMemeCanvasState();
@@ -81,25 +100,6 @@ const UploadPage :React.FC = (props) =>{
     }
   }
 
-  const UpLoadButton:React.FC<{toolTopString:string,readyForUpload:boolean}> =(props) => {
-    var upLoadButton;
-    if (toolTipString){
-      upLoadButton = (<Button disabled data-tip data-for="submit" block appearance="primary" onClick={handleUpload}>Upload</Button>  );
-    }else {
-      if(!readyToUpload){
-        upLoadButton = (<Button disabled  block appearance="primary" onClick={handleUpload}>Upload</Button>);
-      } else {
-        upLoadButton = (<Button block appearance="primary" onClick={handleUpload}>Upload</Button>);
-      } 
-    }
-    return (upLoadButton);
-  }
-
-  const MemeLoader:React.FC<{isloading:boolean}> = (props) => {
-    const loader = props.isloading ? (<Loader backdrop content="sending..." vertical/>) : <div></div>
-    return (loader);
-  }
-
   return (
     <div key={reset} className="Upload-page">
       <Form className="Login-form">
@@ -123,7 +123,7 @@ const UploadPage :React.FC = (props) =>{
           </FormGroup>
           <FormGroup>
             <ButtonToolbar>
-              <UpLoadButton toolTopString={toolTipString} readyForUpload={readyToUpload}/>
+              <UpLoadButton toolTipString={toolTipString} readyForUpload={readyToUpload} handleUpload={handleUpload}/>
             </ButtonToolbar>
           </FormGroup>
           <MemeLoader isloading={isLoading}/>

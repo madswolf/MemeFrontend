@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, response, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 import * as bcrypt from 'bcryptjs';
@@ -9,8 +9,6 @@ import * as nodemailer from 'nodemailer';
 import {uploadfolder,visualsFolder,soundsFolder, fileSizeLimit, profilePicFolder} from '../index';
 
 class UserController{
-  
-  static UserRepository = getRepository(User);
 
   static hashPassword(password:string,salt:string) {
     return bcrypt.hashSync(password + salt, 8);
@@ -32,9 +30,9 @@ class UserController{
   static async verifyUser(res:Response){
     const id = res.locals.jwtPayload.userId;
     let user: User;
-    
+    let UserRepository = getRepository(User);
     try {
-      user = await UserController.UserRepository.findOneOrFail(id);
+      user = await UserRepository.findOneOrFail(id);
     } catch (id) {
       res.status(401).send();
       return;
@@ -43,8 +41,8 @@ class UserController{
   }
   
   static all = async (req: Request, res: Response) => {
-
-    const users = await UserController.UserRepository.find({
+    let UserRepository = getRepository(User);
+    const users = await UserRepository.find({
       select: ["id", "username", "role"] 
     });
     
@@ -54,9 +52,10 @@ class UserController{
   static one = async (req: Request, res: Response) => {
     
     const id: number = parseInt(req.params.id);
+    let UserRepository = getRepository(User);
     
     try {
-      const user = await UserController.UserRepository.findOneOrFail(id, {
+      const user = await UserRepository.findOneOrFail(id, {
         select: ["id", "username", "role"]
       });
     } catch (error) {
@@ -80,9 +79,10 @@ class UserController{
       res.status(400).send();
       return;
     }
+    let UserRepository = getRepository(User);
     
     try {
-      await UserController.UserRepository.save(user);
+      await UserRepository.save(user);
     } catch (e) {
       res.setHeader("error","username or email already in use");
       res.status(409).send();
@@ -99,10 +99,11 @@ class UserController{
     const id = req.params.id;
     
     const { username, role } = req.body;
+    let UserRepository = getRepository(User);
     
     let user;
     try {
-      user = await UserController.UserRepository.findOneOrFail(id);
+      user = await UserRepository.findOneOrFail(id);
     } catch (error) {
       res.setHeader("error","User not found");
       res.status(404).send();
@@ -118,7 +119,7 @@ class UserController{
     }
     
     try {
-      await UserController.UserRepository.save(user);
+      await UserRepository.save(user);
     } catch (e) {
       res.setHeader("error","username already in use");
       res.status(409).send();
@@ -130,19 +131,77 @@ class UserController{
   
   static remove = async (req: Request, res: Response) => {
     
-    const id = req.params.id;
+    const {password} = req.body;
+    if (!(password)) {
+      res.status(400).send();
+    }
     
-    let user: User;
-    try {
-      user = await UserController.UserRepository.findOneOrFail(id);
-    } catch (error) {
-      res.status(404).send("User not found");
+    let user = await UserController.verifyUser(res);
+
+    if(!user){
       return;
     }
-    UserController.UserRepository.delete(id);
-    
+
+    if (!UserController.checkIfUnencryptedPasswordIsValid(password,user)) {
+      res.setHeader("error","Wrong password");
+      res.status(401).send();
+      return;
+    }
+
+    let UserRepository = getRepository(User);
+    UserRepository.delete(user.id);
     res.status(204).send();
   };
+
+  static update = async (req:Request, res:Response) => {
+
+    let user = await UserController.verifyUser(res);
+
+    if(!user){
+      return;
+    }
+
+    if (!UserController.checkIfUnencryptedPasswordIsValid(req.body.password,user)) {
+      res.setHeader("error","Wrong password");
+      res.status(401).send();
+      return;
+    }
+
+    if(req.body.profilePic){
+      res = await UserController.changeProfilePic(req,res,user);
+      if(res.statusCode !== 204){
+        res.send();
+        return;
+      }
+    }
+
+    if(req.body.username){
+      res = await UserController.changeUsername(req,res,user);
+      if(res.statusCode !== 204){
+        res.send();
+        return;
+      }
+    }
+
+    if(req.body.email){
+      res = await UserController.changeEmail(req,res,user);
+      if(res.statusCode !== 204){
+        res.send();
+        return;
+      }
+    }
+
+    if(req.body.newPassword){
+      res = await UserController.changePassword(req,res,user);
+      if(res.statusCode !== 204){
+        res.send();
+        return;
+      }
+    }
+
+    res.status(204).send(user)
+    return;
+  }
 
   static updateUsername = async (req:Request, res: Response) => {
     
@@ -152,26 +211,34 @@ class UserController{
       return;
     }
 
-    const {newUsername } = req.body;
-    if (!(newUsername)) {
-      res.status(400).send();
+    (await UserController.changeUsername(req,res,user)).send();
+  }
+
+  static changeUsername = async (req: Request, res: Response, user: User) => {
+    const {newUsername, password} = req.body;
+    if (!(newUsername && password)) {
+      return res.status(400);
+    }
+
+    if (!UserController.checkIfUnencryptedPasswordIsValid(password,user)) {
+      res.setHeader("error","Wrong password");
+      return res.status(401);
     }
     
     user.username = newUsername;
+    let UserRepository = getRepository(User);
 
     try {
-      await UserController.UserRepository.save(user);
+      await UserRepository.save(user);
     } catch (e) {
       res.setHeader("error","Username already in use");
-      res.status(409).send();
-      return;
+      return res.status(409);
     }
 
     const newToken = UserController.signToken(user);
     
     res.setHeader("token", newToken);   
-    
-    res.status(201).send(user);
+    return res.status(204);
   }
     
   static updatePassword = async (req: Request, res: Response) => {
@@ -182,17 +249,18 @@ class UserController{
       return;
     }
     
+    (await UserController.changePassword(req,res,user)).send(user);
+  };
+
+  static changePassword = async(req: Request, res: Response, user: User) => {
     const { oldPassword, newPassword } = req.body;
     if (!(oldPassword && newPassword)) {
       res.status(400).send();
     }
     
-
-    
     if (!UserController.checkIfUnencryptedPasswordIsValid(oldPassword,user)) {
       res.setHeader("error","Wrong password");
-      res.status(401).send();
-      return;
+      return res.status(401);
     }
     
     //validate password length
@@ -200,18 +268,19 @@ class UserController{
     const errors = await validate(user);
     if (errors.length > 0) {
       res.setHeader("error","Password must be at least 7 characters long");
-      res.status(400).send();
-      return;
+      return res.status(400);
+      
     }
+    let UserRepository = getRepository(User);
     
-    UserController.UserRepository.save(user);
+    UserRepository.save(user);
     
     const newToken = UserController.signToken(user);
     
-    res.setHeader("token", newToken);   
+    res.setHeader("token", newToken);  
 
-    res.status(204).send();
-  };
+    return res.status(204);
+  }
 
   static updateProfilePic = async (req: Request, res: Response) => {
     let user = await UserController.verifyUser(res);
@@ -220,14 +289,19 @@ class UserController{
       return;
     }
 
+    (await UserController.changeProfilePic(req,res,user)).send(user);
+  }
+
+  static changeProfilePic = async (req: Request, res: Response, user: User) => {
     const newProfilePic = req.files.newProfilePic;
     if(!newProfilePic){
-      res.status(400).send();
+      return res.status(400);
+
     }
 
     if (newProfilePic.data.length > fileSizeLimit ){     
       res.setHeader("error","Filesize too large");
-      res.status(413).send();
+      return res.status(413);
     }
 
     let result = await saveVerifyCompress(newProfilePic,profilePicFolder,res);
@@ -237,9 +311,32 @@ class UserController{
     }
 
     user.profilePicFileName = result.filename;
+    let UserRepository = getRepository(User);
     
-    UserController.UserRepository.save(user);
-    res.status(204).send(user);
+    UserRepository.save(user);
+    return res.status(204);
+  }
+
+  static changeEmail = async (req: Request, res: Response, user: User) => {
+    const newEmail = req.body.email;
+    if(!newEmail){
+      return res.status(400);
+    }
+
+    user.profilePicFileName = newEmail;
+    let UserRepository = getRepository(User);
+    
+    try {
+      await UserRepository.save(user);
+    } catch (e) {
+      res.setHeader("error","Email already in use");
+      return res.status(409);
+    }
+
+    const newToken = UserController.signToken(user);
+    
+    res.setHeader("token", newToken);   
+    return res.status(204);
   }
 
   static recoverPassword = async (req: Request, res: Response) => {
@@ -248,16 +345,18 @@ class UserController{
       res.status(400).send("Bad request");
     }
     
+    let UserRepository = getRepository(User);
     let user: User;
     try {
-      user = await UserController.UserRepository.findOneOrFail({ where: { email } });
+      user = await UserRepository.findOneOrFail({ where: { email } });
     } catch (id) {
       res.setHeader("error","No account with that email exists");
       res.status(401).send();
     }
     
     user.password = randomStringOfLength(10);
-    UserController.UserRepository.save(user);
+
+    UserRepository.save(user);
     
     var transporter = nodemailer.createTransport({
       service: `${process.env.BOTMAIL_SERVICE}`,
@@ -290,11 +389,11 @@ class UserController{
     if (!(username && password)) {
       res.status(400).send();
     }
+    let UserRepository = getRepository(User);
 
     let user: User;
     try {
-      console.log(await UserController.UserRepository.find());
-      user = await UserController.UserRepository.findOneOrFail({ 
+      user = await UserRepository.findOneOrFail({ 
         where: [
           { username: username },
           { email: username }
@@ -317,6 +416,7 @@ class UserController{
     
     res.setHeader("token", token);   
     res.send(user);
+    return;
   };
   
 }

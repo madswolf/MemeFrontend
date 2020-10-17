@@ -17,25 +17,36 @@
 }
 
 .User-box-container {
-  padding-left: 10vh;
+  height: 80%;
+  display: flex;
+  justify-content: center;
 }
 
 .User-box {
   padding: 2vh;
   width: 40vw;
-  height: 40vh;
+  height: 100%;
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
+  flex-direction: column;
   background: #121517;
   border: 0.2vh solid #000000;
   border-radius: 1.5vh;
 }
+@media only screen and (max-width: 600px) {
+  .User-box {
+    border-radius: 0;
+    width: 100%;
+  }
+}
+
+.User-picture-container {
+  height: 100%;
+  padding-top: 5vh;
+}
 
 .User-picture {
-  height: 30vh;
-  width: 30vh;
+  height: 15vw;
+  width: 15vw;
   border-radius: 50%;
 }
 
@@ -49,8 +60,16 @@
   top: -11px;
 }
 
+.User-info-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
 .User-info {
   list-style-type: none;
+  width: 40%;
   display: flex;
   text-align: left; 
   justify-content: space-around;
@@ -63,7 +82,6 @@
 
 .User-field {
   color: white;
-  padding: 6vh;
 }
 
 .User-field-name {
@@ -81,6 +99,8 @@
 
   color: #FFFFFF;
 }
+
+
 
 .Login-form{
   font-size: calc(4px + 2vmin);
