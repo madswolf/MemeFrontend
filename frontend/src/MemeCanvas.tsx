@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { MemeCanvasState, useMemeCanvasState } from './State';
+import { MemeCanvasState } from './State';
 
 export const MemeCanvas :React.FC<{memeState:MemeCanvasState,className:string}> = (props) =>{
     var fontBase = 1000,                   // selected default width for canvas
