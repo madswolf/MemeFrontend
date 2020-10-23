@@ -52,7 +52,7 @@ const UploadPage :React.FC = (props) =>{
       }
     }
     ReactTooltip.rebuild();
-  });
+  },[visualFile]);
 
   function handleUpload(){
     if (visualFile){

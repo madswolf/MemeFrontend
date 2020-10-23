@@ -68,11 +68,11 @@ export const useMemeStackState = () => {
     
     useEffect(() =>{
         setCanGoBack(memeStackPointer !== 0);
-    })
+    },[memeStackPointer])
 
     useEffect(() =>{
         setcanGoForward(memeStackPointer !== (memeStackState.length - 1));
-    })
+    },[memeStackPointer,memeStackState.length])
 
 
     function append(memeState:MemeCanvasState){

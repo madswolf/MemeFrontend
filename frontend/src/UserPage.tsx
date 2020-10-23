@@ -10,7 +10,7 @@ function UserPicture(profilePicURL:string, classExtension :string) {
   let className = classExtension === "" ? "User-picture" : "User-picture-" + classExtension
   return (
     <div>
-      <img src={profilePicURL} className={className} alt="user-profile-picture" />
+      <img src={profilePicURL} className={className} alt="user-profile" />
     </div>
   );
 }
