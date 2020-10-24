@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import {Alert, Button, ButtonToolbar, ControlLabel, Form, FormControl, FormGroup, HelpBlock} from 'rsuite';
 import 'rsuite/dist/styles/rsuite-dark.css';
 import axios from 'axios';
-import ReactTooltip from 'react-tooltip';
-import { UpLoadButton } from './UploadPage';
 
 const RecoveryPage:React.FC = (props) =>  {
   const [email,setEmail] = useState('');
@@ -16,9 +14,8 @@ const RecoveryPage:React.FC = (props) =>  {
       }
     }).then(response => {
       if(response.status === 200){
-        let tempEmail = email;
         setEmail("");
-        Alert.success(`Temporary password sent to ${tempEmail}`,3000)
+        Alert.success(`Temporary password sent to ${response.data.email}`,3000)
       }else{
         Alert.error(`Error: ${response.headers.error}`,3000)
       }
