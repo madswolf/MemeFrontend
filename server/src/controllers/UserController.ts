@@ -249,9 +249,9 @@ class UserController{
     let UserRepository = getRepository(User);
     let user: User;
     try {
-      user = await UserRepository.findOneOrFail({ where: { email } });
+      user = await UserRepository.findOneOrFail({ where: [{ email:email },{ username:email}] });
     } catch (id) {
-      res.setHeader("error","No account with that email exists");
+      res.setHeader("error","No account with that email or username exists");
       res.status(401).send();
       return;
     }
@@ -279,7 +279,7 @@ class UserController{
       if (error) {
         res.status(400).send();
       } else {
-        res.status(200).send();
+        res.status(200).send({email:user.email});
       }
       return;
     });
