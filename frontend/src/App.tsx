@@ -11,6 +11,7 @@ import HomePage from './HomePage';
 import {isLoggedIn,profilePic,signout,useUserState} from './State'
 import { SignupPage } from './SignupPage';
 import UploadPage from './UploadPage';
+import { RecoveryPage } from './RecoveryPage';
 
 
 const Header:React.FC<(isLoggedIn & profilePic & signout)> = (props) => {
@@ -57,6 +58,7 @@ const App:React.FC = () => {
             <Route exact path ='/' render={() => <HomePage isLoggedIn={userState.isLoggedIn} token={userState.token} username={userState.username} />}/>
             <Route exact path='/User' render={() => (userState.isLoggedIn ? (<UserPage isLoggedIn={userState.isLoggedIn} token={userState.token} username={userState.username} profilePicURL={userState.profilePicURL} email={userState.email} login={login}/>) : <Redirect to="/Login"/>)}/>
             <Route path='/user/Login' render={() => (!userState.isLoggedIn ? (<LoginPage login={login} />) : <Redirect to="/User"/>)}/>
+            <Route path='/user/forgot-password' render={() => (!userState.isLoggedIn ? (<RecoveryPage />) : <Redirect to="/User"/>)} />
             <Route path='/Memes' render={() => (<MemePage />)}/>
             <Route exact path='/user/Signup' render={() => (!userState.isLoggedIn ? (<SignupPage login={login} />) : <Redirect to="/User"/>)}/>
             <Route exact path ="/Upload/Meme" render={() => <UploadPage />}/>
