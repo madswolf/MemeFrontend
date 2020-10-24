@@ -36,7 +36,7 @@ const LoginPage:React.FC<login> = (props) =>  {
           <FormGroup>
             <ControlLabel>Password</ControlLabel>
             <FormControl name="password" type="password" onChange={(v,e) => setPassword(v)}/>
-            <HelpBlock><Link to={'/'}>forgot password?</Link></HelpBlock>
+            <HelpBlock><Link to={'/user/forgot-password'}>forgot password?</Link></HelpBlock>
           </FormGroup>
           <FormGroup>
             <ButtonToolbar>

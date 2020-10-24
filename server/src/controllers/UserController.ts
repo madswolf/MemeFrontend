@@ -243,6 +243,7 @@ class UserController{
     const {email} = req.body;
     if(!email){
       res.status(400).send("Bad request");
+      return;
     }
     
     let UserRepository = getRepository(User);
@@ -252,6 +253,7 @@ class UserController{
     } catch (id) {
       res.setHeader("error","No account with that email exists");
       res.status(401).send();
+      return;
     }
     
     user.password = randomStringOfLength(10);
@@ -279,6 +281,7 @@ class UserController{
       } else {
         res.status(200).send();
       }
+      return;
     });
   
   };
