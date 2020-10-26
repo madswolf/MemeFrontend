@@ -13,7 +13,7 @@ export class Vote {
     upvote: boolean;
 
     @ManyToOne(() => User, user => user.votes)
-    user?: User;
+    user: User;
 
     @ManyToOne(() => Votable, Votable => Votable.votes)
     element: Votable;

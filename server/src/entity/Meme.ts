@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ChildEntity} from "typeorm";
+import { OneToOne, JoinColumn, ChildEntity} from "typeorm";
 import { MemeBottomtext } from "./MemeBottomText";
 import { MemeSound } from "./MemeSound";
 import { MemeToptext } from "./MemeToptext";
@@ -11,10 +11,6 @@ export class Meme extends Votable{
     @OneToOne(type => MemeSound)
     @OneToOne(type => MemeToptext)
     @OneToOne(type => MemeBottomtext)
-    
-
-    @PrimaryGeneratedColumn()
-    id: number;
 
     @JoinColumn()
     visual: MemeVisual;

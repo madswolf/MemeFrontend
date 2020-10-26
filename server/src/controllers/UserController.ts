@@ -1,4 +1,4 @@
-import { Request, response, Response } from "express";
+import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 import * as bcrypt from 'bcryptjs';
