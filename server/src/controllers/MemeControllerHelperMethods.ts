@@ -1,7 +1,7 @@
 import { UploadedFile } from "express-fileupload";
 import * as compress_images from 'compress-images';
 import * as fs from 'fs';
-import {uploadfolder,visualsFolder,soundsFolder, fileSizeLimit} from '../index';
+import {uploadfolder} from '../index';
 import * as FileType from 'file-type';
 import * as MimeTypes from 'mime-types';
 import { Response } from "express";

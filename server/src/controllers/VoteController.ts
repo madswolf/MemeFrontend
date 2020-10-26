@@ -1,4 +1,4 @@
-import { Request, response, Response } from "express";
+import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { User } from "../entity/User";
 import { Vote } from "../entity/Vote";
@@ -6,7 +6,7 @@ import { MemeToptext } from "../entity/MemeToptext";
 import { MemeBottomtext } from "../entity/MemeBottomText";
 import { MemeVisual } from "../entity/MemeVisual";
 import { MemeSound } from "../entity/MemeSound";
-import * as jwt from "jsonwebtoken";
+import UserController from "./UserController";
 
 export const memeTypeToType = {
     "bottomtext":MemeBottomtext,
@@ -46,7 +46,6 @@ class VoteController{
     }
 
     let elementRepository = getRepository(memeTypeToType[type]);
-    let UserRepository = getRepository(User);
     let VoteRepository = getRepository(Vote);
     let vote = new Vote();
     let element;
@@ -59,32 +58,29 @@ class VoteController{
         return;
     }
 
-    if(<string>req.headers["auth"]){
-        const token = <string>req.headers["auth"];
-        let jwtPayload;
-        try {
-            jwtPayload = <any>jwt.verify(token, process.env.JWTSECRET);
-            vote.user = await UserRepository.findOneOrFail(jwtPayload.userId);
-            const { userId, username } = jwtPayload;
-            const newToken = jwt.sign({ userId, username }, process.env.JWTSECRET, {
-                expiresIn: "1h"
-            });
-            res.setHeader("token", newToken);  
-            let existingVote = await VoteRepository.findOne({where: {user:vote.user, element:element}})
-            if(existingVote){
-                existingVote.upvote = upvote;
-                VoteRepository.save(existingVote);
-                return;
-            }
-        } catch (error) {
-            res.status(401).send();
-            return;
-        }
+    vote.user = await UserController.verifyUser(res);
+
+    if(!vote.user){
+      return;
+    }
+
+    
+    let existingVote = await VoteRepository.findOne({where: {user:vote.user, element:element}})
+    
+    if(existingVote){
+        existingVote.upvote = upvote;
+        VoteRepository.save(existingVote);
+        res.status(201).send();
+        return;
     }
 
     vote.upvote = upvote;
     vote.element = element;
     
+    const newToken = UserController.signToken(vote.user);
+      
+    res.setHeader("token", newToken);   
+
     try{
         await VoteRepository.save(vote);
     } catch(e) {

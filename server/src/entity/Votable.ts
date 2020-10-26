@@ -5,6 +5,9 @@ import { Vote } from "./Vote";
 @TableInheritance({column: {type: 'varchar', name: 'type'}})
 export abstract class Votable {
 
+    @PrimaryGeneratedColumn()
+    id: number;
+
     @OneToMany(() => Vote, vote => vote.element)
     votes: Vote[];
 

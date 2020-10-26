@@ -1,15 +1,12 @@
 import {getRepository} from "typeorm";
 import {NextFunction, Request, Response} from "express";
 import {Meme} from "../entity/Meme";
-import { getFromTableRandom, compressImage, saveVerifyCompress } from "./MemeControllerHelperMethods";
+import { getFromTableRandom, saveVerifyCompress } from "./MemeControllerHelperMethods";
 import { MemeVisual } from "../entity/MemeVisual";
 import { MemeSound } from "../entity/MemeSound";
 import { MemeToptext } from "../entity/MemeToptext";
 import { MemeBottomtext } from "../entity/MemeBottomText";
 import {uploadfolder,visualsFolder,soundsFolder, fileSizeLimit} from '../index';
-import * as FileType from 'file-type';
-import * as fs from "fs";
-import * as MimeTypes from 'mime-types';
 
 type MemeTextBody = {
     toptext:string,
@@ -29,6 +26,8 @@ export class MemeController {
     }
 
     async one(request: Request, response: Response, next: NextFunction) {
+        let thing = await this.memeRepository.findOne(request.params.id)
+        console.log(thing.visual);
         return this.memeRepository.findOne(request.params.id);
     }
 

@@ -13,7 +13,6 @@ router.get(
   VoteController.one
 );
 
-router.post("/", VoteController.save);
-
+router.post("/", [checkJwt], VoteController.save);
 
 export default router;
