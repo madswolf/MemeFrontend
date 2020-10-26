@@ -1,7 +1,8 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import { PrimaryGeneratedColumn, Column, ChildEntity} from "typeorm";
+import { Votable } from "./Votable";
 
-@Entity()
-export class MemeBottomtext {
+@ChildEntity()
+export class MemeBottomtext  extends Votable{
 
     @PrimaryGeneratedColumn()
     id: number;

@@ -39,9 +39,7 @@ export class MemeVisualController {
             host:request.get('host'),
             pathname: ( `${uploadfolder}/${visualsFolder}/${memeVisual.filename}`)
         });
-        console.log(memeURL)
-        return {data:memeURL};
+
+        return {id:memeVisual.id,data:memeURL};
     }
-
-
 }

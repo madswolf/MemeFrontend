@@ -8,6 +8,7 @@ import * as path from 'path';
 import {Request, Response} from "express";
 import {Routes} from "./routes/routes";
 import UserRoutes from './routes/UserRoutes';
+import VoteRoutes from './routes/VoteRoutes';
 import * as http from 'http';
 import * as cors from 'cors';
 import * as https from 'https'; 
@@ -58,6 +59,7 @@ createConnection().then(async connection => {
     });
 
     app.use('/user', UserRoutes);
+    app.use('/vote',VoteRoutes)
 
     if(process.env.ADMIN_USERNAME){
         let user = new User();
