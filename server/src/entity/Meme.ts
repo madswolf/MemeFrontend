@@ -1,11 +1,12 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ChildEntity} from "typeorm";
 import { MemeBottomtext } from "./MemeBottomText";
 import { MemeSound } from "./MemeSound";
 import { MemeToptext } from "./MemeToptext";
 import { MemeVisual } from "./MemeVisual";
+import { Votable } from "./Votable";
 
-@Entity()
-export class Meme {
+@ChildEntity()
+export class Meme extends Votable{
     @OneToOne(type => MemeVisual)
     @OneToOne(type => MemeSound)
     @OneToOne(type => MemeToptext)

@@ -1,7 +1,8 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ChildEntity} from "typeorm";
+import { Votable } from "./Votable";
 
-@Entity()
-export class MemeSound {
+@ChildEntity()
+export class MemeSound extends Votable{
 
     @PrimaryGeneratedColumn()
     id: number;

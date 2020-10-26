@@ -5,8 +5,10 @@ import {
     Column,
     CreateDateColumn,
     UpdateDateColumn,
-    Unique
+    Unique,
+    OneToMany
 } from "typeorm";
+import { Vote } from "./Vote";
 
 @Entity()
 @Unique(["username"])
@@ -48,5 +50,8 @@ export class User {
     @Column()
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @OneToMany(() => Vote, vote => vote.user)
+    votes: Vote[];
 
 }
