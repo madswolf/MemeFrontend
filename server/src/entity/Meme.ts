@@ -19,9 +19,9 @@ export class Meme extends Votable{
     sound?: MemeSound;
 
     @JoinColumn()
-    topText: MemeToptext;
+    topText?: MemeToptext;
 
     @JoinColumn()
-    bottomText: MemeBottomtext;
+    bottomText?: MemeBottomtext;
 
 }

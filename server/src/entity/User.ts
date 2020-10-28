@@ -27,11 +27,12 @@ export class User {
     profilePicFileName: string;
 
     @Column()
+    @Length(1,100)
     email: string;
 
     @Column()
     @Length(7,100)
-    password: string;
+    passwordHash: string;
 
     @Column()
     @Length(25)
@@ -45,7 +46,6 @@ export class User {
     @Column()
     @CreateDateColumn()
     createdAt: Date;
-
     
     @Column()
     @UpdateDateColumn()
