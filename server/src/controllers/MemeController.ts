@@ -48,20 +48,21 @@ export class MemeController {
         }
         const body = request.body as MemeTextBody 
         const memevisual = await this.memeVisualRepository.save({filename:result.filename})
-        var meme = {visual:memevisual};
+        var meme = new Meme();
+        meme.visual = memevisual;
         
         if (body.toptext !== ""){
             const memetoptext = await this.memeToptextRepository.save({memetext:body.toptext}) 
-            meme['toptext'] = memetoptext
+            meme.topText = memetoptext
         }
         if (body.bottomtext !== ""){
             const memebottomtext =  await this.memeBottomtextRepository.save({memetext:body.bottomtext}) 
-            meme['bottomtext'] = memebottomtext
+            meme.bottomText = memebottomtext
         }
         if (request.files.soundFile){
             request.files.soundFile.mv(uploadfolder + '/' + soundsFolder + '/' + request.files.soundFile.name)
             const memesound = await this.memeSoundRepository.save({filename:request.files.soundFile.name})
-            meme['sound'] = memesound
+            meme.sound = memesound
         }
         return this.memeRepository.save(meme);
     }
