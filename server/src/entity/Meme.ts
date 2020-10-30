@@ -1,4 +1,4 @@
-import { OneToOne, JoinColumn, ChildEntity} from "typeorm";
+import { OneToOne, JoinColumn, ChildEntity, ManyToOne} from "typeorm";
 import { MemeBottomtext } from "./MemeBottomText";
 import { MemeSound } from "./MemeSound";
 import { MemeToptext } from "./MemeToptext";
@@ -7,21 +7,17 @@ import { Votable } from "./Votable";
 
 @ChildEntity()
 export class Meme extends Votable{
-    @OneToOne(type => MemeVisual)
-    @OneToOne(type => MemeSound)
-    @OneToOne(type => MemeToptext)
-    @OneToOne(type => MemeBottomtext)
-
-    @JoinColumn()
+    
+    @ManyToOne(() => MemeVisual, MemeVisual => MemeVisual.memes)
     visual: MemeVisual;
 
-    @JoinColumn()
+    @ManyToOne(() => MemeSound, MemeSound => MemeSound.memes)
     sound?: MemeSound;
 
-    @JoinColumn()
+    @ManyToOne(() => MemeToptext, MemeToptext => MemeToptext.memes)
     topText?: MemeToptext;
 
-    @JoinColumn()
+    @ManyToOne(() => MemeBottomtext, MemeBottomtext => MemeBottomtext.memes)
     bottomText?: MemeBottomtext;
 
 }

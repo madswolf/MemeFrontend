@@ -67,7 +67,7 @@ createConnection().then(async connection => {
         user.email = process.env.ADMIN_EMAIL;
         user.profilePicFileName = process.env.ADMIN_PROFILEPIC;
         user.salt = randomStringOfLength(25);
-        user.password = UserController.hashPassword(process.env.ADMIN_PASSWORD,user.salt);
+        user.passwordHash = UserController.hashPassword(process.env.ADMIN_PASSWORD,user.salt);
 
         
         user.role = "ADMIN";

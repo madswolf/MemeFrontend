@@ -7,12 +7,14 @@ import { MemeBottomtext } from "../entity/MemeBottomText";
 import { MemeVisual } from "../entity/MemeVisual";
 import { MemeSound } from "../entity/MemeSound";
 import UserController from "./UserController";
+import { Meme } from "../entity/Meme";
 
 export const memeTypeToType = {
     "bottomtext":MemeBottomtext,
     "toptext":MemeToptext,
     "visual":MemeVisual,
-    "sound":MemeSound
+    "sound":MemeSound,
+    "meme":Meme
 };
 
 class VoteController{
@@ -38,9 +40,9 @@ class VoteController{
   
   static save = async (req: Request, res: Response) => {
     
-    let {upvote, id, type} = req.body;
+    let {upvote, ids, type} = req.body;
 
-    if(!(upvote && id && type)){
+    if(!(upvote && ids && type)){
         res.status(400).send("Bad request");
         return;
     }
@@ -50,10 +52,42 @@ class VoteController{
     let vote = new Vote();
     let element;
 
+    if(type === "meme"){
+      let meme = new Meme();
+      meme.visual = await getRepository(MemeVisual).findOne(parseInt(ids[0]));
+
+      let query = 
+        getRepository(Meme).createQueryBuilder()
+        .select("meme")
+        .from(Meme,"meme")
+        .where("meme.visual = :visual",{visual:meme.visual.id});
+
+      if(ids[1]){
+        meme.topText = await getRepository(MemeToptext).findOne(parseInt(ids[1]));
+        query.andWhere("meme.topText = :topText",{topText:meme.topText.id});
+      }
+      if(ids[2]){
+        meme.bottomText = await getRepository(MemeBottomtext).findOne(parseInt(ids[2]));
+        query.andWhere("meme.bottomText = :bottomText",{bottomText:meme.bottomText.id});
+      }
+      if(ids[3]){
+        meme.sound = await getRepository(MemeSound).findOne(parseInt(ids[3]));
+        query.andWhere("meme.sound = :sound",{sound:meme.sound.id});
+
+      }
+
+      let exists = await query.getOne();
+
+      if(exists){
+        ids[0] = exists.id;
+      }else{
+        ids[0] = (await getRepository(Meme).save(meme)).id;
+      }
+    }
     try {
-        element = await elementRepository.findOneOrFail(id);
+        element = await elementRepository.findOneOrFail(ids[0]);
     } catch (error) {
-        res.setHeader("error","Element not found")
+        res.setHeader("error","Element not found");
         res.status(404).send();
         return;
     }

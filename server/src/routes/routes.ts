@@ -63,12 +63,12 @@ export const Routes = [{
 }, {
     method: "get",
     route: "/meme/bottomtexts",
-    controller: MemeToptextController,
+    controller: MemeBotttomtextController,
     action: "all"
 }, {
     method: "get",
     route: "/meme/toptexts",
-    controller: MemeBotttomtextController,
+    controller: MemeToptextController,
     action: "all"
 }, {
     method: "get",
