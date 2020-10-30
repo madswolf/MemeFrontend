@@ -15,7 +15,7 @@ class UserController{
   };
   
   static checkIfUnencryptedPasswordIsValid(unencryptedPassword: string,user:User) {
-    return bcrypt.compareSync(unencryptedPassword + user.salt, user.password);
+    return bcrypt.compareSync(unencryptedPassword + user.salt, user.passwordHash);
   };
 
   static signToken(user:User){
@@ -71,7 +71,7 @@ class UserController{
     user.email = email;
     user.profilePicFileName = "default.png";
     user.salt = randomStringOfLength(25);
-    user.password = UserController.hashPassword(password,user.salt);
+    user.passwordHash = UserController.hashPassword(password,user.salt);
     user.role = "USER";
     
     const errors = await validate(user);
@@ -215,7 +215,7 @@ class UserController{
     }
 
     if(req.body.newPassword){
-      user.password = UserController.hashPassword(req.body.newPassword,user.salt);
+      user.passwordHash = UserController.hashPassword(req.body.newPassword,user.salt);
       const errors = await validate(user);
       if (errors.length > 0) {
         res.setHeader("error","Password must be at least 7 characters long");
@@ -256,7 +256,7 @@ class UserController{
       return;
     }
     
-    user.password = randomStringOfLength(10);
+    user.passwordHash = randomStringOfLength(10);
 
     UserRepository.save(user);
     
@@ -272,7 +272,7 @@ class UserController{
       from: process.env.BOTMAIL_EMAIL,
       to: user.email,
       subject: 'Password reset',
-      text: 'Your temporary password is ' + user.password
+      text: 'Your temporary password is ' + user.passwordHash
     };
     
     transporter.sendMail(mailOptions, function(error, info){
@@ -307,7 +307,7 @@ class UserController{
       res.status(401).send();
       return;
     }
-    console.log(user.password)
+    console.log(user.passwordHash)
     
     if (!UserController.checkIfUnencryptedPasswordIsValid(password,user)) {
       res.setHeader("error","Wrong password");
