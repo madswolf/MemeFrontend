@@ -30,30 +30,43 @@ export const useUserState = () => {
     const [userState,setUserState] = useState({isLoggedIn:false,token:"",username:"LonelyCrab",email:"",profilePicURL:"default.png"});
     
     function login (userState:(isLoggedIn & userName & profilePic & email)) {
-       setUserState(userState)
+       setUserState(userState);
     }
 
     function signout() {
-        setUserState({isLoggedIn:false,token:"",username:"LoneliestCrab",email:"",profilePicURL:"default.png"})
+        setUserState({isLoggedIn:false,token:"",username:"LoneliestCrab",email:"",profilePicURL:"default.png"});
     }
     return {userState,login,signout}
 }
 
 export type MemeCanvasState = {
     toptext: string;
+    toptextID:number;
     bottomtext: string;
+    bottomtextID:number;
     visualFileURL: string;
+    visualFileID:number;
     soundFileURL: string;
+    soundFileID:number;
     isGif:boolean;
 }
 
+
 export const useMemeCanvasState = () => {
-    const [memeState,setMemeState] = useState({toptext:"",bottomtext:"",visualFileURL:"",soundFileURL:"",isGif:false});
+    const [memeState,setMemeState] = useState({
+        toptext:"",
+        toptextID:0,
+        bottomtext:"",
+        bottomtextID:0,
+        visualFileURL:"",
+        visualFileID:0,
+        soundFileURL:"",
+        soundFileID:0,
+        isGif:false});
     return {memeState,setMemeState};
 }
 
 export const useMemeStackState = () => {
-
 
     const {memeState, setMemeState} = useMemeCanvasState();
     const [memeStackState,setMemeStackState] = useState<MemeCanvasState[]>([memeState]);
@@ -94,4 +107,27 @@ export const useMemeStackState = () => {
     }
 
     return {memeState,memeStackPointer,canGoBack,canGoForward,append,goBack,goForward};
+}
+
+export const useVoteState = (vote:number) => {
+    const [upvoted, setUpvoted] = useState(false);
+    const [downvoted, setDownvoted] = useState(false);
+    const [voteCount,setVoteCount] = useState(vote);
+    
+    function setVote(upvote:boolean){
+        setUpvoted(upvote);
+        setDownvoted(!upvote);
+        setVoteCount(vote + (upvote ? 1 : -1))
+    }
+
+    return {voteCount,upvoted,downvoted,setVote};
+}
+
+export type settings = {
+    advancedMode:boolean
+}
+
+export const useSettings = () => {
+    const [advancedMode,setAdvancedMode] = useState(true);
+    return {advancedMode,setAdvancedMode};
 }
