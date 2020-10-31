@@ -69,7 +69,17 @@ const UploadPage :React.FC = (props) =>{
           'Content-Type' : 'multipart/form-data'
         }
       }).then(response => {
-        setMemeState({toptext:"",bottomtext:"",visualFileURL:"",soundFileURL:"",isGif:false})
+        setMemeState({
+          toptext:"",
+          toptextID:0,
+          bottomtext:"",
+          bottomtextID:0,
+          visualFileURL:"",
+          visualFileID:0,
+          soundFileURL:"",
+          soundFileID:0,
+          isGif:false
+        });
         setVisualFile(undefined);
         setSoundFile(undefined);
         setReset("");

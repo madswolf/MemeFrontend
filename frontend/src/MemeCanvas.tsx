@@ -60,7 +60,7 @@ export const MemeCanvas :React.FC<{memeState:MemeCanvasState,className:string}> 
                 if (ctx){
                     
 
-                    let maxDimension = windowDimensions.width < 400 ? windowDimensions.width - 50 : 400;
+                    let maxDimension = windowDimensions.width < 350 ? windowDimensions.width - 50 : 350;
                     
                     if (imageElement.width > maxDimension && imageElement.width >= imageElement.height){
                         memeCanvas.width = maxDimension;
