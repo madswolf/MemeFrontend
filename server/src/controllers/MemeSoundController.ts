@@ -32,15 +32,14 @@ export class MemeSoundController {
     }
 
     async random(request: Request, response: Response, next: NextFunction) {
-        let allMemeSounds = await this.memeSoundRepository.find();
+        let allMemeSounds = await this.memeSoundRepository.find({relations:["votes"]});
         let memeSound =  getFromTableRandom(allMemeSounds) as MemeSound
         let memeURL = url.format({
             protocol:request.protocol,
             host:request.get('host'),
             pathname: ( `${uploadfolder}/${soundsFolder}/${memeSound.filename}`)
         });
-        console.log(memeURL)
-        return {id:memeSound.id,data:memeURL};
+        return {id:memeSound.id,votes:memeSound.votes,data:memeURL};
     }
 
 }

@@ -154,6 +154,8 @@
 .vote-component-container {
   display: flex;
   position: absolute;
+  top: 20%;
+  left:15%;
   width: 300px;
   flex-direction: column;
   justify-content: left;
@@ -170,6 +172,7 @@
 }
 
 .vote-component{
+  padding: 3vh;
   display: flex;
   justify-content: left;
   align-items: center;
@@ -192,12 +195,12 @@
 }
 
 .normal-vote{
-  width: 50px;
+  width: calc(10px + 5vmin);
   height: auto;
 }
 
 .small-vote{
-  width: 25px;
+  width: calc(10px + 3vmin);;
   height: auto;
 }
 

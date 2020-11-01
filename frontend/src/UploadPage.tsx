@@ -72,12 +72,16 @@ const UploadPage :React.FC = (props) =>{
         setMemeState({
           toptext:"",
           toptextID:0,
+          toptextVotes:0,
           bottomtext:"",
           bottomtextID:0,
+          bottomtextVotes:0,
           visualFileURL:"",
           visualFileID:0,
+          visualVotes:0,
           soundFileURL:"",
           soundFileID:0,
+          soundVotes:0,
           isGif:false
         });
         setVisualFile(undefined);

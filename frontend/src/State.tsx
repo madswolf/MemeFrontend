@@ -42,12 +42,16 @@ export const useUserState = () => {
 export type MemeCanvasState = {
     toptext: string;
     toptextID:number;
+    toptextVotes:number,
     bottomtext: string;
     bottomtextID:number;
+    bottomtextVotes:number,
     visualFileURL: string;
     visualFileID:number;
+    visualVotes:number,
     soundFileURL: string;
     soundFileID:number;
+    soundVotes:number,
     isGif:boolean;
 }
 
@@ -56,12 +60,16 @@ export const useMemeCanvasState = () => {
     const [memeState,setMemeState] = useState({
         toptext:"",
         toptextID:0,
+        toptextVotes:0,
         bottomtext:"",
         bottomtextID:0,
+        bottomtextVotes:0,
         visualFileURL:"",
         visualFileID:0,
+        visualVotes:0,
         soundFileURL:"",
         soundFileID:0,
+        soundVotes:0,
         isGif:false});
     return {memeState,setMemeState};
 }

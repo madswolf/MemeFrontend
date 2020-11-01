@@ -10,6 +10,7 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
       res.locals.jwtPayload = jwtPayload;
     } catch (error) {
       res.status(401).send();
+      console.log("bruh")
       return;
     }
     const { userId, username } = jwtPayload;
