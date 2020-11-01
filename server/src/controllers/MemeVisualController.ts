@@ -32,7 +32,7 @@ export class MemeVisualController {
     }
 
     async random(request: Request, response: Response, next: NextFunction) {
-        let allMemeVisuals = await this.memeVisualRepository.find();
+        let allMemeVisuals = await this.memeVisualRepository.find({relations:["votes"]});
         let memeVisual =  getFromTableRandom(allMemeVisuals) as MemeVisual
         let memeURL = url.format({
             protocol:request.protocol,
@@ -40,6 +40,6 @@ export class MemeVisualController {
             pathname: ( `${uploadfolder}/${visualsFolder}/${memeVisual.filename}`)
         });
 
-        return {id:memeVisual.id,data:memeURL};
+        return {id:memeVisual.id,votes:memeVisual.votes,data:memeURL};
     }
 }

@@ -85,7 +85,7 @@ class VoteController{
       }
     }
     try {
-        element = await elementRepository.findOneOrFail(ids[0]);
+        element = await elementRepository.findOneOrFail(parseInt(ids[0]));
     } catch (error) {
         res.setHeader("error","Element not found");
         res.status(404).send();

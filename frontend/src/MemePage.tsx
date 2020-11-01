@@ -24,19 +24,19 @@ const MemeControleButton : React.FC<{isAllowed:boolean,className:string,isRight:
     return button;
 }
 
-const MemePage :React.FC<settings & {isLoggedIn:boolean}> = (props) =>{
+const MemePage :React.FC<settings & {isLoggedIn:boolean,token:string}> = (props) =>{
     
     const CHANCE_OF_TOPTEXT = 75;
     const CHANCE_OF_SOUND = 25;
     const chance_OF_BOTTOMTEXT = 75;
     
     const {memeState,memeStackPointer,canGoBack,canGoForward,append,goBack,goForward} = useMemeStackState();
-    async function getResourceOnChance(fetchURL:string,chance:number):Promise<{id:number,data:string}>{
+    async function getResourceOnChance(fetchURL:string,chance:number):Promise<{id:number,votes:number,data:string}>{
         if( Math.floor(Math.random() * 100) < chance){
             return fetch(fetchURL,{method:'GET'})
             .then(response => response.json())
         }else {
-            return {id:0,data:""};
+            return {id:0, votes:0, data:""};
         }
     }
 
@@ -49,10 +49,11 @@ const MemePage :React.FC<settings & {isLoggedIn:boolean}> = (props) =>{
             for(var i = 0 ; i < ids.length; i++){
                 formdata.append("ids",ids[i].toString());
             }
-
-            axios.post(window.location.href +'s',formdata, {
+            console.log(window.location.protocol + '//' + window.location.hostname +`/vote/`);
+            axios.post(window.location.protocol + '//' + window.location.hostname +`/vote/`,formdata, {
                 headers: {
-                  'Content-Type' : 'multipart/form-data'
+                  'Content-Type' : 'multipart/form-data',
+                  'auth' : props.token
                 } 
             })
             .then(response => console.log(response));
@@ -67,12 +68,16 @@ const MemePage :React.FC<settings & {isLoggedIn:boolean}> = (props) =>{
         append({
             toptext:toptextResource.data,
             toptextID:toptextResource.id,
+            toptextVotes:toptextResource.votes,
             bottomtext:bottomtextResource.data,
             bottomtextID:bottomtextResource.id,
+            bottomtextVotes:bottomtextResource.votes,
             visualFileURL:visualResource.data,
             visualFileID:visualResource.id,
+            visualVotes:visualResource.votes,
             soundFileURL:soundResource.data,
             soundFileID:soundResource.id,
+            soundVotes:soundResource.votes,
             isGif:visualResource.data.endsWith('.gif')
         });
     }
@@ -84,23 +89,27 @@ const MemePage :React.FC<settings & {isLoggedIn:boolean}> = (props) =>{
             memeState.bottomtextID,
             memeState.soundFileID
         ]);
+    var handleToptextVote = handleVote("toptext",[memeState.toptextID]);
+    var handleBottomtextVote = handleVote("bottomtext",[memeState.bottomtextID]);
+    var handleVisualVote = handleVote("visual",[memeState.visualFileID]);
+    var handlesoundVote = handleVote("sound",[memeState.soundFileID]);
 
     var voteList = (
         <div className="vote-component-container">
             <li key={0} className="vote-component">
-                <Votebuttons voteCount={0} isLoggedIn={props.isLoggedIn} size="small-vote" vote={() => handleVote("toptext",[memeState.toptextID])}/>
+                <Votebuttons voteCount={0} isLoggedIn={props.isLoggedIn} size="small-vote" vote={handleToptextVote}/>
                 <h3>toptext</h3>
             </li>
             <li key={1} className="vote-component" >
-                <Votebuttons voteCount={0} isLoggedIn={props.isLoggedIn} size="small-vote" vote={() => handleVote("bottomtext",[memeState.bottomtextID])}/>
+                <Votebuttons voteCount={0} isLoggedIn={props.isLoggedIn} size="small-vote" vote={handleBottomtextVote}/>
                 <h3>bottomtext</h3>
             </li>
             <li key={2} className="vote-component">
-                <Votebuttons voteCount={0} isLoggedIn={props.isLoggedIn} size="small-vote" vote={() => handleVote("visual",[memeState.visualFileID])}/>
+                <Votebuttons voteCount={0} isLoggedIn={props.isLoggedIn} size="small-vote" vote={handleVisualVote}/>
                 <h3>visual</h3>
             </li>
             <li key={2} className="vote-component">
-                <Votebuttons voteCount={0} isLoggedIn={props.isLoggedIn} size="small-vote" vote={() => handleVote("sound",[memeState.soundFileID])}/>
+                <Votebuttons voteCount={0} isLoggedIn={props.isLoggedIn} size="small-vote" vote={handlesoundVote}/>
                 <h3>sound</h3>
             </li>
         </div>     
