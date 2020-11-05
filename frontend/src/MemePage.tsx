@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Icon, IconButton, List } from 'rsuite';
+import { Button, Icon, IconButton } from 'rsuite';
 import axios from 'axios';
 import { MemeDisplayer } from './MemeDisplayer';
 import {  settings, useMemeStackState } from './State';
@@ -30,7 +30,8 @@ const MemePage :React.FC<settings & {isLoggedIn:boolean,token:string}> = (props)
     const CHANCE_OF_SOUND = 25;
     const chance_OF_BOTTOMTEXT = 75;
     
-    const {memeState,memeStackPointer,canGoBack,canGoForward,append,goBack,goForward} = useMemeStackState();
+    const {memeCanvasState,memeStackPointer,canGoBack,canGoForward,memeVote,visualVote,toptextVote,bottomtextVote,soundVote,setMemeVote,setVisualVote,setToptextVote,setBottomtextVote,setSoundVote,append,goBack,goForward} = useMemeStackState();
+
     async function getResourceOnChance(fetchURL:string,chance:number):Promise<{id:number,votes:number,data:string}>{
         if( Math.floor(Math.random() * 100) < chance){
             return fetch(fetchURL,{method:'GET'})
@@ -56,7 +57,8 @@ const MemePage :React.FC<settings & {isLoggedIn:boolean,token:string}> = (props)
                   'auth' : props.token
                 } 
             })
-            .then(response => console.log(response));
+            .then(response => {
+            });
         }
     }
 
@@ -65,53 +67,70 @@ const MemePage :React.FC<settings & {isLoggedIn:boolean,token:string}> = (props)
         const soundResource = await getResourceOnChance(`${window.location.href}/random/sound`,CHANCE_OF_SOUND);
         const toptextResource = await getResourceOnChance(`${window.location.href}/random/toptext`,CHANCE_OF_TOPTEXT);
         const bottomtextResource = await getResourceOnChance(`${window.location.href}/random/bottomtext`,chance_OF_BOTTOMTEXT);
-        append({
-            toptext:toptextResource.data,
-            toptextID:toptextResource.id,
-            toptextVotes:toptextResource.votes,
-            bottomtext:bottomtextResource.data,
-            bottomtextID:bottomtextResource.id,
-            bottomtextVotes:bottomtextResource.votes,
-            visualFileURL:visualResource.data,
-            visualFileID:visualResource.id,
-            visualVotes:visualResource.votes,
-            soundFileURL:soundResource.data,
-            soundFileID:soundResource.id,
-            soundVotes:soundResource.votes,
-            isGif:visualResource.data.endsWith('.gif')
-        });
+        append(
+            {
+                toptext:toptextResource.data,
+                toptextID:toptextResource.id,
+                toptextVotes:visualResource.votes,
+                bottomtext:bottomtextResource.data,
+                bottomtextID:bottomtextResource.id,
+                bottomtextVotes:bottomtextResource.votes,
+                visualFileURL:visualResource.data,
+                visualFileID:visualResource.id,
+                visualVotes:visualResource.votes,
+                soundFileURL:soundResource.data,
+                soundFileID:soundResource.id,
+                soundVotes:soundResource.votes,
+                isGif:visualResource.data.endsWith('.gif')
+            },
+            {
+                meme:undefined,
+                visual:undefined,
+                toptext:undefined,
+                bottomtext:undefined,
+                sound:undefined
+            }
+        );
     }
 
-    var handleMemeVote = handleVote("meme", 
-        [
-            memeState.visualFileID,
-            memeState.toptextID,
-            memeState.bottomtextID,
-            memeState.soundFileID
-        ]);
-    var handleToptextVote = handleVote("toptext",[memeState.toptextID]);
-    var handleBottomtextVote = handleVote("bottomtext",[memeState.bottomtextID]);
-    var handleVisualVote = handleVote("visual",[memeState.visualFileID]);
-    var handlesoundVote = handleVote("sound",[memeState.soundFileID]);
+    var memeIds = [memeCanvasState.visualFileID];
+    if (memeCanvasState.toptext) memeIds.push(memeCanvasState.toptextID);
+    if (memeCanvasState.bottomtext) memeIds.push(memeCanvasState.bottomtextID);
+    if (memeCanvasState.soundFileURL) memeIds.push(memeCanvasState.soundFileID);
+
+    var handleMemeVote = handleVote("meme", memeIds);
+    var handleToptextVote = handleVote("toptext",[memeCanvasState.toptextID]);
+    var handleBottomtextVote = handleVote("bottomtext",[memeCanvasState.bottomtextID]);
+    var handleVisualVote = handleVote("visual",[memeCanvasState.visualFileID]);
+    var handlesoundVote = handleVote("sound",[memeCanvasState.soundFileID]);
 
     var voteList = (
         <div className="vote-component-container">
             <li key={0} className="vote-component">
-                <Votebuttons voteCount={0} isLoggedIn={props.isLoggedIn} size="small-vote" vote={handleToptextVote}/>
-                <h3>toptext</h3>
+                <Votebuttons state={visualVote} voteCount={memeCanvasState.visualVotes} setVote={setVisualVote} isLoggedIn={props.isLoggedIn} size="small-vote" vote={handleVisualVote}/>
+                <h3>Visual</h3>
             </li>
-            <li key={1} className="vote-component" >
-                <Votebuttons voteCount={0} isLoggedIn={props.isLoggedIn} size="small-vote" vote={handleBottomtextVote}/>
-                <h3>bottomtext</h3>
-            </li>
-            <li key={2} className="vote-component">
-                <Votebuttons voteCount={0} isLoggedIn={props.isLoggedIn} size="small-vote" vote={handleVisualVote}/>
-                <h3>visual</h3>
-            </li>
-            <li key={2} className="vote-component">
-                <Votebuttons voteCount={0} isLoggedIn={props.isLoggedIn} size="small-vote" vote={handlesoundVote}/>
-                <h3>sound</h3>
-            </li>
+            {memeCanvasState.toptext ? 
+                <li key={1} className="vote-component" >
+                    <Votebuttons state={toptextVote} voteCount={memeCanvasState.toptextVotes} setVote={setToptextVote} isLoggedIn={props.isLoggedIn} size="small-vote" vote={handleToptextVote}/>
+                    <h3>Toptext</h3>
+                </li>
+            : null
+            }
+            {memeCanvasState.bottomtext ?
+                <li key={2} className="vote-component">
+                    <Votebuttons state={bottomtextVote} voteCount={memeCanvasState.bottomtextVotes} setVote={setBottomtextVote} isLoggedIn={props.isLoggedIn} size="small-vote" vote={handleBottomtextVote}/>
+                    <h3>Bottomtext</h3>
+                </li>
+            : null
+            }
+            {memeCanvasState.soundFileURL ?
+                <li key={3} className="vote-component">
+                    <Votebuttons state={soundVote} voteCount={memeCanvasState.soundVotes} setVote={setSoundVote} isLoggedIn={props.isLoggedIn} size="small-vote" vote={handlesoundVote}/>
+                    <h3>Sound</h3>
+                </li>
+            : null
+            }
         </div>     
     );
 
@@ -127,8 +146,8 @@ const MemePage :React.FC<settings & {isLoggedIn:boolean,token:string}> = (props)
             </div>
             {props.advancedMode ? voteList : null}
             <div className="random-container">
-                <Votebuttons voteCount={0} isLoggedIn={props.isLoggedIn} size="normal-vote" vote={handleMemeVote}/>       
-                <MemeDisplayer className="Meme-container" memeState={memeState}>
+                <Votebuttons state={memeVote} voteCount={0} setVote={setMemeVote} isLoggedIn={props.isLoggedIn} size="normal-vote" vote={handleMemeVote}/>       
+                <MemeDisplayer className="Meme-container" memeState={memeCanvasState}>
                     <div className="Meme-button-container">
                         <MemeControleButton className="Meme-button" isAllowed={canGoBack} isRight={false} onClick={goBack} />
                         <Button className="Meme-button" appearance="primary" onClick={getRandom}>

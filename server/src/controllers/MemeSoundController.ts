@@ -39,7 +39,7 @@ export class MemeSoundController {
             host:request.get('host'),
             pathname: ( `${uploadfolder}/${soundsFolder}/${memeSound.filename}`)
         });
-        return {id:memeSound.id,votes:memeSound.votes,data:memeURL};
+        return {id:memeSound.id,votes:memeSound.votes.length,data:memeURL};
     }
 
 }

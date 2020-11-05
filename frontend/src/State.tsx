@@ -42,22 +42,22 @@ export const useUserState = () => {
 export type MemeCanvasState = {
     toptext: string;
     toptextID:number;
-    toptextVotes:number,
+    toptextVotes:number;
     bottomtext: string;
     bottomtextID:number;
-    bottomtextVotes:number,
+    bottomtextVotes:number;
     visualFileURL: string;
     visualFileID:number;
-    visualVotes:number,
+    visualVotes:number;
     soundFileURL: string;
     soundFileID:number;
-    soundVotes:number,
+    soundVotes:number;
     isGif:boolean;
 }
 
 
 export const useMemeCanvasState = () => {
-    const [memeState,setMemeState] = useState({
+    const [memeCanvasState,setMemeCanvasState] = useState<MemeCanvasState>({
         toptext:"",
         toptextID:0,
         toptextVotes:0,
@@ -71,64 +71,89 @@ export const useMemeCanvasState = () => {
         soundFileID:0,
         soundVotes:0,
         isGif:false});
-    return {memeState,setMemeState};
+    return {memeCanvasState,setMemeCanvasState};
+}
+
+export type VoteState = {
+    upvoted:boolean,
+    downvoted:boolean,
+    voteCount:number
+}
+
+export type MemeVoteState = {
+    [index:string]:boolean | undefined,
+    meme:boolean | undefined,
+    visual:boolean | undefined,
+    toptext:boolean | undefined,
+    bottomtext:boolean | undefined,
+    sound:boolean | undefined
 }
 
 export const useMemeStackState = () => {
+    const {memeCanvasState, setMemeCanvasState} = useMemeCanvasState();
 
-    const {memeState, setMemeState} = useMemeCanvasState();
-    const [memeStackState,setMemeStackState] = useState<MemeCanvasState[]>([memeState]);
+    const [memeVote,setMemeVote] = useState<boolean>();
+    const [visualVote,setVisualVote] = useState<boolean>();
+    const [toptextVote,setToptextVote] = useState<boolean>();
+    const [bottomtextVote,setBottomtextVote] = useState<boolean>();
+    const [soundVote,setSoundVote] = useState<boolean>();
+
+    const [memeCanvasStackState,setMemCanvaseStackState] = useState([memeCanvasState]);
+    const [memeVoteStackState,setMemeVoteStackState] = useState([{meme:memeVote,visual:visualVote,toptext:toptextVote,bottomtext:bottomtextVote,sound:soundVote}]);
 
     const [memeStackPointer,setMemeStackPointer] = useState(0);
     const [canGoBack,setCanGoBack] = useState(false);
     const [canGoForward,setcanGoForward] = useState(false);
 
-    useEffect(() => {
-        setMemeState(memeStackState[memeStackPointer])
-    });
+    useEffect(() => {   
+        setMemeCanvasState(memeCanvasStackState[memeStackPointer]);
+        var copy = {...memeVoteStackState[memeStackPointer]};
+        setMemeVote(copy.meme)
+        setVisualVote(copy.visual)
+        setToptextVote(copy.toptext)
+        setBottomtextVote(copy.bottomtext)
+        setSoundVote(copy.sound)
+    },[memeStackPointer,memeCanvasStackState]);
     
     useEffect(() =>{
         setCanGoBack(memeStackPointer !== 0);
-    },[memeStackPointer])
+    })
 
     useEffect(() =>{
-        setcanGoForward(memeStackPointer !== (memeStackState.length - 1));
-    },[memeStackPointer,memeStackState.length])
+        setcanGoForward(memeStackPointer !== (memeCanvasStackState.length - 1));
+    })
 
 
-    function append(memeState:MemeCanvasState){
-        if(memeStackState[0].visualFileURL === ""){
-            setMemeStackState([memeState]);
+    function append(newMemeCanvasState:MemeCanvasState,newMemeVoteState:MemeVoteState){
+        if(memeCanvasStackState[0].visualFileURL === ""){
+            setMemCanvaseStackState([newMemeCanvasState]);
+            setMemeVoteStackState([newMemeVoteState]);
         }  else {
-            var copy = [...memeStackState,memeState];
-            setMemeStackState(copy);
+            var copy = [...memeCanvasStackState,newMemeCanvasState];
+            setMemCanvaseStackState(copy);
+            var copy2 = [...memeVoteStackState];
+            copy2[memeStackPointer] = {meme:memeVote,visual:visualVote,toptext:toptextVote,bottomtext:bottomtextVote,sound:soundVote};
+            copy2 = [...copy2,newMemeVoteState];
+            setMemeVoteStackState(copy2);
             setMemeStackPointer(copy.length - 1);
         }
     }
 
     function goBack(){
+        var copy2 = [...memeVoteStackState];
+        copy2[memeStackPointer] = {meme:memeVote,visual:visualVote,toptext:toptextVote,bottomtext:bottomtextVote,sound:soundVote};
+        setMemeVoteStackState(copy2);
         setMemeStackPointer(memeStackPointer - 1);
     }
 
     function goForward(){
+        var copy2 = [...memeVoteStackState];
+        copy2[memeStackPointer] = {meme:memeVote,visual:visualVote,toptext:toptextVote,bottomtext:bottomtextVote,sound:soundVote};
+        setMemeVoteStackState(copy2);
         setMemeStackPointer(memeStackPointer + 1); 
     }
 
-    return {memeState,memeStackPointer,canGoBack,canGoForward,append,goBack,goForward};
-}
-
-export const useVoteState = (vote:number) => {
-    const [upvoted, setUpvoted] = useState(false);
-    const [downvoted, setDownvoted] = useState(false);
-    const [voteCount,setVoteCount] = useState(vote);
-    
-    function setVote(upvote:boolean){
-        setUpvoted(upvote);
-        setDownvoted(!upvote);
-        setVoteCount(vote + (upvote ? 1 : -1))
-    }
-
-    return {voteCount,upvoted,downvoted,setVote};
+    return {memeCanvasState,memeStackPointer,canGoBack,canGoForward,memeVote,visualVote,toptextVote,bottomtextVote,soundVote,setMemeVote,setVisualVote,setToptextVote,setBottomtextVote,setSoundVote,append,goBack,goForward};
 }
 
 export type settings = {
@@ -136,6 +161,6 @@ export type settings = {
 }
 
 export const useSettings = () => {
-    const [advancedMode,setAdvancedMode] = useState(true);
+    const [advancedMode,setAdvancedMode] = useState(false);
     return {advancedMode,setAdvancedMode};
 }
