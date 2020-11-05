@@ -41,7 +41,7 @@ class VoteController{
   static save = async (req: Request, res: Response) => {
     
     let {upvote, ids, type} = req.body;
-
+    console.log(upvote + " " + ids + " " + type)
     if(!(upvote && ids && type)){
         res.status(400).send("Bad request");
         return;
@@ -51,7 +51,7 @@ class VoteController{
     let VoteRepository = getRepository(Vote);
     let vote = new Vote();
     let element;
-
+    let elementId;
     if(type === "meme"){
       let meme = new Meme();
       meme.visual = await getRepository(MemeVisual).findOne(parseInt(ids[0]));
@@ -79,13 +79,15 @@ class VoteController{
       let exists = await query.getOne();
 
       if(exists){
-        ids[0] = exists.id;
+        elementId = exists.id;
       }else{
-        ids[0] = (await getRepository(Meme).save(meme)).id;
+        elementId = (await getRepository(Meme).save(meme)).id;
       }
+    } else {
+      elementId = parseInt(ids);
     }
     try {
-        element = await elementRepository.findOneOrFail(parseInt(ids[0]));
+        element = await elementRepository.findOneOrFail(elementId);
     } catch (error) {
         res.setHeader("error","Element not found");
         res.status(404).send();
@@ -97,7 +99,7 @@ class VoteController{
     if(!vote.user){
       return;
     }
-
+    console.log("boop")
     
     let existingVote = await VoteRepository.findOne({where: {user:vote.user, element:element}})
     

@@ -26,7 +26,7 @@ export const UpLoadButton:React.FC<{toolTipString:string,readyForUpload:boolean,
 
 const UploadPage :React.FC = (props) =>{
   //hooks for state of the form/preview
-  const{memeState,setMemeState} = useMemeCanvasState();
+  const{memeCanvasState,setMemeCanvasState} = useMemeCanvasState();
   const [visualFile,setVisualFile] = useState<File>();
   const [soundFile,setSoundFile] = useState<File>();
 
@@ -57,8 +57,8 @@ const UploadPage :React.FC = (props) =>{
   function handleUpload(){
     if (visualFile){
       let formdata = new FormData();
-      formdata.append("toptext",memeState.toptext);
-      formdata.append("bottomtext",memeState.bottomtext);
+      formdata.append("toptext",memeCanvasState.toptext);
+      formdata.append("bottomtext",memeCanvasState.bottomtext);
       formdata.append("visualFile",visualFile);
       if(soundFile){
         formdata.append("soundFile",soundFile);
@@ -69,7 +69,7 @@ const UploadPage :React.FC = (props) =>{
           'Content-Type' : 'multipart/form-data'
         }
       }).then(response => {
-        setMemeState({
+        setMemeCanvasState({
           toptext:"",
           toptextID:0,
           toptextVotes:0,
@@ -82,8 +82,7 @@ const UploadPage :React.FC = (props) =>{
           soundFileURL:"",
           soundFileID:0,
           soundVotes:0,
-          isGif:false
-        });
+          isGif:false});
         setVisualFile(undefined);
         setSoundFile(undefined);
         setReset("");
@@ -101,12 +100,12 @@ const UploadPage :React.FC = (props) =>{
       if(target.name === 'visualFile')
       {
         fr.onload = () => {
-          setMemeState({...memeState,visualFileURL:(fr.result as string),isGif:(fr.result as string).startsWith('data:image/gif;') })
+          setMemeCanvasState({...memeCanvasState,visualFileURL:(fr.result as string),isGif:(fr.result as string).startsWith('data:image/gif;') })
         };
         setVisualFile(target.files[0])
       } 
       else if (target.name === 'soundFile') {
-        fr.onload = () => setMemeState({...memeState,soundFileURL:(fr.result as string)});
+        fr.onload = () => setMemeCanvasState({...memeCanvasState,soundFileURL:(fr.result as string)});
         setSoundFile(target.files[0])
       }
 
@@ -119,12 +118,12 @@ const UploadPage :React.FC = (props) =>{
       <Form className="Login-form">
           <FormGroup >
             <ControlLabel>Toptext</ControlLabel>
-            <FormControl name="toptext" onChange={(v,e) => setMemeState({...memeState,toptext:v})}/>
+            <FormControl name="toptext" onChange={(v,e) => setMemeCanvasState({...memeCanvasState,toptext:v})}/>
             <HelpBlock tooltip>The toptext of your dank meme</HelpBlock>
           </FormGroup>
           <FormGroup>
             <ControlLabel>Bottomtext</ControlLabel>
-            <FormControl name="bottomtext"  onChange={(v,e) => setMemeState({...memeState,bottomtext:v})}/>
+            <FormControl name="bottomtext"  onChange={(v,e) => setMemeCanvasState({...memeCanvasState,bottomtext:v})}/>
             <HelpBlock tooltip>Pretty self explanatory tbh</HelpBlock>
           </FormGroup>
           <FormGroup>
@@ -142,7 +141,7 @@ const UploadPage :React.FC = (props) =>{
           </FormGroup>
           <MemeLoader isloading={isLoading}/>
       </Form>
-      <MemeDisplayer className="Meme-preview-container" memeState={memeState}></MemeDisplayer>
+      <MemeDisplayer className="Meme-preview-container" memeState={memeCanvasState}></MemeDisplayer>
       <ReactTooltip id="submit" place="top" effect="solid">
         {toolTipString}
       </ReactTooltip>

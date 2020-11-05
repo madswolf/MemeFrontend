@@ -20,7 +20,7 @@ const Header:React.FC<(isLoggedIn & profilePic & signout & {advancedMode:boolean
     userLink = (
     <Dropdown title={UserPicture(props.profilePicURL,"navbar")}>
       <Dropdown.Item componentClass={Link} to={'/User'}>UserPage</Dropdown.Item>
-      <Dropdown.Item onSelect={() => props.setAdvancedMode(true)}>{!props.advancedMode ? "disable advanced mode" : "enable advanced mode"}</Dropdown.Item> 
+      <Dropdown.Item onSelect={() => props.setAdvancedMode(!props.advancedMode)}>{!props.advancedMode ? "disable advanced mode" : "enable advanced mode"}</Dropdown.Item> 
       <Dropdown.Item onSelect={props.signout}>Sign out</Dropdown.Item>
     </Dropdown>
     );
@@ -59,7 +59,7 @@ const App:React.FC = () => {
             <Route exact path='/User' render={() => (userState.isLoggedIn ? (<UserPage isLoggedIn={userState.isLoggedIn} token={userState.token} username={userState.username} profilePicURL={userState.profilePicURL} email={userState.email} login={login}/>) : <Redirect to="/Login"/>)}/>
             <Route path='/user/Login' render={() => (!userState.isLoggedIn ? (<LoginPage login={login} />) : <Redirect to="/User"/>)}/>
             <Route path='/user/forgot-password' render={() => (!userState.isLoggedIn ? (<RecoveryPage />) : <Redirect to="/User"/>)} />
-            <Route path='/Memes' render={() => (<MemePage isLoggedIn={userState.isLoggedIn} token={userState.token} advancedMode={advancedMode}/>)}/>
+            <Route path='/Memes' render={() => (<MemePage isLoggedIn={userState.isLoggedIn } token={userState.token} advancedMode={advancedMode}/>)}/>
             <Route exact path='/user/Signup' render={() => (!userState.isLoggedIn ? (<SignupPage login={login} />) : <Redirect to="/User"/>)}/>
             <Route exact path ="/Upload/Meme" render={() => <UploadPage />}/>
           </body>
