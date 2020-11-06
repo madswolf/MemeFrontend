@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import { getRandom } from './MemePage';
 
 export type isLoggedIn = {
     isLoggedIn:boolean,
@@ -138,7 +139,7 @@ export const useMemeStackState = () => {
             setMemeStackPointer(copy.length - 1);
         }
     }
-
+    
     function goBack(){
         var copy2 = [...memeVoteStackState];
         copy2[memeStackPointer] = {meme:memeVote,visual:visualVote,toptext:toptextVote,bottomtext:bottomtextVote,sound:soundVote};

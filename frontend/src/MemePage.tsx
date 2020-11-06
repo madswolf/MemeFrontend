@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Icon, IconButton } from 'rsuite';
 import axios from 'axios';
 import { MemeDisplayer } from './MemeDisplayer';
-import {  settings, useMemeStackState } from './State';
+import {  MemeCanvasState, MemeVoteState, settings, useMemeStackState } from './State';
 import { Votebuttons } from './VoteButtons';
 
 const MemeControleButton : React.FC<{isAllowed:boolean,className:string,isRight:boolean,onClick():void}> = (props) => {
@@ -24,22 +24,56 @@ const MemeControleButton : React.FC<{isAllowed:boolean,className:string,isRight:
     return button;
 }
 
+export const CHANCE_OF_TOPTEXT = 75;
+export const CHANCE_OF_SOUND = 25;
+export const chance_OF_BOTTOMTEXT = 75;
+
+export async function getResourceOnChance(fetchURL:string,chance:number):Promise<{id:number,votes:number,data:string}>{
+    if( Math.floor(Math.random() * 100) < chance){
+        return fetch(fetchURL,{method:'GET'})
+        .then(response => response.json())
+    }else {
+        return {id:0, votes:0, data:""};
+    }
+}
+
+export async function getRandom(append:(memeState:MemeCanvasState,voteState:MemeVoteState) => void){
+    const visualResource = await getResourceOnChance(`${window.location.href}/random/visual`,100);
+    const soundResource = await getResourceOnChance(`${window.location.href}/random/sound`,CHANCE_OF_SOUND);
+    const toptextResource = await getResourceOnChance(`${window.location.href}/random/toptext`,CHANCE_OF_TOPTEXT);
+    const bottomtextResource = await getResourceOnChance(`${window.location.href}/random/bottomtext`,chance_OF_BOTTOMTEXT);
+    append(
+        {
+            toptext:toptextResource.data,
+            toptextID:toptextResource.id,
+            toptextVotes:visualResource.votes,
+            bottomtext:bottomtextResource.data,
+            bottomtextID:bottomtextResource.id,
+            bottomtextVotes:bottomtextResource.votes,
+            visualFileURL:visualResource.data,
+            visualFileID:visualResource.id,
+            visualVotes:visualResource.votes,
+            soundFileURL:soundResource.data,
+            soundFileID:soundResource.id,
+            soundVotes:soundResource.votes,
+            isGif:visualResource.data.endsWith('.gif')
+        },
+        {
+            meme:undefined,
+            visual:undefined,
+            toptext:undefined,
+            bottomtext:undefined,
+            sound:undefined
+        }
+    );
+}
+
 const MemePage :React.FC<settings & {isLoggedIn:boolean,token:string}> = (props) =>{
     
-    const CHANCE_OF_TOPTEXT = 75;
-    const CHANCE_OF_SOUND = 25;
-    const chance_OF_BOTTOMTEXT = 75;
     
     const {memeCanvasState,memeStackPointer,canGoBack,canGoForward,memeVote,visualVote,toptextVote,bottomtextVote,soundVote,setMemeVote,setVisualVote,setToptextVote,setBottomtextVote,setSoundVote,append,goBack,goForward} = useMemeStackState();
 
-    async function getResourceOnChance(fetchURL:string,chance:number):Promise<{id:number,votes:number,data:string}>{
-        if( Math.floor(Math.random() * 100) < chance){
-            return fetch(fetchURL,{method:'GET'})
-            .then(response => response.json())
-        }else {
-            return {id:0, votes:0, data:""};
-        }
-    }
+    
 
     function handleVote(type:string,ids:number[]){
         return function(upvote:boolean){
@@ -62,36 +96,7 @@ const MemePage :React.FC<settings & {isLoggedIn:boolean,token:string}> = (props)
         }
     }
 
-    async function getRandom(){
-        const visualResource = await getResourceOnChance(`${window.location.href}/random/visual`,100);
-        const soundResource = await getResourceOnChance(`${window.location.href}/random/sound`,CHANCE_OF_SOUND);
-        const toptextResource = await getResourceOnChance(`${window.location.href}/random/toptext`,CHANCE_OF_TOPTEXT);
-        const bottomtextResource = await getResourceOnChance(`${window.location.href}/random/bottomtext`,chance_OF_BOTTOMTEXT);
-        append(
-            {
-                toptext:toptextResource.data,
-                toptextID:toptextResource.id,
-                toptextVotes:visualResource.votes,
-                bottomtext:bottomtextResource.data,
-                bottomtextID:bottomtextResource.id,
-                bottomtextVotes:bottomtextResource.votes,
-                visualFileURL:visualResource.data,
-                visualFileID:visualResource.id,
-                visualVotes:visualResource.votes,
-                soundFileURL:soundResource.data,
-                soundFileID:soundResource.id,
-                soundVotes:soundResource.votes,
-                isGif:visualResource.data.endsWith('.gif')
-            },
-            {
-                meme:undefined,
-                visual:undefined,
-                toptext:undefined,
-                bottomtext:undefined,
-                sound:undefined
-            }
-        );
-    }
+    
 
     var memeIds = [memeCanvasState.visualFileID];
     if (memeCanvasState.toptext) memeIds.push(memeCanvasState.toptextID);
@@ -133,6 +138,11 @@ const MemePage :React.FC<settings & {isLoggedIn:boolean,token:string}> = (props)
             }
         </div>     
     );
+    
+    //on mount do this once
+    useEffect(() => {
+        getRandom(append);
+    },[])
 
     return (
         <div>
@@ -150,7 +160,7 @@ const MemePage :React.FC<settings & {isLoggedIn:boolean,token:string}> = (props)
                 <MemeDisplayer className="Meme-container" memeState={memeCanvasState}>
                     <div className="Meme-button-container">
                         <MemeControleButton className="Meme-button" isAllowed={canGoBack} isRight={false} onClick={goBack} />
-                        <Button className="Meme-button" appearance="primary" onClick={getRandom}>
+                        <Button className="Meme-button" appearance="primary" onClick={() => getRandom(append)}>
                             New meme
                         </Button>    
                         <MemeControleButton className="Meme-button" isAllowed={canGoForward} isRight={true} onClick={goForward} />
