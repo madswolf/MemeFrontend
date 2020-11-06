@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Input } from 'rsuite';
+import { Alert, Button, Input } from 'rsuite';
 import { email, isLoggedIn, login, profilePic, userName } from './State';
 import { MemeLoader } from './UploadPage';
 
@@ -121,7 +121,7 @@ const UserPage:React.FC<(userName & email & profilePic & login & isLoggedIn)> = 
                 <Button className="User-edit-button" appearance="primary" onClick={() => setIsEditing(!isEditing)}>Rediger</Button>
                 :
                 <div>
-                  <Button appearance="ghost" color="red">Slet konto</Button>
+                  <Button appearance="ghost" color="red" onClick={() => Alert.error("Not implemented: too bad")}>Slet konto</Button>
                   <Button appearance="subtle" onClick={() => {setIsEditing(false); setIsEditingPassword(false)} }>Annuller</Button>
                   {!toolTipString? <Button appearance="primary" color="green" onClick={() => handleUpload()}>Gem</Button> : <Button data-tip data-for="submit" appearance="primary" color="green" onClick={() => handleUpload()}>Gem</Button>}
                 </div>

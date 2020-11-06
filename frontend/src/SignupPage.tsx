@@ -34,33 +34,35 @@ const SignupPage:React.FC<login> = (props) => {
   }
   
     return (
-      <Form className="Login-form">
-      <FormGroup>
-        <ControlLabel>Username</ControlLabel>
-        <FormControl name="name" onChange={(v,e) => setUsername(v)}/>
-        <HelpBlock tooltip>Either username or email</HelpBlock>
-      </FormGroup>
-      <FormGroup>
-        <ControlLabel>Email</ControlLabel>
-        <FormControl name="email" type="email" onChange={(v,e) => setEmail(v)}/>
-      </FormGroup>
-      <FormGroup>
-        <ControlLabel>Password</ControlLabel>
-        <FormControl name="password" type="password" onChange={(v,e) => setPassword(v)}/>
-      </FormGroup>
-      <FormGroup>
-        <ControlLabel>re-enter password</ControlLabel>
-        <FormControl name="password2" type="password" onChange={(v,e) => setPassword2(v)}/>
-      </FormGroup>
-      <FormGroup>
-        <ButtonToolbar>
-          <Button block appearance="primary" onClick={handleSignup}>Sign up</Button>
-          <Link to="/Signup" className="Signup-link">
-              <Button block appearance="ghost">Login</Button>
-          </Link>
-        </ButtonToolbar>
-      </FormGroup>
-  </Form>
+      <div className="Login-page">
+        <Form className="Login-form">
+          <FormGroup>
+            <ControlLabel>Username</ControlLabel>
+            <FormControl name="name" onChange={(v,e) => setUsername(v)}/>
+            <HelpBlock tooltip>Either username or email</HelpBlock>
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>Email</ControlLabel>
+            <FormControl name="email" type="email" onChange={(v,e) => setEmail(v)}/>
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>Password</ControlLabel>
+            <FormControl name="password" type="password" onChange={(v,e) => setPassword(v)}/>
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>re-enter password</ControlLabel>
+            <FormControl name="password2" type="password" onChange={(v,e) => setPassword2(v)}/>
+          </FormGroup>
+          <FormGroup>
+            <ButtonToolbar>
+              <Button block appearance="primary" onClick={handleSignup}>Sign up</Button>
+              <Link to="/Signup" className="Signup-link">
+                  <Button block appearance="ghost">Login</Button>
+              </Link>
+            </ButtonToolbar>
+          </FormGroup>
+        </Form>
+      </div>
     );
     
 }
