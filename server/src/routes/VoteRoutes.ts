@@ -1,18 +1,18 @@
 import { Router } from "express";
 import VoteController from "../controllers/VoteController";
-import { checkJwt } from "../middlewares/checkJwt";
+import { checkJWT } from "../middlewares/checkjwt";
 import { checkRole } from "../middlewares/checkRole";
 
 const router = Router();
 
-router.get("/", [checkJwt, checkRole(["ADMIN"])], VoteController.all);
+router.get("/", [checkJWT, checkRole(["ADMIN"])], VoteController.all);
 
 router.get(
   "/:id([0-9]+)",
-  [checkJwt, checkRole(["ADMIN"])],
+  [checkJWT, checkRole(["ADMIN"])],
   VoteController.one
 );
 
-router.post("/", [checkJwt], VoteController.save);
+router.post("/", [checkJWT], VoteController.save);
 
 export default router;

@@ -69,7 +69,7 @@ class UserController{
     let user = new User();
     user.username = username;
     user.email = email;
-    user.profilePicFileName = "default.png";
+    user.profilePicFileName = "default.jpg";
     user.salt = randomStringOfLength(25);
     user.passwordHash = UserController.hashPassword(password,user.salt);
     user.role = "USER";
@@ -255,8 +255,8 @@ class UserController{
       res.status(401).send();
       return;
     }
-    
-    user.passwordHash = randomStringOfLength(10);
+    const tmpPassword = randomStringOfLength(10);
+    user.passwordHash = UserController.hashPassword(tmpPassword,user.salt);
 
     UserRepository.save(user);
     
@@ -272,7 +272,7 @@ class UserController{
       from: process.env.BOTMAIL_EMAIL,
       to: user.email,
       subject: 'Password reset',
-      text: 'Your temporary password is ' + user.passwordHash
+      text: 'Your temporary password is ' + tmpPassword
     };
     
     transporter.sendMail(mailOptions, function(error, info){
@@ -292,6 +292,7 @@ class UserController{
     if (!(username && password)) {
       res.status(400).send();
     }
+    console.log(username)
     let UserRepository = getRepository(User);
 
     let user: User;
@@ -307,7 +308,6 @@ class UserController{
       res.status(401).send();
       return;
     }
-    console.log(user.passwordHash)
     
     if (!UserController.checkIfUnencryptedPasswordIsValid(password,user)) {
       res.setHeader("error","Wrong password");

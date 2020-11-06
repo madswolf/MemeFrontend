@@ -27,14 +27,14 @@ export type signout = {
 
 
 export const useUserState = () => {
-    const [userState,setUserState] = useState({isLoggedIn:false,token:"",username:"LonelyCrab",email:"",profilePicURL:"default.png"});
+    const [userState,setUserState] = useState({isLoggedIn:false,token:"",username:"LonelyCrab",email:"",profilePicURL:"default.jpg"});
     
     function login (userState:(isLoggedIn & userName & profilePic & email)) {
        setUserState(userState);
     }
 
     function signout() {
-        setUserState({isLoggedIn:false,token:"",username:"LoneliestCrab",email:"",profilePicURL:"default.png"});
+        setUserState({isLoggedIn:false,token:"",username:"LoneliestCrab",email:"",profilePicURL:"default.jpg"});
     }
     return {userState,login,signout}
 }
