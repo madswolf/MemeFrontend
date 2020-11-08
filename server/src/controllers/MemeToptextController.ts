@@ -25,14 +25,19 @@ export class MemeToptextController {
             return {you:"suck"};
         }
 
-        let toptextToRemove = await this.memeToptextRepository.findOne(request.params.id);
+        const toptextToRemove = await this.memeToptextRepository.findOne(request.params.id);
         return await this.memeToptextRepository.remove(toptextToRemove);
     }
     
     async random(request: Request, response: Response, next: NextFunction) {
-        let allMemeToptexts = await this.memeToptextRepository.find({relations:["votes"]});
-        let toptext = getFromTableRandom(allMemeToptexts) as MemeToptext;
-        return {id:toptext.id,votes:toptext.votes.length,data:toptext.memetext};
+        const allMemeToptexts = await this.memeToptextRepository.find({relations:["votes"]});
+        const toptext = getFromTableRandom(allMemeToptexts) as MemeToptext;
+        
+        return {
+            id: toptext.id,
+            votes: toptext.votes.length,
+            data: toptext.memetext
+        };
     }
 
 }

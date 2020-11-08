@@ -1,4 +1,4 @@
-import { OneToOne, JoinColumn, ChildEntity, ManyToOne} from "typeorm";
+import { ChildEntity, ManyToOne} from "typeorm";
 import { MemeBottomtext } from "./MemeBottomText";
 import { MemeSound } from "./MemeSound";
 import { MemeToptext } from "./MemeToptext";

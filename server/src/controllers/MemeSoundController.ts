@@ -3,7 +3,7 @@ import {NextFunction, Request, Response} from "express";
 import { MemeSound } from "../entity/MemeSound";
 import { getFromTableRandom } from "./MemeControllerHelperMethods";
 import * as url from 'url';
-import {uploadfolder, soundsFolder, mediaHost} from '../index'
+import {soundsFolder, mediaHost} from '../index'
 
 export class MemeSoundController {
 
@@ -27,19 +27,25 @@ export class MemeSoundController {
             return {you:"suck"};
         }
         
-        let soundToRemove = await this.memeSoundRepository.findOne(request.params.id);
+        const soundToRemove = await this.memeSoundRepository.findOne(request.params.id);
         return await this.memeSoundRepository.remove(soundToRemove);
     }
 
     async random(request: Request, response: Response, next: NextFunction) {
-        let allMemeSounds = await this.memeSoundRepository.find({relations:["votes"]});
-        let memeSound =  getFromTableRandom(allMemeSounds) as MemeSound
-        let memeURL = url.format({
-            protocol:request.protocol,
-            host:mediaHost,
+        const allMemeSounds = await this.memeSoundRepository.find({relations:["votes"]});
+        const memeSound =  getFromTableRandom(allMemeSounds) as MemeSound
+
+        const memeURL = url.format({
+            protocol: "https",
+            host: mediaHost,
             pathname: ( `${soundsFolder}/${memeSound.filename}`)
         });
-        return {id:memeSound.id,votes:memeSound.votes.length,data:memeURL};
+
+        return {
+            id: memeSound.id,
+            votes: memeSound.votes.length,
+            data: memeURL
+        };
     }
 
 }

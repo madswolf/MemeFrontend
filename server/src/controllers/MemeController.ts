@@ -26,8 +26,6 @@ export class MemeController {
     }
 
     async one(request: Request, response: Response, next: NextFunction) {
-        let thing = await this.memeRepository.findOne(request.params.id)
-        console.log(thing.visual);
         return this.memeRepository.findOne(request.params.id);
     }
 
@@ -37,33 +35,39 @@ export class MemeController {
             response.status(413);
             return {error:"Filesize too large"};
         }
+
         if(request.body.toptext.length > 512 || request.body.bottomtext.length > 512){
             response.status(413);
             return {error:"Top/Bottomtext too long"};
         }
         
-        let result = await saveVerifyCompress(request.files.visualFile,visualsFolder,response)
+        const result = await saveVerifyCompress(request.files.visualFile,visualsFolder,response)
         if(result.error){
             return result;
         }
+
         const body = request.body as MemeTextBody 
-        const memevisual = await this.memeVisualRepository.save({filename:result.filename})
-        var meme = new Meme();
+        const memevisual = await this.memeVisualRepository.save({filename: result.filename})
+        const meme = new Meme();
+
         meme.visual = memevisual;
         
         if (body.toptext !== ""){
-            const memetoptext = await this.memeToptextRepository.save({memetext:body.toptext}) 
+            const memetoptext = await this.memeToptextRepository.save({memetext: body.toptext}) 
             meme.topText = memetoptext
         }
+
         if (body.bottomtext !== ""){
-            const memebottomtext =  await this.memeBottomtextRepository.save({memetext:body.bottomtext}) 
+            const memebottomtext =  await this.memeBottomtextRepository.save({memetext: body.bottomtext}) 
             meme.bottomText = memebottomtext
         }
+
         if (request.files.soundFile){
             request.files.soundFile.mv(uploadfolder + '/' + soundsFolder + '/' + request.files.soundFile.name)
-            const memesound = await this.memeSoundRepository.save({filename:request.files.soundFile.name})
+            const memesound = await this.memeSoundRepository.save({filename: request.files.soundFile.name})
             meme.sound = memesound
         }
+
         return this.memeRepository.save(meme);
     }
 
@@ -73,7 +77,7 @@ export class MemeController {
             return {you:"suck"};
         }
         
-        let memeToRemove = await this.memeRepository.findOne(request.params.id);
+        const memeToRemove = await this.memeRepository.findOne(request.params.id);
         return await this.memeRepository.remove(memeToRemove);
     }
 

@@ -7,21 +7,25 @@ import * as MimeTypes from 'mime-types';
 import { Response } from "express";
 
 
-export function getFromTableRandom(table:Object[]) {
+export function getFromTableRandom(table: Object[]) {
     return table[Math.floor(Math.random() * table.length)];
 }
 
-export function randomStringOfLength(length) {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
+export function randomStringOfLength(length: number) {
+
+    let result           = '';
+    const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+
+    for ( let i = 0; i < length; i++ ) {
        result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
+
     return result;
  }
 
-export function compressImage(srcPath:string,outPath:string,fileName:string){
+export function compressImage(srcPath: string, outPath: string, fileName: string){
+
     if(fs.existsSync(outPath + fileName)){
         const id = randomStringOfLength(5);
         fs.renameSync(srcPath + fileName, srcPath + id + fileName);
@@ -49,8 +53,9 @@ export function compressImage(srcPath:string,outPath:string,fileName:string){
     return fileName;
 }
 
-export async function saveVerifyCompress(file:UploadedFile,folder:string,res:Response){
-    var fileName;
+export async function saveVerifyCompress(file: UploadedFile, folder: string, res: Response){
+    let fileName;
+
     if (file.name.length > 100){
         fileName = file.name.substring(0,95);
     }
@@ -59,13 +64,15 @@ export async function saveVerifyCompress(file:UploadedFile,folder:string,res:Res
 
     const type = await FileType.fromFile(`${uploadfolder}/${folder}/`+ '/temp/' + file.name)
 
-        //validation of file type
+    //validation of file type
     if (type.mime.toString() !== file.mimetype || MimeTypes.lookup(file.name) !== type.mime.toString() ){
         fs.unlinkSync(`${uploadfolder}/${folder}/`+ '/temp/' + file.name);
         res.status(415)
         //unsure if this is improper form for returning errors
         return {error:"Mismatch between file mimetype and file extension"};
     }
-    fileName = compressImage(`${uploadfolder}/${folder}/temp/`,`${uploadfolder}/${folder}/`,file.name);
+
+    fileName = compressImage(`${uploadfolder}/${folder}/temp/`, `${uploadfolder}/${folder}/`, file.name);
+    
     return {filename:fileName};
 }
