@@ -57,10 +57,10 @@ createConnection().then(async connection => {
     });
 
     app.use('/user', UserRoutes);
-    app.use('/vote',VoteRoutes)
+    app.use('/vote', VoteRoutes);
 
     if(process.env.ADMIN_USERNAME){
-        let user = new User();
+        const user = new User();
         user.username = process.env.ADMIN_USERNAME;
         user.email = process.env.ADMIN_EMAIL;
         user.profilePicFileName = process.env.ADMIN_PROFILEPIC;
@@ -70,21 +70,17 @@ createConnection().then(async connection => {
         
         user.role = "ADMIN";
         const userRepository = getRepository(User);
+
         try {
             await userRepository.save(user);
           } catch (e) {
             console.log(e);
             return;
         }
-        console.log(user);
 
-    }else {
-        console.log("not")
     }
     
     const httpServer = http.createServer(app);
     httpServer.listen(process.env.PORT);
-
-    console.log(`Express server has started on port ${process.env.PORT}. Open http://localhost:${process.env.PORT}/users to see results`);
 
 }).catch(error => console.log(error));

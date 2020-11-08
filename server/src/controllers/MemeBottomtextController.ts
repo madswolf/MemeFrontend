@@ -26,14 +26,19 @@ export class MemeBotttomtextController {
             return {you:"suck"};
         }
 
-        let bottomtextToRemove = await this.memeBottomtextRepository.findOne(request.params.id);
+        const bottomtextToRemove = await this.memeBottomtextRepository.findOne(request.params.id);
         return await this.memeBottomtextRepository.remove(bottomtextToRemove);
 
     }
 
     async random(request: Request, response: Response, next: NextFunction) {
-        let allMemeBottomtexts = await this.memeBottomtextRepository.find({relations:["votes"]});
-        let bottomtext = getFromTableRandom(allMemeBottomtexts) as MemeBottomtext;
-        return {id:bottomtext.id,votes:bottomtext.votes.length,data:bottomtext.memetext};
+        const allMemeBottomtexts = await this.memeBottomtextRepository.find({relations:["votes"]});
+        const bottomtext = getFromTableRandom(allMemeBottomtexts) as MemeBottomtext;
+        
+        return {
+            id: bottomtext.id,
+            votes: bottomtext.votes.length,
+            data: bottomtext.memetext
+        };
     }
 }

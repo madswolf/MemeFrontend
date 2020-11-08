@@ -27,18 +27,25 @@ export class MemeVisualController {
             return {you:"suck"};
         }
 
-        let visualToRemove = await this.memeVisualRepository.findOne(request.params.id);
+        const visualToRemove = await this.memeVisualRepository.findOne(request.params.id);
         return await this.memeVisualRepository.remove(visualToRemove);
     }
 
     async random(request: Request, response: Response, next: NextFunction) {
-        let allMemeVisuals = await this.memeVisualRepository.find({relations:["votes"]});
-        let memeVisual =  getFromTableRandom(allMemeVisuals) as MemeVisual
-        let memeURL = url.format({
-            protocol:request.protocol,
-            host:mediaHost,
+        
+        const allMemeVisuals = await this.memeVisualRepository.find({relations:["votes"]});
+        const memeVisual =  getFromTableRandom(allMemeVisuals) as MemeVisual
+        
+        const memeURL = url.format({
+            protocol: "https",
+            host: mediaHost,
             pathname: ( `${visualsFolder}/${memeVisual.filename}`)
         });
-        return {id:memeVisual.id,votes:memeVisual.votes.length,data:memeURL};
+        
+        return {
+            id: memeVisual.id,
+            votes: memeVisual.votes.length,
+            data: memeURL
+        };
     }
 }
