@@ -3,7 +3,7 @@ import {NextFunction, Request, Response} from "express";
 import { MemeSound } from "../entity/MemeSound";
 import { getFromTableRandom } from "./MemeControllerHelperMethods";
 import * as url from 'url';
-import {uploadfolder, soundsFolder} from '../index'
+import {uploadfolder, soundsFolder, mediaHost} from '../index'
 
 export class MemeSoundController {
 
@@ -36,8 +36,8 @@ export class MemeSoundController {
         let memeSound =  getFromTableRandom(allMemeSounds) as MemeSound
         let memeURL = url.format({
             protocol:request.protocol,
-            host:request.get('host'),
-            pathname: ( `${uploadfolder}/${soundsFolder}/${memeSound.filename}`)
+            host:mediaHost,
+            pathname: ( `${soundsFolder}/${memeSound.filename}`)
         });
         return {id:memeSound.id,votes:memeSound.votes.length,data:memeURL};
     }

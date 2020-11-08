@@ -39,10 +39,10 @@ export async function getResourceOnChance(fetchURL:string,chance:number):Promise
 }
 
 export async function getRandom(append:(memeState:MemeCanvasState,voteState:MemeVoteState) => void){
-    const visualResource = await getResourceOnChance(`https://${apiHost}/random/visual`,100);
-    const soundResource = await getResourceOnChance(`https://${apiHost}/random/sound`,CHANCE_OF_SOUND);
-    const toptextResource = await getResourceOnChance(`https://${apiHost}/random/toptext`,CHANCE_OF_TOPTEXT);
-    const bottomtextResource = await getResourceOnChance(`https://${apiHost}/random/bottomtext`,chance_OF_BOTTOMTEXT);
+    const visualResource = await getResourceOnChance(`https://${apiHost}/meme/random/visual`,100);
+    const soundResource = await getResourceOnChance(`https://${apiHost}/meme/random/sound`,CHANCE_OF_SOUND);
+    const toptextResource = await getResourceOnChance(`https://${apiHost}/meme/random/toptext`,CHANCE_OF_TOPTEXT);
+    const bottomtextResource = await getResourceOnChance(`https://${apiHost}/meme/random/bottomtext`,chance_OF_BOTTOMTEXT);
     append(
         {
             toptext:toptextResource.data,

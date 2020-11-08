@@ -107,22 +107,22 @@ export const Routes = [{
     action: "random"
 }, {
     method: "get",
-    route: "/Memes/random/visual",
+    route: "/meme/random/visual",
     controller: MemeVisualController,
     action: "random"
 }, {
     method: "get",
-    route: "/Memes/random/sound",
+    route: "/meme/random/sound",
     controller: MemeSoundController,
     action: "random"
 }, {
     method: "get",
-    route: "/Memes/random/toptext",
+    route: "/meme/random/toptext",
     controller: MemeToptextController,
     action: "random"
 }, {
     method: "get",
-    route: "/Memes/random/bottomtext",
+    route: "/meme/random/bottomtext",
     controller: MemeBotttomtextController,
     action: "random"
 }];

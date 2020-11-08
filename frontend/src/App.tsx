@@ -13,7 +13,8 @@ import { SignupPage } from './SignupPage';
 import UploadPage from './UploadPage';
 import { RecoveryPage } from './RecoveryPage';
 
-export const apiHost = "api.mads.monster"
+export const apiHost = "api.mads.monster";
+export const mediaHost = "media.mads.monster";
 
 const Header:React.FC<(isLoggedIn & profilePic & signout & {advancedMode:boolean,setAdvancedMode(advanced:boolean):void})> = (props) => {
   let userLink;
