@@ -19,9 +19,9 @@ const LoginPage:React.FC<login> = (props) =>  {
       }
     }).then(response => {
       if(response.status === 200){
-        props.login({...response.data,isLoggedIn:true,profilePicURL:`https://${mediaHost}/${response.data.profilePicFileName}`,token:response.headers['token']})
+        props.login({...response.data,isLoggedIn:true,profilePicURL:`https://${mediaHost}/${response.data.profilePicFileName}`,token:response.data.token})
       }else{
-        console.log(response.headers.error);
+        console.log(response.data.error);
       }
     });
   }

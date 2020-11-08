@@ -30,7 +30,8 @@ export const useUserState = () => {
     const [userState,setUserState] = useState({isLoggedIn:false,token:"",username:"LonelyCrab",email:"",profilePicURL:"default.jpg"});
     
     function login (userState:(isLoggedIn & userName & profilePic & email)) {
-       setUserState(userState);
+        console.log(userState);
+        setUserState(userState);
     }
 
     function signout() {

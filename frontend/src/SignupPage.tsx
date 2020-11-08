@@ -4,7 +4,7 @@ import {Button, ButtonToolbar, ControlLabel, Form, FormControl, FormGroup, HelpB
 import 'rsuite/dist/styles/rsuite-dark.css';
 import axios from 'axios';
 import { login } from './State';
-import { apiHost } from './App';
+import { apiHost, mediaHost } from './App';
 
 const SignupPage:React.FC<login> = (props) => {
   const [username,setUsername] = useState('');
@@ -24,9 +24,9 @@ const SignupPage:React.FC<login> = (props) => {
         }
       }).then(response => {
         if(response.status === 201){
-          props.login({...response.data,isLoggedIn:true,profilePicURL:`/public/${response.data.profilePic}`,token:response.headers['token']})
+          props.login({...response.data,isLoggedIn:true,profilePicURL:`https://${mediaHost}/${response.data.profilePicFileName}`})
         }else{
-          console.log(response.headers.error);
+          console.log(response.data.error);
         }
       });
     }else{

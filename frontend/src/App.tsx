@@ -61,7 +61,7 @@ const App:React.FC = () => {
             <Route exact path='/User' render={() => (userState.isLoggedIn ? (<UserPage isLoggedIn={userState.isLoggedIn} token={userState.token} username={userState.username} profilePicURL={userState.profilePicURL} email={userState.email} login={login}/>) : <Redirect to="/Login"/>)}/>
             <Route path='/user/Login' render={() => (!userState.isLoggedIn ? (<LoginPage login={login} />) : <Redirect to="/User"/>)}/>
             <Route path='/user/forgot-password' render={() => (!userState.isLoggedIn ? (<RecoveryPage />) : <Redirect to="/User"/>)} />
-            <Route path='/Memes' render={() => (<MemePage isLoggedIn={userState.isLoggedIn } token={userState.token} advancedMode={advancedMode}/>)}/>
+            <Route path='/Memes' render={() => (<MemePage userstate={userState} advancedMode={advancedMode} login={login}/>)}/>
             <Route exact path='/user/Signup' render={() => (!userState.isLoggedIn ? (<SignupPage login={login} />) : <Redirect to="/User"/>)}/>
             <Route exact path ="/Upload/Meme" render={() => <UploadPage />}/>
           </body>

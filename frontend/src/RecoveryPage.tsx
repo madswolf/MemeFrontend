@@ -18,11 +18,11 @@ const RecoveryPage:React.FC = (props) =>  {
         setEmail("");
         Alert.success(`Temporary password sent to ${response.data.email}`,3000)
       }else{
-        Alert.error(`Error: ${response.headers.error}`,3000)
+        Alert.error(`Error: ${response.data.error}`,3000)
       }
     }).catch(error => {
       if(error.response){
-        Alert.error(`Error: ${error.response.headers.error}`,3000)
+        Alert.error(`Error: ${error.response.data.error}`,3000)
       }
     });
   }
