@@ -5,6 +5,7 @@ import { MemeLoader } from './UploadPage';
 
 import axios from 'axios';
 import ReactTooltip from 'react-tooltip';
+import { apiHost } from './App';
 
 function UserPicture(profilePicURL:string, classExtension :string) {
   let className = classExtension === "" ? "User-picture" : "User-picture-" + classExtension
@@ -71,7 +72,7 @@ const UserPage:React.FC<(userName & email & profilePic & login & isLoggedIn)> = 
       formdata.append("password",password);
 
       setIsLoading(true);
-      axios.post('/user/update',formdata, {
+      axios.post(`https://${apiHost}/user/update`,formdata, {
         headers: {
           'Content-Type' : 'multipart/form-data',
           'auth' : props.token

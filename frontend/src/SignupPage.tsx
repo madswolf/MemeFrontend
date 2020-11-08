@@ -4,6 +4,7 @@ import {Button, ButtonToolbar, ControlLabel, Form, FormControl, FormGroup, HelpB
 import 'rsuite/dist/styles/rsuite-dark.css';
 import axios from 'axios';
 import { login } from './State';
+import { apiHost } from './App';
 
 const SignupPage:React.FC<login> = (props) => {
   const [username,setUsername] = useState('');
@@ -17,7 +18,7 @@ const SignupPage:React.FC<login> = (props) => {
       formdata.append('username',username);
       formdata.append('email',email);
       formdata.append('password',password);
-      axios.post(window.location.href, formdata, {
+      axios.post(`https://${apiHost}/user/Signup`, formdata, {
         headers: {
           'Content-Type' : 'application/json'
         }
