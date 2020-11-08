@@ -5,6 +5,7 @@ import axios from 'axios';
 import { MemeDisplayer } from './MemeDisplayer';
 import {  MemeCanvasState, MemeVoteState, settings, useMemeStackState } from './State';
 import { Votebuttons } from './VoteButtons';
+import { apiHost } from './App';
 
 const MemeControleButton : React.FC<{isAllowed:boolean,className:string,isRight:boolean,onClick():void}> = (props) => {
     const iconToUse = <Icon icon={props.isRight ? "arrow-right" : "arrow-left"} />; 
@@ -38,10 +39,10 @@ export async function getResourceOnChance(fetchURL:string,chance:number):Promise
 }
 
 export async function getRandom(append:(memeState:MemeCanvasState,voteState:MemeVoteState) => void){
-    const visualResource = await getResourceOnChance(`${window.location.href}/random/visual`,100);
-    const soundResource = await getResourceOnChance(`${window.location.href}/random/sound`,CHANCE_OF_SOUND);
-    const toptextResource = await getResourceOnChance(`${window.location.href}/random/toptext`,CHANCE_OF_TOPTEXT);
-    const bottomtextResource = await getResourceOnChance(`${window.location.href}/random/bottomtext`,chance_OF_BOTTOMTEXT);
+    const visualResource = await getResourceOnChance(`https://${apiHost}/random/visual`,100);
+    const soundResource = await getResourceOnChance(`https://${apiHost}/random/sound`,CHANCE_OF_SOUND);
+    const toptextResource = await getResourceOnChance(`https://${apiHost}/random/toptext`,CHANCE_OF_TOPTEXT);
+    const bottomtextResource = await getResourceOnChance(`https://${apiHost}/random/bottomtext`,chance_OF_BOTTOMTEXT);
     append(
         {
             toptext:toptextResource.data,
@@ -84,8 +85,7 @@ const MemePage :React.FC<settings & {isLoggedIn:boolean,token:string}> = (props)
             for(var i = 0 ; i < ids.length; i++){
                 formdata.append("ids",ids[i].toString());
             }
-            console.log(window.location.protocol + '//' + window.location.hostname +`/vote/`);
-            axios.post(window.location.protocol + '//' + window.location.hostname +`/vote/`,formdata, {
+            axios.post(`https://${apiHost}/vote/`,formdata, {
                 headers: {
                   'Content-Type' : 'multipart/form-data',
                   'auth' : props.token

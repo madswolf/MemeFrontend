@@ -4,6 +4,7 @@ import { useMemeCanvasState } from './State';
 import axios from 'axios';
 import ReactTooltip from 'react-tooltip';
 import { MemeDisplayer } from './MemeDisplayer';
+import { apiHost } from './App';
 
 export const MemeLoader:React.FC<{isloading:boolean}> = (props) => {
   const loader = props.isloading ? (<Loader backdrop content="sending..." vertical/>) : <div></div>
@@ -64,7 +65,7 @@ const UploadPage :React.FC = (props) =>{
         formdata.append("soundFile",soundFile);
       }
       setIsLoading(true);
-      axios.post(window.location.href +'s',formdata, {
+      axios.post(`https://${apiHost}/Upload/Memes`,formdata, {
         headers: {
           'Content-Type' : 'multipart/form-data'
         }

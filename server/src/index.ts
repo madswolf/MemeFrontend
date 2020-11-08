@@ -11,15 +11,14 @@ import UserRoutes from './routes/UserRoutes';
 import VoteRoutes from './routes/VoteRoutes';
 import * as http from 'http';
 import * as cors from 'cors';
-import * as https from 'https'; 
-import * as fs from 'fs';
 import * as dotenv from 'dotenv';
 import { User } from "./entity/User";
 import { randomStringOfLength } from "./controllers/MemeControllerHelperMethods";
 import UserController from "./controllers/UserController";
+import * as fs from 'fs';
 
 
-export const uploadfolder = 'public';
+export const uploadfolder = '/var/www/memeserver/public';
 export const visualsFolder = 'visual';
 export const soundsFolder = 'sound';
 export const profilePicFolder = 'profilePictures';
@@ -35,14 +34,11 @@ createConnection().then(async connection => {
     app.use(bodyParser.urlencoded({extended:true}))
     app.use(cors())
     app.use(fileUpload({createParentPath:true}))
-    app.use(express.static(path.join(__dirname,'build')))
     app.use(express.static(__dirname, {dotfiles: 'allow'}))
     logger('tiny')
     app.use(logger('dev'))
     
-    app.get('/',function(req,res){
-        res.sendFile(path.join(__dirname,'build','index.html'))
-    })
+
     app.use('/public', express.static(`${uploadfolder}`))
 
     // register express routes from defined application routes
@@ -83,21 +79,12 @@ createConnection().then(async connection => {
     }else {
         console.log("not")
     }
-    
-    if (process.env.PATH_TO_CERT){
-        const privateKey = fs.readFileSync(path.join(process.env.PATH_TO_CERT,'privkey.pem'), 'utf8');
-        const certificate = fs.readFileSync(path.join(process.env.PATH_TO_CERT,'cert.pem'), 'utf8');
-        const ca = fs.readFileSync(path.join(process.env.PATH_TO_CERT,'chain.pem'), 'utf8');
-    
-        const credentials = {
-            key: privateKey,
-            cert: certificate,
-            ca: ca
-        };
-        
-        const httpsServer = https.createServer(credentials, app);
-        httpsServer.listen(443);
-    }
+
+    console.log(__dirname)
+    fs.writeFile('/var/www/memeserver/helloworld.txt', 'Hello World!', function (err) {
+        if (err) return console.log(err);
+        console.log('Hello World > helloworld.txt');
+      });
     
     const httpServer = http.createServer(app);
     httpServer.listen(process.env.PORT);

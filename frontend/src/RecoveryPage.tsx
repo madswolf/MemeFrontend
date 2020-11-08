@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import {Alert, Button, ButtonToolbar, ControlLabel, Form, FormControl, FormGroup, HelpBlock} from 'rsuite';
 import 'rsuite/dist/styles/rsuite-dark.css';
 import axios from 'axios';
+import { apiHost } from './App';
 
 const RecoveryPage:React.FC = (props) =>  {
   const [email,setEmail] = useState('');
   function handleRecovery(){
     let formdata = new FormData();
     formdata.append('email',email);
-    axios.post(window.location.href, formdata, {
+    axios.post(`https://${apiHost}/user/forgot-password`, formdata, {
       headers: {
         'Content-Type' : 'application/json'
       }
