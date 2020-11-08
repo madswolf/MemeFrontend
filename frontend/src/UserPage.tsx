@@ -87,7 +87,7 @@ const UserPage:React.FC<(userName & email & profilePic & login & isLoggedIn)> = 
           setProfilePicURL('')
           setNewProfilePic(undefined);
           setNewPassword('');
-          props.login({...response.data,isLoggedIn:true,profilePicURL:`/public/${response.data.profilePicFileName}`,token:response.headers['token']})
+          props.login({...response.data,isLoggedIn:true,profilePicURL:`/public/${response.data.profilePicFileName}`})
         } else {
           setToolTipString(response.headers.error);
         } 

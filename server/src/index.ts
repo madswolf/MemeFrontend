@@ -81,12 +81,6 @@ createConnection().then(async connection => {
     }else {
         console.log("not")
     }
-
-    console.log(__dirname)
-    fs.writeFile('/var/www/memeserver/helloworld.txt', 'Hello World!', function (err) {
-        if (err) return console.log(err);
-        console.log('Hello World > helloworld.txt');
-      });
     
     const httpServer = http.createServer(app);
     httpServer.listen(process.env.PORT);

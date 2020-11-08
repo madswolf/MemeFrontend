@@ -89,8 +89,7 @@ class VoteController{
     try {
         element = await elementRepository.findOneOrFail(elementId);
     } catch (error) {
-        res.setHeader("error","Element not found");
-        res.status(404).send();
+        res.status(404).send({error:"Element not found"});
         return;
     }
 
@@ -114,18 +113,15 @@ class VoteController{
     vote.element = element;
     
     const newToken = UserController.signToken(vote.user);
-      
-    res.setHeader("token", newToken);   
 
     try{
         await VoteRepository.save(vote);
     } catch(e) {
-        res.setHeader("error",e);
-        res.status(400).send();
+        res.status(400).send({error:e});
         return;
     }
 
-    res.status(201).send();
+    res.status(201).send({token:newToken});
     return;
   };
   

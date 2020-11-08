@@ -24,6 +24,7 @@ class UserController{
       process.env.JWTSECRET,
       { expiresIn: "1h" }
       );
+    console.log(token);
     return token;
   }
   
@@ -84,16 +85,13 @@ class UserController{
     try {
       await UserRepository.save(user);
     } catch (e) {
-      res.setHeader("error","username or email already in use");
-      res.status(409).send();
+      res.status(409).send({error:"username or email already in use"});
       return;
     }
 
     const token = UserController.signToken(user);
-    
-    res.setHeader('token',token);
 
-    res.status(201).send(user);
+    res.status(201).send({username:user.username,profilePicFileName:user.profilePicFileName,email:user.email,token:token});
   };
   
   static updateRole = async (req: Request, res: Response) => {
@@ -107,8 +105,7 @@ class UserController{
     try {
       user = await UserRepository.findOneOrFail(id);
     } catch (error) {
-      res.setHeader("error","User not found");
-      res.status(404).send();
+      res.status(404).send({error:"User not found"});
       return;
     }
     
@@ -123,8 +120,7 @@ class UserController{
     try {
       await UserRepository.save(user);
     } catch (e) {
-      res.setHeader("error","username already in use");
-      res.status(409).send();
+      res.status(409).send({error:"username already in use"});
       return;
     }
 
@@ -145,8 +141,7 @@ class UserController{
     }
 
     if (!UserController.checkIfUnencryptedPasswordIsValid(password,user)) {
-      res.setHeader("error","Wrong password");
-      res.status(401).send();
+      res.status(401).send({error:"Wrong password"});
       return;
     }
 
@@ -168,16 +163,14 @@ class UserController{
     let UserRepository = getRepository(User);
 
     if (!UserController.checkIfUnencryptedPasswordIsValid(req.body.password,user)) {
-      res.setHeader("error","Wrong password");
-      res.status(401).send();
+      res.status(401).send({error:"Wrong password"});
       return;
     }
 
     if(req.body.profilePic){
       let newProfilePic = req.body.profilepic;
-      if (newProfilePic.data.length > fileSizeLimit){     
-        res.setHeader("error","Filesize too large");
-        res.status(413).send();
+      if (newProfilePic.data.length > fileSizeLimit){
+        res.status(413).send({error:"Filesize too large"});
         return;
       }
   
@@ -197,8 +190,7 @@ class UserController{
       if(doesExist){
         user.username = req.body.username;
       }else{
-        res.setHeader("error","Username already in use");
-        res.status(409).send();
+        res.status(409).send({error:"Username already in use"});
         return;
       }
     }
@@ -208,8 +200,7 @@ class UserController{
       if(doesExist){
         user.email = req.body.email;
       }else{
-        res.setHeader("error","Email already in use");
-        res.status(409).send();
+        res.status(409).send({error:"Email already in use"});
         return;
       }
     }
@@ -218,8 +209,7 @@ class UserController{
       user.passwordHash = UserController.hashPassword(req.body.newPassword,user.salt);
       const errors = await validate(user);
       if (errors.length > 0) {
-        res.setHeader("error","Password must be at least 7 characters long");
-        res.status(400).send();
+        res.status(400).send({error:"Password must be at least 7 characters long"});
         return;
       }
     }
@@ -227,15 +217,13 @@ class UserController{
     try {
       await UserRepository.save(user);
     } catch (e) {
-      res.setHeader("error",e);
-      return res.status(409).send();
+      return res.status(409).send({error:e});
     }
 
 
     const newToken = UserController.signToken(user);
-      
-    res.setHeader("token", newToken);   
-    res.status(204).send(user)
+
+    res.status(204).send({username:user.username,profilePicFileName:user.profilePicFileName,email:user.email,token:newToken});
     return;
   }
 
@@ -251,8 +239,7 @@ class UserController{
     try {
       user = await UserRepository.findOneOrFail({ where: [{ email:email },{ username:email}] });
     } catch (id) {
-      res.setHeader("error","No account with that email or username exists");
-      res.status(401).send();
+      res.status(401).send({error:"No account with that email or username exists"});
       return;
     }
     const tmpPassword = randomStringOfLength(10);
@@ -310,15 +297,13 @@ class UserController{
     }
     
     if (!UserController.checkIfUnencryptedPasswordIsValid(password,user)) {
-      res.setHeader("error","Wrong password");
-      res.status(401).send();
+      res.status(401).send({error:"Wrong password"});
       return;
     }
     
     const token = UserController.signToken(user);
     
-    res.setHeader("token", token);   
-    res.send(user);
+    res.send({username:user.username,profilePicFileName:user.profilePicFileName,email:user.email,token:token});
     return;
   };
   
