@@ -4,7 +4,7 @@ import {Button, ButtonToolbar, ControlLabel, Form, FormControl, FormGroup, HelpB
 import 'rsuite/dist/styles/rsuite-dark.css';
 import axios from 'axios';
 import { login } from './State';
-import { apiHost } from './App';
+import { apiHost, mediaHost } from './App';
 
 const LoginPage:React.FC<login> = (props) =>  {
   const [username,setUsername] = useState('');
@@ -13,13 +13,13 @@ const LoginPage:React.FC<login> = (props) =>  {
     let formdata = new FormData();
     formdata.append('username',username);
     formdata.append('password',password);
-    axios.post(`https://${apiHost}/memes`, formdata, {
+    axios.post(`https://${apiHost}/user/login`, formdata, {
       headers: {
         'Content-Type' : 'application/json'
       }
     }).then(response => {
       if(response.status === 200){
-        props.login({...response.data,isLoggedIn:true,profilePicURL:`/public/${response.data.profilePicFileName}`,token:response.headers['token']})
+        props.login({...response.data,isLoggedIn:true,profilePicURL:`https://${mediaHost}/${response.data.profilePicFileName}`,token:response.headers['token']})
       }else{
         console.log(response.headers.error);
       }

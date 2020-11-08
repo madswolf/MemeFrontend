@@ -23,6 +23,8 @@ export const visualsFolder = 'visual';
 export const soundsFolder = 'sound';
 export const profilePicFolder = 'profilePictures';
 export const fileSizeLimit = 5000000;
+export const apiHost = "api.mads.monster";
+export const mediaHost = "media.mads.monster";
 
 createConnection().then(async connection => {
 
