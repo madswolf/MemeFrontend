@@ -24,7 +24,6 @@ class UserController{
       process.env.JWTSECRET,
       { expiresIn: "1h" }
       );
-    console.log(token);
     return token;
   }
   

@@ -43,7 +43,7 @@ export class MemeSoundController {
 
         return {
             id: memeSound.id,
-            votes: memeSound.votes.length,
+            votes: memeSound.votes.reduce(function(acc,item){return (acc + (item.upvote ? 1 : -1))},0),
             data: memeURL
         };
     }

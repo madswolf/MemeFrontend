@@ -145,7 +145,7 @@ const MemePage: React.FC<
           },
         })
         .then((response) => {
-          props.login({ ...props.userstate, token: response.data.token });
+          props.login({ ...props.userstate, token: response.token });
         });
     };
   }

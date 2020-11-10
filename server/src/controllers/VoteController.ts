@@ -103,26 +103,26 @@ class VoteController{
     }
     
     const existingVote = await VoteRepository.findOne({where: {user: vote.user, element: element}})
+    const newToken = UserController.signToken(vote.user);
     
     if(existingVote){
         existingVote.upvote = upvote;
         VoteRepository.save(existingVote);
-        res.status(201).send();
+        res.status(201).send({token: newToken});
         return;
     }
 
-    vote.upvote = upvote;
+    vote.upvote = upvote.toLowerCase() == 'true';
     vote.element = element;
     
-    const newToken = UserController.signToken(vote.user);
 
     try{
         await VoteRepository.save(vote);
     } catch(e) {
+        console.log("error" + e)
         res.status(400).send({error: e});
         return;
     }
-
     res.status(201).send({token: newToken});
     return;
   };
