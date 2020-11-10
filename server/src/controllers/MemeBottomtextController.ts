@@ -37,7 +37,7 @@ export class MemeBotttomtextController {
         
         return {
             id: bottomtext.id,
-            votes: bottomtext.votes.length,
+            votes: bottomtext.votes.reduce(function(acc,item){return (acc + (item.upvote ? 1 : -1))},0),
             data: bottomtext.memetext
         };
     }

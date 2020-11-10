@@ -35,7 +35,7 @@ export class MemeToptextController {
         
         return {
             id: toptext.id,
-            votes: toptext.votes.length,
+            votes: toptext.votes.reduce(function(acc,item){return (acc + (item.upvote ? 1 : -1))},0),
             data: toptext.memetext
         };
     }

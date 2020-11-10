@@ -41,10 +41,10 @@ export class MemeVisualController {
             host: mediaHost,
             pathname: ( `${visualsFolder}/${memeVisual.filename}`)
         });
-        
+
         return {
             id: memeVisual.id,
-            votes: memeVisual.votes.length,
+            votes: memeVisual.votes.reduce(function(acc,item){return (acc + (item.upvote ? 1 : -1))},0),
             data: memeURL
         };
     }
