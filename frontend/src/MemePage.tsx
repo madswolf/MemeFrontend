@@ -129,25 +129,41 @@ const MemePage: React.FC<
   } = useMemeStackState();
 
   function handleVote(type: string, ids: number[]) {
-    return function (upvote: boolean) {
+    return function (upvote: boolean | undefined) {
+      
       const formdata = new FormData();
       formdata.append('type', type);
-      formdata.append('upvote', JSON.stringify(upvote));
-
+      
       for (let i = 0; i < ids.length; i++) {
         formdata.append('ids', ids[i].toString());
       }
-      axios
+      const headers =  {
+        'Content-Type': 'multipart/form-data',
+        auth: props.userstate.token,
+      }
+
+      var token = "";
+
+      if (upvote !== undefined){
+        formdata.append('upvote', JSON.stringify(upvote));
+        axios
         .post(`https://${apiHost}/vote/`, formdata, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            auth: props.userstate.token,
-          },
+          headers
         })
         .then((response) => {
-          props.login({ ...props.userstate, token: response.token });
+          token = response.data.token;
         });
-    };
+      } else {
+        axios
+        .delete(`https://${apiHost}/vote/`, {
+            headers
+        })
+        .then((response) => {
+          token = response.data.token;
+        });
+      } 
+      props.login({ ...props.userstate, token: token });
+    }
   }
 
   const memeIds = [memeCanvasState.visualFileID];
