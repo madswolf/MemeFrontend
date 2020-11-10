@@ -15,4 +15,6 @@ router.get(
 
 router.post("/", [checkJWT], VoteController.save);
 
+router.delete("/", [checkJWT], VoteController.remove);
+
 export default router;
