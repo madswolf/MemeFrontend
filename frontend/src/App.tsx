@@ -8,7 +8,7 @@ import { Dropdown, Nav, Navbar } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-dark.css';
 import logo from './mads_monster_logo.png';
 import HomePage from './HomePage';
-import { isLoggedIn, profilePic, signout, useSettings, useUserState } from './State';
+import { isLoggedIn, profilePic, signout, useConfig, useUserState } from './State';
 import { SignupPage } from './SignupPage';
 import UploadPage from './UploadPage';
 import { RecoveryPage } from './RecoveryPage';
@@ -67,74 +67,74 @@ const Header: React.FC<
 
 const App: React.FC = () => {
   const { userState, login, signout } = useUserState();
-  const { advancedMode, setAdvancedMode } = useSettings();
+  const { advancedMode, setAdvancedMode } = useConfig();
   return (
     <Router>
-      <div className="App">
-        <Header
-          isLoggedIn={userState.isLoggedIn}
-          advancedMode={advancedMode}
-          setAdvancedMode={setAdvancedMode}
-          token={userState.token}
-          profilePicURL={userState.profilePicURL}
-          signout={signout}
-        />
-        <body className="App-body">
-          <Route
-            exact={true}
-            path="/"
-            render={() => (
-              <HomePage
-                isLoggedIn={userState.isLoggedIn}
-                token={userState.token}
-                username={userState.username}
-              />
-            )}
+        <div className="App">
+          <Header
+            isLoggedIn={userState.isLoggedIn}
+            advancedMode={advancedMode}
+            setAdvancedMode={setAdvancedMode}
+            token={userState.token}
+            profilePicURL={userState.profilePicURL}
+            signout={signout}
           />
-          <Route
-            exact={true}
-            path="/User"
-            render={() =>
-              userState.isLoggedIn ? (
-                <UserPage
+          <body className="App-body">
+            <Route
+              exact={true}
+              path="/"
+              render={() => (
+                <HomePage
                   isLoggedIn={userState.isLoggedIn}
                   token={userState.token}
                   username={userState.username}
-                  profilePicURL={userState.profilePicURL}
-                  email={userState.email}
-                  login={login}
                 />
-              ) : (
-                <Redirect to="/Login" />
-              )
-            }
-          />
-          <Route
-            path="/user/Login"
-            render={() =>
-              !userState.isLoggedIn ? <LoginPage login={login} /> : <Redirect to="/User" />
-            }
-          />
-          <Route
-            path="/user/forgot-password"
-            render={() => (!userState.isLoggedIn ? <RecoveryPage /> : <Redirect to="/User" />)}
-          />
-          <Route
-            path="/Memes"
-            render={() => (
-              <MemePage userstate={userState} advancedMode={advancedMode} login={login} />
-            )}
-          />
-          <Route
-            exact={true}
-            path="/user/Signup"
-            render={() =>
-              !userState.isLoggedIn ? <SignupPage login={login} /> : <Redirect to="/User" />
-            }
-          />
-          <Route exact={true} path="/Upload/Meme" render={() => <UploadPage />} />
-        </body>
-      </div>
+              )}
+            />
+            <Route
+              exact={true}
+              path="/User"
+              render={() =>
+                userState.isLoggedIn ? (
+                  <UserPage
+                    isLoggedIn={userState.isLoggedIn}
+                    token={userState.token}
+                    username={userState.username}
+                    profilePicURL={userState.profilePicURL}
+                    email={userState.email}
+                    login={login}
+                  />
+                ) : (
+                  <Redirect to="/Login" />
+                )
+              }
+            />
+            <Route
+              path="/user/Login"
+              render={() =>
+                !userState.isLoggedIn ? <LoginPage login={login} /> : <Redirect to="/User" />
+              }
+            />
+            <Route
+              path="/user/forgot-password"
+              render={() => (!userState.isLoggedIn ? <RecoveryPage /> : <Redirect to="/User" />)}
+            />
+            <Route
+              path="/Memes"
+              render={() => (
+                <MemePage userstate={userState} advancedMode={advancedMode} login={login} />
+              )}
+            />
+            <Route
+              exact={true}
+              path="/user/Signup"
+              render={() =>
+                !userState.isLoggedIn ? <SignupPage login={login} /> : <Redirect to="/User" />
+              }
+            />
+            <Route exact={true} path="/Upload/Meme" render={() => <UploadPage />} />
+          </body>
+        </div>
     </Router>
   );
 };

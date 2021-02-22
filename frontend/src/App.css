@@ -161,6 +161,16 @@
   justify-content: left;
 }
 
+.config-component-container {
+  display: flex;
+  position: absolute;
+  top: 20%;
+  right:15%;
+  width: 300px;
+  flex-direction: column;
+  justify-content: right;
+}
+
 .vote-container {
   display: inline-block;
 }

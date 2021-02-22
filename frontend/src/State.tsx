@@ -1,4 +1,5 @@
 import { EffectCallback, useEffect, useState } from 'react';
+import {setCookie, getCookie} from './cookies'
 
 export type isLoggedIn = {
   isLoggedIn: boolean;
@@ -186,9 +187,40 @@ export type settings = {
   advancedMode: boolean;
 };
 
-export const useSettings = () => {
-  const [advancedMode, setAdvancedMode] = useState(false);
-  return { advancedMode, setAdvancedMode };
-};
-
 export const useMountEffect = (fun: EffectCallback) => useEffect(fun, []);
+
+export const useConfig = () => {
+    const defaultConfig = {
+      advancedMode:false,
+      soundChance:25,
+      toptextChance:75,
+      bottomtextChance:75
+    }
+    const raw = getCookie("config")
+    const config = raw ? JSON.parse(raw) : defaultConfig;
+    const [advancedMode, setAdvancedMode] = useState(config.advancedMode)
+    const [soundChance, setsoundChance] = useState(config.soundChance)
+    const [toptextChance, settoptextChance] = useState(config.toptextChance)
+    const [bottomtextChance, setbottomtextChance] = useState(config.bottomtextChance)
+
+    useEffect(() => {
+      setCookie("config",
+      JSON.stringify({
+        advancedMode:advancedMode,
+        soundChance:soundChance,
+        toptextChance:toptextChance,
+        bottomtextChance:bottomtextChance
+      }));
+    },[advancedMode,soundChance,toptextChance,bottomtextChance]);
+    
+    return {
+      advancedMode,
+      soundChance,
+      toptextChance,
+      bottomtextChance,
+      setAdvancedMode,
+      setsoundChance,
+      settoptextChance,
+      setbottomtextChance
+    }
+}
