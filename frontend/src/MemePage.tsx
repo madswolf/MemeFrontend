@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Icon, IconButton } from 'rsuite';
+import { Button, Icon, IconButton, Input } from 'rsuite';
 import axios from 'axios';
 import { MemeDisplayer } from './MemeDisplayer';
 import {
@@ -14,6 +14,7 @@ import {
   useMemeStackState,
   useMountEffect,
   userName,
+  useConfig
 } from './State';
 import { Votebuttons } from './VoteButtons';
 import { apiHost } from './App';
@@ -56,10 +57,6 @@ const MemeControleButton: React.FC<{
   return button;
 };
 
-export const CHANCE_OF_TOPTEXT = 75;
-export const CHANCE_OF_SOUND = 25;
-export const chance_OF_BOTTOMTEXT = 75;
-
 export async function getResourceOnChance(
   fetchURL: string,
   chance: number
@@ -72,20 +69,21 @@ export async function getResourceOnChance(
 }
 
 export async function getRandom(
-  append: (memeState: MemeCanvasState, voteState: MemeVoteState) => void
+  append: (memeState: MemeCanvasState, voteState: MemeVoteState) => void,
+  config: {soundChance:number, toptextChance:number,bottomtextChance:number}
 ) {
   const visualResource = await getResourceOnChance(`https://${apiHost}/meme/random/visual`, 100);
   const soundResource = await getResourceOnChance(
     `https://${apiHost}/meme/random/sound`,
-    CHANCE_OF_SOUND
+    config.soundChance
   );
   const toptextResource = await getResourceOnChance(
     `https://${apiHost}/meme/random/toptext`,
-    CHANCE_OF_TOPTEXT
+    config.toptextChance
   );
   const bottomtextResource = await getResourceOnChance(
     `https://${apiHost}/meme/random/bottomtext`,
-    chance_OF_BOTTOMTEXT
+    config.bottomtextChance
   );
   append(
     {
@@ -127,6 +125,14 @@ const MemePage: React.FC<
     goBack,
     goForward,
   } = useMemeStackState();
+  const {
+    soundChance,
+    bottomtextChance,
+    toptextChance,
+    setsoundChance,
+    setbottomtextChance,
+    settoptextChance
+  } = useConfig();
 
   function handleVote(type: string, ids: number[]) {
     return function (upvote: boolean | undefined) {
@@ -232,9 +238,29 @@ const MemePage: React.FC<
     </div>
   );
 
+  const configList = (
+    <div className="config-component-container">
+      <h1>Chance of sound</h1>
+      <Input placeholder="75" onChange={function onChange(v,e) {setsoundChance(parseInt(v));console.log(v)}}>
+      </Input>
+      <h1>Chance of toptext</h1>
+      <Input placeholder="75" onChange={function onChange(v,e) {settoptextChance(parseInt(v));console.log(v)}}>
+      </Input>
+      <h1>Chance of bottomtext</h1>
+      <Input placeholder="75" onChange={function onChange(v,e) {setbottomtextChance(parseInt(v));console.log(v)}}>
+      </Input>
+    </div>
+  );
+
+  const config = {
+    soundChance:soundChance,
+    toptextChance:toptextChance,
+    bottomtextChance:bottomtextChance,
+  }
+
   // on mount do this once
   useMountEffect(function AppendInitialMeme() {
-    getRandom(append);
+    getRandom(append,config);
   });
 
   return (
@@ -269,7 +295,7 @@ const MemePage: React.FC<
               className="Meme-button"
               appearance="primary"
               onClick={function GetRandomAppend() {
-                getRandom(append);
+                getRandom(append,config);
               }}
             >
               New meme
@@ -284,6 +310,7 @@ const MemePage: React.FC<
           <h1>{memeStackPointer}</h1>
         </MemeDisplayer>
       </div>
+      {props.advancedMode ? configList : null}
     </div>
   );
 };
