@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Icon, IconButton, Input } from 'rsuite';
+import { Button, Col, Icon, IconButton, InputNumber, Row, Slider } from 'rsuite';
 import axios from 'axios';
 import { MemeDisplayer } from './MemeDisplayer';
 import {
@@ -56,6 +56,41 @@ const MemeControleButton: React.FC<{
   }
   return button;
 };
+
+const MemeConfigGroup : React.FC<{
+  name:String;
+  numValue:number;
+  setNumValue(num:number): void;
+}> = (props) => {
+  return (
+    <div>
+      <h2>{props.name}</h2>
+      <Row>
+      <Col md={20}>
+        <Slider
+          progress
+          tooltip={true}
+          style={{ marginTop: 16 }}
+          value={props.numValue}
+          onChange={value => {
+            props.setNumValue(value);
+          }}
+        />
+      </Col>
+      <Col md={4}>
+        <InputNumber
+          min={0}
+          max={100}
+          value={props.numValue}
+          onChange={value => {
+            props.setNumValue(props.numValue);
+          }}
+        />
+      </Col>
+    </Row>
+    </div>
+  );
+}
 
 export async function getResourceOnChance(
   fetchURL: string,
@@ -240,15 +275,9 @@ const MemePage: React.FC<
 
   const configList = (
     <div className="config-component-container">
-      <h1>Chance of sound</h1>
-      <Input placeholder="75" onChange={function onChange(v,e) {setsoundChance(parseInt(v));console.log(v)}}>
-      </Input>
-      <h1>Chance of toptext</h1>
-      <Input placeholder="75" onChange={function onChange(v,e) {settoptextChance(parseInt(v));console.log(v)}}>
-      </Input>
-      <h1>Chance of bottomtext</h1>
-      <Input placeholder="75" onChange={function onChange(v,e) {setbottomtextChance(parseInt(v));console.log(v)}}>
-      </Input>
+      <MemeConfigGroup name="Sound" numValue={soundChance} setNumValue={setsoundChance}></MemeConfigGroup>
+      <MemeConfigGroup name="Toptext" numValue={toptextChance} setNumValue={settoptextChance}></MemeConfigGroup>
+      <MemeConfigGroup name="Bottomtext" numValue={bottomtextChance} setNumValue={setbottomtextChance}></MemeConfigGroup>
     </div>
   );
 
