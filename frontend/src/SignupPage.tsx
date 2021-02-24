@@ -15,7 +15,7 @@ import axios from 'axios';
 import { login } from './State';
 import { apiHost, mediaHost } from './App';
 
-const SignupPage: React.FC<login> = (props) => {
+const SignupPage: React.FC<{login:login}> = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');

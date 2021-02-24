@@ -8,23 +8,25 @@ import { Dropdown, Nav, Navbar } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-dark.css';
 import logo from './mads_monster_logo.png';
 import HomePage from './HomePage';
-import { isLoggedIn, profilePic, signout, useConfig, useUserState } from './State';
+import { signout, useConfig, userstate, useUserState } from './State';
 import { SignupPage } from './SignupPage';
 import UploadPage from './UploadPage';
 import { RecoveryPage } from './RecoveryPage';
 
-export const apiHost = 'api.mads.monster';
+export const apiHost = 'localhost';
 export const mediaHost = 'media.mads.monster';
 
 const Header: React.FC<
-  isLoggedIn &
-    profilePic &
-    signout & { advancedMode: boolean; setAdvancedMode(advanced: boolean): void }
-> = (props) => {
+{
+  userState:userstate;
+  signout:signout;
+  advancedMode: boolean;
+  setAdvancedMode(advanced: boolean): void;
+}> = (props) => {
   let userLink;
-  if (props.isLoggedIn) {
+  if (props.userState.isLoggedIn) {
     userLink = (
-      <Dropdown title={UserPicture(props.profilePicURL, 'navbar')}>
+      <Dropdown title={UserPicture(props.userState.profilePicURL, 'navbar')}>
         <Dropdown.Item componentClass={Link} to={'/User'}>
           UserPage
         </Dropdown.Item>
@@ -72,11 +74,9 @@ const App: React.FC = () => {
     <Router>
         <div className="App">
           <Header
-            isLoggedIn={userState.isLoggedIn}
+            userState={userState}
             advancedMode={advancedMode}
             setAdvancedMode={setAdvancedMode}
-            token={userState.token}
-            profilePicURL={userState.profilePicURL}
             signout={signout}
           />
           <body className="App-body">
@@ -86,7 +86,6 @@ const App: React.FC = () => {
               render={() => (
                 <HomePage
                   isLoggedIn={userState.isLoggedIn}
-                  token={userState.token}
                   username={userState.username}
                 />
               )}

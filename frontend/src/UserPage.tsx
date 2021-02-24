@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Alert, Button, Input } from 'rsuite';
-import { email, isLoggedIn, login, profilePic, userName } from './State';
+import { login, profilePic } from './State';
 import { MemeLoader } from './UploadPage';
 
 import axios from 'axios';
@@ -16,7 +16,14 @@ function UserPicture(profilePicURL: string, classExtension: string) {
   );
 }
 
-const UserPage: React.FC<userName & email & profilePic & login & isLoggedIn> = (props) => {
+const UserPage: React.FC<{
+  username:string;
+  email:string; 
+  profilePicURL:string;
+  login:login;
+  isLoggedIn:boolean;
+  token:string;
+}> = (props) => {
   // state for editing user
   const [isEditing, setIsEditing] = useState(false);
   const [editedUserName, setEditedUserName] = useState(props.username);
@@ -94,7 +101,7 @@ const UserPage: React.FC<userName & email & profilePic & login & isLoggedIn> = (
         .post(`https://${apiHost}/user/update`, formdata, {
           headers: {
             'Content-Type': 'multipart/form-data',
-            auth: props.token,
+            auth: props,
           },
         })
         .then((response) => {

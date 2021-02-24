@@ -2,9 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-dark.css';
-import { isLoggedIn, userName } from './State';
 
-const UserGreeting: React.FC<userName> = (props) => {
+const UserGreeting: React.FC<{username:string}> = (props) => {
   return (
     <div className="Greeting">
       <h1>Welcome back {props.username}!</h1>
@@ -26,7 +25,7 @@ const GuestGreeting: React.FC = (props) => {
   );
 };
 
-const Greeting: React.FC<isLoggedIn & userName> = (props) => {
+const Greeting: React.FC<{isLoggedIn:boolean; username:string}> = (props) => {
   if (props.isLoggedIn) {
     return <UserGreeting username={props.username} />;
   } else {
@@ -34,7 +33,7 @@ const Greeting: React.FC<isLoggedIn & userName> = (props) => {
   }
 };
 
-const HomePage: React.FC<isLoggedIn & userName> = (props) => {
+const HomePage: React.FC<{isLoggedIn:boolean; username:string}> = (props) => {
   return <div className="Home-page">{Greeting(props)}</div>;
 };
 

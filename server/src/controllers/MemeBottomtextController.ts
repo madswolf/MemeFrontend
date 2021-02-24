@@ -12,7 +12,13 @@ export class MemeBotttomtextController {
     }
 
     async one(request: Request, response: Response, next: NextFunction) {
-        return this.memeBottomtextRepository.findOne(request.params.id);
+        const memeVisual = await this.memeBottomtextRepository.findOne(request.params.id,{relations:["votes"]});
+
+        return {
+            id: memeVisual.id,
+            votes: memeVisual.votes.reduce(function(acc,item){return (acc + (item.upvote ? 1 : -1))},0),
+            data: memeVisual.memetext
+        };
     }
 
     async save(request: Request, response: Response, next: NextFunction) {

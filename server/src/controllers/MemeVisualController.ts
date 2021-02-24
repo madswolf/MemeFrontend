@@ -14,7 +14,19 @@ export class MemeVisualController {
     }
 
     async one(request: Request, response: Response, next: NextFunction) {
-        return this.memeVisualRepository.findOne(request.params.id);
+        const memeVisual = await this.memeVisualRepository.findOne(request.params.id,{relations:["votes"]});
+
+        const memeURL = url.format({
+            protocol: "https",
+            host: mediaHost,
+            pathname: ( `${visualsFolder}/${memeVisual.filename}`)
+        });
+
+        return {
+            id: memeVisual.id,
+            votes: memeVisual.votes.reduce(function(acc,item){return (acc + (item.upvote ? 1 : -1))},0),
+            data: memeURL
+        };
     }
 
     async save(request: Request, response: Response, next: NextFunction) {
