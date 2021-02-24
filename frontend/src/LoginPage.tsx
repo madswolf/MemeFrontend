@@ -15,7 +15,7 @@ import axios from 'axios';
 import { login } from './State';
 import { apiHost, mediaHost } from './App';
 
-const LoginPage: React.FC<login> = (props) => {
+const LoginPage: React.FC<{login:login}> = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   function handleLogin() {
@@ -23,7 +23,7 @@ const LoginPage: React.FC<login> = (props) => {
     formdata.append('username', username);
     formdata.append('password', password);
     axios
-      .post(`https://${apiHost}/user/login`, formdata, {
+      .post(`http://${apiHost}/user/login`, formdata, {
         headers: {
           'Content-Type': 'application/json',
         },

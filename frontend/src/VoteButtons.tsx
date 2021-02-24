@@ -1,7 +1,6 @@
 import React from 'react';
 import { ReactComponent as Logo } from './vote.svg';
 import { Alert } from 'rsuite';
-import { isLoggedIn } from './State';
 
 export const Votebuttons: React.FC<{
   state: boolean | undefined;

@@ -1,14 +1,7 @@
 import { EffectCallback, useEffect, useState } from 'react';
 import {setCookie, getCookie} from './cookies'
 
-export type isLoggedIn = {
-  isLoggedIn: boolean;
-  token: string;
-};
 
-export type userName = {
-  username: string;
-};
 
 export type profilePic = {
   profilePicURL: string;
@@ -18,24 +11,29 @@ export type email = {
   email: string;
 };
 
-export type login = {
-  login(userState: isLoggedIn & userName & profilePic & email): void;
-};
+export type userstate = {
+  isLoggedIn:boolean;
+  token:string;
+  username:string;
+  profilePicURL:string;
+  email:string;
+}
 
-export type signout = {
-  signout(): void;
-};
+export type login = (userState:userstate) =>  void;
+
+
+export type signout = () => void
 
 export const useUserState = () => {
   const [userState, setUserState] = useState({
     isLoggedIn: false,
     token: '',
     username: 'LonelyCrab',
-    email: '',
     profilePicURL: 'default.jpg',
+    email: '',
   });
 
-  function login(userState: isLoggedIn & userName & profilePic & email) {
+  function login(userState: userstate) {
     setUserState(userState);
   }
 
@@ -52,6 +50,7 @@ export const useUserState = () => {
 };
 
 export type MemeCanvasState = {
+  [index: string]: string | number | boolean;
   toptext: string;
   toptextID: number;
   toptextVotes: number;
@@ -118,12 +117,15 @@ export const useMemeStackState = () => {
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setcanGoForward] = useState(false);
 
+  //keep current meme/vote state in sync with the current pointer
   useEffect(() => {
     setMemeCanvasState(memeCanvasStackState[memeStackPointer]);
     const copy = { ...memeVoteStackState[memeStackPointer] };
     setVoteState(copy);
   }, [memeStackPointer, memeCanvasStackState, memeVoteStackState, setMemeCanvasState]);
 
+  
+  //enable/disable going backwards/forwards
   useEffect(() => {
     setCanGoBack(memeStackPointer !== 0);
   }, [memeStackPointer]);
@@ -172,19 +174,17 @@ export const useMemeStackState = () => {
 
   return {
     memeCanvasState,
+    memeCanvasStackState,
     memeStackPointer,
     canGoBack,
     canGoForward,
     voteState,
+    setMemeCanvasState,
     vote,
     append,
     goBack,
     goForward,
   };
-};
-
-export type settings = {
-  advancedMode: boolean;
 };
 
 export const useMountEffect = (fun: EffectCallback) => useEffect(fun, []);
