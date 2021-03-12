@@ -176,7 +176,7 @@ const MemeComponentSelector : React.FC<{
   
   var elements : {value:{data:string,id:number},label:string}[] = []
 
-  axios.get(`http://${apiHost}/meme/${props.type.toLowerCase()}s/`)
+  axios.get(`http://${apiHost}/${props.type.toLowerCase()}s/`)
   .then((response) => {elements = response.data.forEach((element: {id:number, filename: string; memetext:string }) => {
     const data = element.filename ? element.filename : element.memetext
     elements.push({
@@ -187,7 +187,7 @@ const MemeComponentSelector : React.FC<{
 
   function handleChange(element:{id:number,data:string} | null,onChange:(value:string,id:number,votes:number) => void){
     if (element){
-    axios.get(`http://${apiHost}/meme/${props.type.toLowerCase()}s/${element.id}`)
+    axios.get(`http://${apiHost}/${props.type.toLowerCase()}s/${element.id}`)
     .then((v) => {
       onChange(v.data.data,element.id,v.data.votes)
     })}else{
@@ -358,17 +358,17 @@ export async function getRandom(
     soundConfigured:boolean,
   }
 ) {
-  let visualResource = await getResourceOnChance(`http://${apiHost}/meme/random/visual`, 100);
+  let visualResource = await getResourceOnChance(`http://${apiHost}/random/visual`, 100);
   let soundResource = await getResourceOnChance(
-    `http://${apiHost}/meme/random/sound`,
+    `http://${apiHost}/random/sound`,
     config.soundChance
   );
   let toptextResource = await getResourceOnChance(
-    `http://${apiHost}/meme/random/toptext`,
+    `http://${apiHost}/random/toptext`,
     config.toptextChance
   );
   let bottomtextResource = await getResourceOnChance(
-    `http://${apiHost}/meme/random/bottomtext`,
+    `http://${apiHost}/random/bottomtext`,
     config.bottomtextChance
   );
 

@@ -13,7 +13,7 @@ import { SignupPage } from './SignupPage';
 import UploadPage from './UploadPage';
 import { RecoveryPage } from './RecoveryPage';
 
-export const apiHost = 'localhost';
+export const apiHost = 'api.mads.monster';
 export const mediaHost = 'media.mads.monster';
 
 const Header: React.FC<
