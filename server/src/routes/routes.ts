@@ -7,82 +7,82 @@ import { MemeVisualController } from "../controllers/MemeVisualController";
 
 export const Routes = [{
     method: "get",
-    route: "/meme/visuals",
+    route: "/visuals",
     controller: MemeVisualController,
     action: "all"
 }, {
     method: "get",
-    route: "/meme/visuals/:id",
+    route: "/visuals/:id",
     controller: MemeVisualController,
     action: "one"
 }, {
     method: "post",
-    route: "/meme/visuals",
+    route: "/visuals",
     controller: MemeVisualController,
     action: "save"
 }, {
     method: "delete",
-    route: "/meme/visuals/:id",
+    route: "/visuals/:id",
     controller: MemeVisualController,
     action: "remove"
 }, {
     method: "get",
-    route: "/meme/sounds",
+    route: "/sounds",
     controller: MemeSoundController,
     action: "all"
 }, {
     method: "get",
-    route: "/meme/sounds/:id",
+    route: "/sounds/:id",
     controller: MemeSoundController,
     action: "one"
 }, {
     method: "post",
-    route: "/meme/sounds",
+    route: "/sounds",
     controller: MemeSoundController,
     action: "save"
 }, {
     method: "delete",
-    route: "/meme/sounds/:id",
+    route: "/sounds/:id",
     controller: MemeSoundController,
     action: "remove"
 }, {
     method: "get",
-    route: "/meme/toptexts/:id",
+    route: "/toptexts/:id",
     controller: MemeToptextController,
     action: "one"
 }, {
     method: "post",
-    route: "/meme/toptexts",
+    route: "/toptexts",
     controller: MemeToptextController,
     action: "save"
 },{
     method: "delete",
-    route: "/meme/toptexts/:id",
+    route: "/toptexts/:id",
     controller: MemeToptextController,
     action: "remove"
 }, {
     method: "get",
-    route: "/meme/bottomtexts",
+    route: "/bottomtexts",
     controller: MemeBotttomtextController,
     action: "all"
 }, {
     method: "get",
-    route: "/meme/toptexts",
+    route: "/toptexts",
     controller: MemeToptextController,
     action: "all"
 }, {
     method: "get",
-    route: "/meme/bottomtexts/:id",
+    route: "/bottomtexts/:id",
     controller: MemeBotttomtextController,
     action: "one"
 }, {
     method: "post",
-    route: "/meme/bottomtexts",
+    route: "/bottomtexts",
     controller: MemeBotttomtextController,
     action: "save"
 },{
     method: "delete",
-    route: "/meme/bottomtexts/:id",
+    route: "/bottomtexts/:id",
     controller: MemeBotttomtextController,
     action: "remove"
 }, {
@@ -107,22 +107,22 @@ export const Routes = [{
     action: "random"
 }, {
     method: "get",
-    route: "/meme/random/visual",
+    route: "/random/visual",
     controller: MemeVisualController,
     action: "random"
 }, {
     method: "get",
-    route: "/meme/random/sound",
+    route: "/random/sound",
     controller: MemeSoundController,
     action: "random"
 }, {
     method: "get",
-    route: "/meme/random/toptext",
+    route: "/random/toptext",
     controller: MemeToptextController,
     action: "random"
 }, {
     method: "get",
-    route: "/meme/random/bottomtext",
+    route: "/random/bottomtext",
     controller: MemeBotttomtextController,
     action: "random"
 }];

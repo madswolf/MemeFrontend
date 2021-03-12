@@ -6,7 +6,9 @@ import { MemeVisual } from "../entity/MemeVisual";
 import { MemeSound } from "../entity/MemeSound";
 import { MemeToptext } from "../entity/MemeToptext";
 import { MemeBottomtext } from "../entity/MemeBottomText";
-import {uploadfolder,visualsFolder,soundsFolder, fileSizeLimit} from '../index';
+import {uploadfolder,visualsFolder,soundsFolder, fileSizeLimit, mediaHost} from '../index';
+import { MemeSoundController } from "./MemeSoundController";
+import * as url from 'url';
 
 type MemeTextBody = {
     toptext:string,
@@ -82,8 +84,22 @@ export class MemeController {
     }
 
     async random(request: Request, response: Response, next: NextFunction) {
-        const allMemes = await this.memeRepository.find()
-        return getFromTableRandom(allMemes) as Meme;
-    }
+        const allMemes = await this.memeRepository.find();
 
+        const visual = getFromTableRandom(await this.memeVisualRepository.find()) as MemeVisual
+        const toptext = getFromTableRandom(await this.memeToptextRepository.find()) as MemeToptext
+        const bottomtext = getFromTableRandom(await this.memeBottomtextRepository.find()) as MemeBottomtext
+
+        const visualURL = url.format({
+            protocol: "https",
+            host: mediaHost,
+            pathname: ( `${visualsFolder}/${visual.filename}`)
+        });
+
+        return {
+            visual:visualURL,
+            toptext:toptext.memetext,
+            bottomtext:bottomtext.memetext
+        }
+    }
 }
