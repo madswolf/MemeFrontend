@@ -1,4 +1,4 @@
-import {getRepository} from "typeorm";
+import {getRepository,Not,Like, LessThan, Raw} from "typeorm";
 import {NextFunction, Request, Response} from "express";
 import {Meme} from "../entity/Meme";
 import { getFromTableRandom, saveVerifyCompress } from "./MemeControllerHelperMethods";
@@ -9,6 +9,7 @@ import { MemeBottomtext } from "../entity/MemeBottomText";
 import {uploadfolder,visualsFolder,soundsFolder, fileSizeLimit, mediaHost} from '../index';
 import { MemeSoundController } from "./MemeSoundController";
 import * as url from 'url';
+
 
 type MemeTextBody = {
     toptext:string,
@@ -83,12 +84,13 @@ export class MemeController {
         return await this.memeRepository.remove(memeToRemove);
     }
 
+    //This is a custom endpoint made for Hydrobot, so filters are applied
     async random(request: Request, response: Response, next: NextFunction) {
         const allMemes = await this.memeRepository.find();
 
-        const visual = getFromTableRandom(await this.memeVisualRepository.find()) as MemeVisual
-        const toptext = getFromTableRandom(await this.memeToptextRepository.find()) as MemeToptext
-        const bottomtext = getFromTableRandom(await this.memeBottomtextRepository.find()) as MemeBottomtext
+        const visual = getFromTableRandom(await this.memeVisualRepository.find({filename: Not(Like("%.gif"))})) as MemeVisual
+        const toptext = getFromTableRandom(await this.memeToptextRepository.find({memetext: Raw(alias =>  `char_length(${alias}) < 150`)})) as MemeToptext
+        const bottomtext = getFromTableRandom(await this.memeBottomtextRepository.find({memetext: Raw(alias =>  `char_length(${alias}) < 150`)})) as MemeBottomtext
 
         const visualURL = url.format({
             protocol: "https",

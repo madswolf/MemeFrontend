@@ -40,6 +40,7 @@ class VoteController{
   
   static remove = async (req: Request, res: Response) => {
     const { ids, type} = req.body;
+    console.log(req);
 
     if(!(ids && type)){
       res.status(400).send({error: "Bad request"});
