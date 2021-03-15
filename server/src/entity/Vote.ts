@@ -15,7 +15,7 @@ export class Vote {
     @ManyToOne(() => User, user => user.votes)
     user: User;
 
-    @ManyToOne(() => Votable, Votable => Votable.votes)
+    @ManyToOne(() => Votable, Votable => Votable.votes,{ onDelete: "CASCADE" })
     element: Votable;
 
 }
