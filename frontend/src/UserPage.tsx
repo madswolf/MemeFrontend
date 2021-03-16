@@ -5,7 +5,7 @@ import { MemeLoader } from './UploadPage';
 
 import axios from 'axios';
 import ReactTooltip from 'react-tooltip';
-import { apiHost } from './App';
+import { apiHost, protocol } from './App';
 
 function UserPicture(profilePicURL: string, classExtension: string) {
   const className = classExtension === '' ? 'User-picture' : 'User-picture-' + classExtension;
@@ -98,7 +98,7 @@ const UserPage: React.FC<{
       setIsLoading(true);
 
       axios
-        .post(`https://${apiHost}/user/update`, formdata, {
+        .post(`${protocol}://${apiHost}/user/update`, formdata, {
           headers: {
             'Content-Type': 'multipart/form-data',
             auth: props,

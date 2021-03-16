@@ -14,7 +14,7 @@ import { useMemeCanvasState } from './State';
 import axios from 'axios';
 import ReactTooltip from 'react-tooltip';
 import { MemeDisplayer } from './MemeDisplayer';
-import { apiHost } from './App';
+import { apiHost, protocol } from './App';
 
 export const MemeLoader: React.FC<{ isloading: boolean }> = (props) => {
   const loader = props.isloading ? (
@@ -107,7 +107,7 @@ const UploadPage: React.FC = (props) => {
       setIsLoading(true);
 
       axios
-        .post(`https://${apiHost}/Upload/Memes`, formdata, {
+        .post(`${protocol}://${apiHost}/Upload/Memes`, formdata, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

@@ -40,7 +40,7 @@ class VoteController{
   
   static remove = async (req: Request, res: Response) => {
     const { ids, type} = req.body;
-    console.log(req);
+    console.log(req.body);
 
     if(!(ids && type)){
       res.status(400).send({error: "Bad request"});
@@ -122,10 +122,14 @@ class VoteController{
         return;
     }
 
+    if(upvote === undefined){
+      return VoteController.remove(req,res);
+    }
+
     const elementRepository = getRepository(memeTypeToType[type]);
     const VoteRepository = getRepository(Vote);
     const vote = new Vote();
-    let elementId;
+    let element;
 
     if(type === "meme"){
       const meme = new Meme();
@@ -155,22 +159,20 @@ class VoteController{
       const exists = await query.getOne();
 
       if(exists){
-        elementId = exists.id;
+        element = exists;
       }else{
-        elementId = (await getRepository(Meme).save(meme)).id;
+        element = (await getRepository(Meme).save(meme)).id;
       }
     } else {
-      elementId = parseInt(ids);
-    }
-
-    let element;
-
-    try {
+      let elementId = parseInt(ids);
+      try {
         element = await elementRepository.findOneOrFail(elementId);
-    } catch (error) {
+      } catch (error) {
         res.status(404).send({error: "Element not found"});
         return;
+      }
     }
+    
 
     vote.user = await UserController.verifyUser(res);
 
