@@ -13,7 +13,7 @@ import {
 import 'rsuite/dist/styles/rsuite-dark.css';
 import axios from 'axios';
 import { login } from './State';
-import { apiHost, mediaHost } from './App';
+import { apiHost, mediaHost, protocol } from './App';
 
 const SignupPage: React.FC<{login:login}> = (props) => {
   const [username, setUsername] = useState('');
@@ -29,7 +29,7 @@ const SignupPage: React.FC<{login:login}> = (props) => {
       formdata.append('password', password);
 
       axios
-        .post(`https://${apiHost}/user/Signup`, formdata, {
+        .post(`${protocol}://${apiHost}/user/Signup`, formdata, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -39,7 +39,7 @@ const SignupPage: React.FC<{login:login}> = (props) => {
             props.login({
               ...response.data,
               isLoggedIn: true,
-              profilePicURL: `https://${mediaHost}/${response.data.profilePicFileName}`,
+              profilePicURL: `://${mediaHost}/${response.data.profilePicFileName}`,
             });
           } else {
             Alert.error(response.data.error);

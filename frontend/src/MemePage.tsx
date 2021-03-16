@@ -13,7 +13,7 @@ import {
   userstate
 } from './State';
 import { Votebuttons } from './VoteButtons';
-import { apiHost, mediaHost } from './App';
+import { apiHost, mediaHost, protocol } from './App';
 
 function handleVote(userstate:userstate,login:login,type: string, ids: number[]) {
   return function (upvote: boolean | undefined) {
@@ -31,24 +31,15 @@ function handleVote(userstate:userstate,login:login,type: string, ids: number[])
 
     var token = "";
 
-    if (upvote !== undefined){
-      formdata.append('upvote', JSON.stringify(upvote));
-      axios
-      .post(`http://${apiHost}/vote/`, formdata, {
-        headers
-      })
-      .then((response) => {
-        token = response.data.token;
-      });
-    } else {
-      axios
-      .delete(`http://${apiHost}/vote/`, {
-          headers
-      })
-      .then((response) => {
-        token = response.data.token;
-      });
-    } 
+    formdata.append('upvote', JSON.stringify(upvote));
+    axios
+    .post(`${protocol}://${apiHost}/vote/`, formdata, {
+      headers
+    })
+    .then((response) => {
+      token = response.data.token;
+    });
+   
     login(
       {
         isLoggedIn: userstate.isLoggedIn,
@@ -176,7 +167,7 @@ const MemeComponentSelector : React.FC<{
   
   var elements : {value:{data:string,id:number},label:string}[] = []
 
-  axios.get(`http://${apiHost}/${props.type.toLowerCase()}s/`)
+  axios.get(`${protocol}://${apiHost}/${props.type.toLowerCase()}s/`)
   .then((response) => {elements = response.data.forEach((element: {id:number, filename: string; memetext:string }) => {
     const data = element.filename ? element.filename : element.memetext
     elements.push({
@@ -187,7 +178,7 @@ const MemeComponentSelector : React.FC<{
 
   function handleChange(element:{id:number,data:string} | null,onChange:(value:string,id:number,votes:number) => void){
     if (element){
-    axios.get(`http://${apiHost}/${props.type.toLowerCase()}s/${element.id}`)
+    axios.get(`${protocol}://${apiHost}/${props.type.toLowerCase()}s/${element.id}`)
     .then((v) => {
       onChange(v.data.data,element.id,v.data.votes)
     })}else{
@@ -358,17 +349,17 @@ export async function getRandom(
     soundConfigured:boolean,
   }
 ) {
-  let visualResource = await getResourceOnChance(`http://${apiHost}/random/visual`, 100);
+  let visualResource = await getResourceOnChance(`${protocol}://${apiHost}/random/visual`, 100);
   let soundResource = await getResourceOnChance(
-    `http://${apiHost}/random/sound`,
+    `${protocol}://${apiHost}/random/sound`,
     config.soundChance
   );
   let toptextResource = await getResourceOnChance(
-    `http://${apiHost}/random/toptext`,
+    `${protocol}://${apiHost}/random/toptext`,
     config.toptextChance
   );
   let bottomtextResource = await getResourceOnChance(
-    `http://${apiHost}/random/bottomtext`,
+    `${protocol}://${apiHost}/random/bottomtext`,
     config.bottomtextChance
   );
 
@@ -467,7 +458,7 @@ const MemePage: React.FC<{
   if (memeCanvasState.toptext) memeIds.push(memeCanvasState.toptextID);
   if (memeCanvasState.bottomtext) memeIds.push(memeCanvasState.bottomtextID);
   if (memeCanvasState.soundFileURL) memeIds.push(memeCanvasState.soundFileID);
-  const handleMemeVote = handleVote(props.userstate,props.login,'sound', memeIds);
+  const handleMemeVote = handleVote(props.userstate,props.login,'meme', memeIds);
 
   return (
     <div>

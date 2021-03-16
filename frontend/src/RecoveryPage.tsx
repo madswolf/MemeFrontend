@@ -11,7 +11,7 @@ import {
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-dark.css';
 import axios from 'axios';
-import { apiHost } from './App';
+import { apiHost, protocol } from './App';
 
 const RecoveryPage: React.FC = (props) => {
   const [email, setEmail] = useState('');
@@ -20,7 +20,7 @@ const RecoveryPage: React.FC = (props) => {
     formdata.append('email', email);
 
     axios
-      .post(`https://${apiHost}/user/forgot-password`, formdata, {
+      .post(`${protocol}://${apiHost}/user/forgot-password`, formdata, {
         headers: {
           'Content-Type': 'application/json',
         },

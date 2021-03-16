@@ -13,8 +13,9 @@ import { SignupPage } from './SignupPage';
 import UploadPage from './UploadPage';
 import { RecoveryPage } from './RecoveryPage';
 
-export const apiHost = 'api.mads.monster';
+export const apiHost = 'localhost';
 export const mediaHost = 'media.mads.monster';
+export const protocol = 'http';
 
 const Header: React.FC<
 {
