@@ -2,17 +2,18 @@ import {getRepository} from "typeorm";
 import {NextFunction, Request, Response} from "express";
 import { MemeBottomtext } from "../entity/MemeBottomText";
 import { getFromTableRandom } from "./MemeControllerHelperMethods";
+import { Topic } from "../entity/Topic";
 
 export class MemeBotttomtextController {
 
     private memeBottomtextRepository = getRepository(MemeBottomtext);
 
-    async all(request: Request, response: Response, next: NextFunction) {
+    async all(req: Request, res: Response, next: NextFunction) {
         return this.memeBottomtextRepository.find();
     }
 
-    async one(request: Request, response: Response, next: NextFunction) {
-        const memeVisual = await this.memeBottomtextRepository.findOne(request.params.id,{relations:["votes"]});
+    async one(req: Request, res: Response, next: NextFunction) {
+        const memeVisual = await this.memeBottomtextRepository.findOne(req.params.id,{relations:["votes"]});
 
         return {
             id: memeVisual.id,
@@ -21,24 +22,53 @@ export class MemeBotttomtextController {
         };
     }
 
-    async save(request: Request, response: Response, next: NextFunction) {
-        return this.memeBottomtextRepository.save(request.body);
+    async save(req: Request, res: Response, next: NextFunction) {
+        if(req.params.topic){
+            let {memetext} = req.body
+
+            if(!memetext){
+                res.status(400).send("Bad request");
+                return;
+            }
+            
+            let topic;
+
+            try{
+                topic = getRepository(Topic).findOneOrFail({where: {name: req.params.topic}})
+            } catch (error){
+                res.status(404).send({error: "Topic not found"});
+                return;
+            }
+
+            let bottomText = new MemeBottomtext();
+            bottomText.memetext = memetext;
+            bottomText.topic = topic
+
+            return this.memeBottomtextRepository.save(bottomText)
+        }
+        return this.memeBottomtextRepository.save(req.body);
     }
 
-    async remove(request: Request, response: Response, next: NextFunction) {
+    async remove(req: Request, res: Response, next: NextFunction) {
 
-        if (request.body.SECRET !== process.env.SECRET){
-            response.status(403);
+        if (req.body.SECRET !== process.env.SECRET){
+            res.status(403);
             return {you:"suck"};
         }
 
-        const bottomtextToRemove = await this.memeBottomtextRepository.findOne(request.params.id);
+        const bottomtextToRemove = await this.memeBottomtextRepository.findOne(req.params.id);
         return await this.memeBottomtextRepository.remove(bottomtextToRemove);
 
     }
 
-    async random(request: Request, response: Response, next: NextFunction) {
-        const allMemeBottomtexts = await this.memeBottomtextRepository.find({relations:["votes"]});
+    async random(req: Request, res: Response, next: NextFunction) {
+        let allMemeBottomtexts
+        if(req.params.topic){
+            const topic = await getRepository(Topic).find({where:{name:req.params.name}})
+            allMemeBottomtexts = await this.memeBottomtextRepository.find({where:{topic:topic},relations:["votes"]});
+        }else {
+            allMemeBottomtexts = await this.memeBottomtextRepository.find({relations:["votes"]});
+        }
         const bottomtext = getFromTableRandom(allMemeBottomtexts) as MemeBottomtext;
         
         return {

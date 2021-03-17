@@ -11,7 +11,7 @@ export abstract class Votable {
 
     //subcultures or topics
     @ManyToOne(() => Topic)
-    topic: string; 
+    topic: Topic; 
 
     @OneToMany(() => Vote, vote => vote.element)
     votes: Vote[];

@@ -17,12 +17,12 @@ export const Routes = [{
     action: "one"
 }, {
     method: "post",
-    route: "/visuals",
+    route: "/:topic?/visuals",
     controller: MemeVisualController,
     action: "save"
 }, {
     method: "delete",
-    route: "/visuals/:id",
+    route: "/:topic?/visuals/:id",
     controller: MemeVisualController,
     action: "remove"
 }, {
@@ -37,12 +37,12 @@ export const Routes = [{
     action: "one"
 }, {
     method: "post",
-    route: "/sounds",
+    route: "/:topic?/sounds",
     controller: MemeSoundController,
     action: "save"
 }, {
     method: "delete",
-    route: "/sounds/:id",
+    route: "/:topic?/sounds/:id",
     controller: MemeSoundController,
     action: "remove"
 }, {
@@ -52,12 +52,12 @@ export const Routes = [{
     action: "one"
 }, {
     method: "post",
-    route: "/toptexts",
+    route: "/:topic?/toptexts",
     controller: MemeToptextController,
     action: "save"
 },{
     method: "delete",
-    route: "/toptexts/:id",
+    route: "/:topic?/toptexts/:id",
     controller: MemeToptextController,
     action: "remove"
 }, {
@@ -77,12 +77,12 @@ export const Routes = [{
     action: "one"
 }, {
     method: "post",
-    route: "/bottomtexts",
+    route: "/:topic?/bottomtexts",
     controller: MemeBotttomtextController,
     action: "save"
 },{
     method: "delete",
-    route: "/bottomtexts/:id",
+    route: "/:topic?/bottomtexts/:id",
     controller: MemeBotttomtextController,
     action: "remove"
 }, {
@@ -97,32 +97,32 @@ export const Routes = [{
     action: "one"
 }, {
     method: "post",
-    route: "/upload/memes",
+    route: "/:topic?/upload/memes",
     controller: MemeController,
     action: "save"
 }, {
     method: "get",
-    route: "/random/meme",
+    route: "/:topic?/random/meme",
     controller: MemeController,
     action: "random"
 }, {
     method: "get",
-    route: "/random/visual",
+    route: "/:topic?/random/visual",
     controller: MemeVisualController,
     action: "random"
 }, {
     method: "get",
-    route: "/random/sound",
+    route: "/:topic?/random/sound",
     controller: MemeSoundController,
     action: "random"
 }, {
     method: "get",
-    route: "/random/toptext",
+    route: "/:topic?/random/toptext",
     controller: MemeToptextController,
     action: "random"
 }, {
     method: "get",
-    route: "/random/bottomtext",
+    route: "/:topic?/random/bottomtext",
     controller: MemeBotttomtextController,
     action: "random"
 }];
