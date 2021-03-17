@@ -6,7 +6,7 @@ import * as bodyParser from "body-parser";
 import * as fileUpload from 'express-fileupload';
 import * as path from 'path';
 import {Request, Response} from "express";
-import {Routes} from "./routes/routes";
+import {Routes} from "./routes/MemeRoutes";
 import UserRoutes from './routes/UserRoutes';
 import VoteRoutes from './routes/VoteRoutes';
 import * as http from 'http';

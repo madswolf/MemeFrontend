@@ -42,7 +42,6 @@ export class User {
     @IsNotEmpty()
     role: string;
 
-    
     @Column()
     @CreateDateColumn()
     createdAt: Date;

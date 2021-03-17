@@ -1,4 +1,5 @@
-import { Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, TableInheritance } from "typeorm";
+import { Topic } from "./Topic";
 import { Vote } from "./Vote";
 
 @Entity()
@@ -8,7 +9,11 @@ export abstract class Votable {
     @PrimaryGeneratedColumn()
     id: number;
 
+    //subcultures or topics
+    @ManyToOne(() => Topic)
+    topic: string; 
+
     @OneToMany(() => Vote, vote => vote.element)
     votes: Vote[];
-
+    
 }
