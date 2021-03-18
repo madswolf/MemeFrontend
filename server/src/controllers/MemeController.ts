@@ -1,7 +1,7 @@
 import {getRepository,Not,Like, LessThan, Raw} from "typeorm";
 import {NextFunction, Request, Response} from "express";
 import {Meme} from "../entity/Meme";
-import { getFromTableRandom, saveVerifyCompress } from "./MemeControllerHelperMethods";
+import { getElement, getFromTableRandom, getTopic, isModerator, saveVerifyCompress, verifyUser } from "./MemeControllerHelperMethods";
 import { MemeVisual } from "../entity/MemeVisual";
 import { MemeSound } from "../entity/MemeSound";
 import { MemeToptext } from "../entity/MemeToptext";
@@ -10,12 +10,6 @@ import {uploadfolder,visualsFolder,soundsFolder, fileSizeLimit, mediaHost} from 
 import { MemeSoundController } from "./MemeSoundController";
 import * as url from 'url';
 import { Topic } from "../entity/Topic";
-
-
-type MemeTextBody = {
-    toptext:string,
-    bottomtext:string
-}
 
 export class MemeController {
 
@@ -35,6 +29,12 @@ export class MemeController {
 
     async save(req: Request , res: Response, next: NextFunction) {
         //check if any one component is too large
+
+        if (!req.files.visualFile){
+            res.status(400).send("Bad request");
+            return;
+        }
+
         if (req.files.visualFile.data.length > fileSizeLimit || (req.files.soundFile && req.files.soundFile.data.length > fileSizeLimit)){
             res.status(413);
             return {error:"Filesize too large"};
@@ -44,34 +44,63 @@ export class MemeController {
             res.status(413);
             return {error:"Top/Bottomtext too long"};
         }
+        let topic;
+        if(req.params.topic){
+            topic = await getTopic(req,res);
+            if (!topic){
+                return;
+            }
+        }
 
-        let topic = await getRepository(Topic).findOne({where:{name:req.params.topic}});
-        
         const result = await saveVerifyCompress(req.files.visualFile,visualsFolder,res)
         if(result.error){
             return result;
         }
 
-        const body = req.body as MemeTextBody 
-        const memevisual = await this.memeVisualRepository.save({filename: result.filename,topic:topic})
-        let meme = new Meme();
-        meme.topic = topic;
+        const {toptext,bottomtext} = req.body
 
+        let memevisual = new MemeVisual();
+        memevisual.filename = result.filename
+        if(topic){
+            memevisual.topic = topic
+        }
+        
+        memevisual = await this.memeVisualRepository.save(memevisual)
+        let meme = new Meme();
+        
+        if(topic){
+            meme.topic = topic
+        }
         meme.visual = memevisual;
         
-        if (body.toptext !== ""){
-            const memetoptext = await this.memeToptextRepository.save({memetext: body.toptext,topic:topic}) 
+        let memetoptext = new MemeToptext();
+        if (toptext !== ""){
+            memetoptext.memetext = toptext
+            if(topic){
+                memetoptext.topic = topic
+            }
+            memetoptext = await this.memeToptextRepository.save(memetoptext) 
             meme.topText = memetoptext
         }
 
-        if (body.bottomtext !== ""){
-            const memebottomtext =  await this.memeBottomtextRepository.save({memetext: body.bottomtext,topic:topic}) 
+        let memebottomtext = new MemeBottomtext();
+        if (bottomtext !== ""){
+            memebottomtext.memetext = toptext
+            if(topic){
+                memebottomtext.topic = topic
+            }
+            memebottomtext = await this.memeBottomtextRepository.save(memebottomtext) 
             meme.bottomText = memebottomtext
         }
 
+        let memesound = new MemeSound();
         if (req.files.soundFile){
             req.files.soundFile.mv(uploadfolder + '/' + soundsFolder + '/' + req.files.soundFile.name)
-            const memesound = await this.memeSoundRepository.save({filename: req.files.soundFile.name,topic:topic})
+            memesound.filename = req.files.soundFile.name
+            if(topic){
+                memesound.topic = topic
+            }
+            memesound = await this.memeSoundRepository.save(memesound)
             meme.sound = memesound
         }
 
@@ -79,13 +108,45 @@ export class MemeController {
     }
 
     async remove(req: Request, res: Response, next: NextFunction) {
+        let id = req.params.id
+
+        if(!id){
+            res.status(400).send("Bad request");
+            return;
+        }
+
+        if(req.params.topic){
+
+            let topic = await getTopic(req,res,['moderators','owner']);
+            if (!topic){
+                return;
+            }
+           
+            let user = await verifyUser(res);
+            if(!user){
+                return;
+            }
+
+            if(!isModerator(topic,user) && user.role != 'ADMIN'){
+                res.status(401).send({error: "User is not a moderator of this topic"});
+                return;
+            }
+
+            let memeToRemove = await getElement(MemeToptext,req,res,"Meme not found in topic",topic);
+            if(!memeToRemove){
+                return;
+            }
+
+            return this.memeRepository.remove(memeToRemove)
+        }
+
         if (req.body.SECRET !== process.env.SECRET){
             res.status(403);
             return {you:"suck"};
         }
-        
+
         const memeToRemove = await this.memeRepository.findOne(req.params.id);
-        return await this.memeRepository.remove(memeToRemove);
+        return this.memeRepository.remove(memeToRemove);
     }
 
     //This is a custom endpoint made for Hydrobot, so filters are applied

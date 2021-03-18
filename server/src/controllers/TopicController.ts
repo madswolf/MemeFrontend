@@ -8,6 +8,7 @@ import { MemeSound } from "../entity/MemeSound";
 import UserController from "./UserController";
 import { Meme } from "../entity/Meme";
 import { User } from "../entity/User";
+import { signToken, verifyUser } from "./MemeControllerHelperMethods";
 
 
 export class TopicController {
@@ -33,7 +34,7 @@ export class TopicController {
     static async remove (req: Request, res: Response){
 
         const TopicRepository = getRepository(Topic);
-        const user = await UserController.verifyUser(res);
+        const user = await verifyUser(res);
 
         if(!user){
           return;
@@ -54,7 +55,7 @@ export class TopicController {
         }
 
         await TopicRepository.remove(topic);
-        const newToken = UserController.signToken(user);
+        const newToken = signToken(user);
 
         return res.status(204).send({token: newToken});
     }
@@ -63,7 +64,7 @@ export class TopicController {
 
         const TopicRepository = getRepository(Topic);
         
-        let user = await UserController.verifyUser(res);
+        let user = await verifyUser(res);
 
         if(!user){
           return;
@@ -83,7 +84,7 @@ export class TopicController {
             return;
         }
         
-        const newToken = UserController.signToken(user);
+        const newToken = signToken(user);
         res.status(201).send({token: newToken});
         return;
     };
@@ -92,7 +93,7 @@ export class TopicController {
 
         const TopicRepository = getRepository(Topic);
         
-        let user = await UserController.verifyUser(res);
+        let user = await verifyUser(res);
 
         if(!user){
           return;
@@ -127,7 +128,7 @@ export class TopicController {
         topic.moderators.push(moderator);
         TopicRepository.save(topic);
         
-        const newToken = UserController.signToken(user);
+        const newToken = signToken(user);
         res.status(201).send({token: newToken});
         return;
     };

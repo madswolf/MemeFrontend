@@ -8,6 +8,7 @@ import { MemeVisual } from "../entity/MemeVisual";
 import { MemeSound } from "../entity/MemeSound";
 import UserController from "./UserController";
 import { Meme } from "../entity/Meme";
+import { signToken, verifyUser } from "./MemeControllerHelperMethods";
 
 export const memeTypeToType = {
     "bottomtext": MemeBottomtext,
@@ -98,7 +99,7 @@ class VoteController{
         return;
     }
 
-    const user = await UserController.verifyUser(res);
+    const user = await verifyUser(res);
 
     if(!user){
       return;
@@ -107,7 +108,7 @@ class VoteController{
     
     const existingVote = await VoteRepository.findOne({where: {user: user, element: element}})
     await VoteRepository.remove(existingVote);
-    const newToken = UserController.signToken(user);
+    const newToken = signToken(user);
 
     return res.status(204).send({token: newToken});
 
@@ -174,14 +175,14 @@ class VoteController{
     }
     
 
-    vote.user = await UserController.verifyUser(res);
+    vote.user = await verifyUser(res);
 
     if(!vote.user){
       return;
     }
     
     const existingVote = await VoteRepository.findOne({where: {user: vote.user, element: element}})
-    const newToken = UserController.signToken(vote.user);
+    const newToken = signToken(vote.user);
     
     if(existingVote){
         existingVote.upvote = upvote;

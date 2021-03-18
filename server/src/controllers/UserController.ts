@@ -2,11 +2,11 @@ import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 import * as bcrypt from 'bcryptjs';
-import * as jwt from "jsonwebtoken";
 import { User } from "../entity/User";
 import { randomStringOfLength, saveVerifyCompress } from "./MemeControllerHelperMethods";
 import * as nodemailer from 'nodemailer';
 import { fileSizeLimit, profilePicFolder} from '../index';
+import {verifyUser, signToken} from "./MemeControllerHelperMethods"
 
 class UserController{
 
@@ -16,31 +16,6 @@ class UserController{
   
   static checkIfUnencryptedPasswordIsValid(unencryptedPassword: string, user: User) {
     return bcrypt.compareSync(unencryptedPassword + user.salt, user.passwordHash);
-  }
-
-  static signToken(user: User){
-    const token = jwt.sign(
-      { userId: user.id, username: user.username },
-      process.env.JWTSECRET,
-      { expiresIn: "1h" }
-      );
-    return token;
-  }
-  
-  static async verifyUser(res: Response){
-    const id = res.locals.jwtPayload.userId;
-
-    let user: User;
-    const UserRepository = getRepository(User);
-
-    try {
-      user = await UserRepository.findOneOrFail(id);
-    } catch (id) {
-      res.status(401).send();
-      return;
-    }
-
-    return user;
   }
   
   static all = async (req: Request, res: Response) => {
@@ -97,7 +72,7 @@ class UserController{
       return;
     }
 
-    const token = UserController.signToken(user);
+    const token = signToken(user);
 
     res.status(201).send({
       username: user.username,
@@ -149,7 +124,7 @@ class UserController{
       res.status(400).send();
     }
     
-    const user = await UserController.verifyUser(res);
+    const user = await verifyUser(res);
 
     if(!user){
       return;
@@ -169,7 +144,7 @@ class UserController{
 
   static update = async (req: Request, res: Response) => {
 
-    const user = await UserController.verifyUser(res);
+    const user = await verifyUser(res);
 
     if(!user){
       return;
@@ -239,7 +214,7 @@ class UserController{
     }
 
 
-    const newToken = UserController.signToken(user);
+    const newToken = signToken(user);
 
     res.status(204).send({
       username: user.username,
@@ -329,7 +304,7 @@ class UserController{
       return;
     }
     
-    const token = UserController.signToken(user);
+    const token = signToken(user);
     
     res.send({
       username: user.username,

@@ -4,7 +4,11 @@ import * as fs from 'fs';
 import {uploadfolder} from '../index';
 import * as FileType from 'file-type';
 import * as MimeTypes from 'mime-types';
-import { Response } from "express";
+import { Request, Response } from "express";
+import { User } from "../entity/User";
+import * as jwt from "jsonwebtoken";
+import { getRepository } from "typeorm";
+import { Topic } from "../entity/Topic";
 
 
 export function getFromTableRandom(table: Object[]) {
@@ -75,4 +79,59 @@ export async function saveVerifyCompress(file: UploadedFile, folder: string, res
     fileName = compressImage(`${uploadfolder}/${folder}/temp/`, `${uploadfolder}/${folder}/`, file.name);
     
     return {filename:fileName};
+}
+
+export async function verifyUser(res: Response){
+    const id = res.locals.jwtPayload.userId;
+
+    let user: User;
+    const UserRepository = getRepository(User);
+
+    try {
+      user = await UserRepository.findOneOrFail(id);
+    } catch (id) {
+      res.status(401).send();
+      return;
+    }
+
+    return user;
+}
+
+export async function signToken(user: User){
+    const token = jwt.sign(
+      { userId: user.id, username: user.username },
+      process.env.JWTSECRET,
+      { expiresIn: "1h" }
+      );
+    return token;
+  }
+
+export function isModerator(topic:Topic,user:User){
+    return topic.moderators.indexOf(user) > -1 || topic.owner == user
+}
+
+export async function getTopic(req:Request,res:Response,relations:string[] = []){
+    let topic;
+    try{
+        topic = await getRepository(Topic).findOneOrFail({where: {name: req.params.topic},relations:relations})
+    } catch (error){
+        res.status(404).send({error: "Topic not found"});
+        return;
+    }
+    return topic;
+}
+
+export async function getElement(type,req:Request,res:Response,error:string,topic:Topic = undefined){
+    let element;
+    try{
+        if(topic){
+            element = await getRepository(type).findOneOrFail({where:{id:req.params.id,topic:topic}});
+        } else {
+            element = await this.memeSoundRepository.findOneOrFail({where:{id:req.params.id}});
+        }
+    } catch (err){
+        res.status(404).send({error: error});
+        return;
+    }
+    return element;
 }

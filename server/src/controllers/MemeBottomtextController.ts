@@ -1,8 +1,10 @@
 import {getRepository} from "typeorm";
 import {NextFunction, Request, Response} from "express";
 import { MemeBottomtext } from "../entity/MemeBottomText";
-import { getFromTableRandom } from "./MemeControllerHelperMethods";
+import { getElement, getFromTableRandom, getTopic, isModerator } from "./MemeControllerHelperMethods";
 import { Topic } from "../entity/Topic";
+import { checkRole } from "../middlewares/checkRole";
+import {verifyUser} from "./MemeControllerHelperMethods"
 
 export class MemeBotttomtextController {
 
@@ -31,12 +33,8 @@ export class MemeBotttomtextController {
                 return;
             }
             
-            let topic;
-
-            try{
-                topic = getRepository(Topic).findOneOrFail({where: {name: req.params.topic}})
-            } catch (error){
-                res.status(404).send({error: "Topic not found"});
+            let topic = await getTopic(req,res);
+            if (!topic){
                 return;
             }
 
@@ -46,10 +44,44 @@ export class MemeBotttomtextController {
 
             return this.memeBottomtextRepository.save(bottomText)
         }
+
         return this.memeBottomtextRepository.save(req.body);
     }
 
     async remove(req: Request, res: Response, next: NextFunction) {
+
+        let id = req.params.id
+
+        if(!id){
+            res.status(400).send("Bad request");
+            return;
+        }
+
+        if(req.params.topic){
+
+            let topic = await getTopic(req,res,['moderators','owner']);
+            if (!topic){
+                return;
+            }
+
+            let user = await verifyUser(res);
+
+            if(!user){
+                return;
+            }
+
+            if(!isModerator(topic,user) && user.role != 'ADMIN'){
+                res.status(401).send({error: "User is not a moderator of this topic"});
+                return;
+            }
+
+            let bottomtextToRemove = await getElement(MemeBottomtext,req,res,"Toptext not found in topic",topic);
+            if(!bottomtextToRemove){
+                return;
+            }
+
+            return this.memeBottomtextRepository.remove(bottomtextToRemove)
+        }
 
         if (req.body.SECRET !== process.env.SECRET){
             res.status(403);
@@ -57,7 +89,7 @@ export class MemeBotttomtextController {
         }
 
         const bottomtextToRemove = await this.memeBottomtextRepository.findOne(req.params.id);
-        return await this.memeBottomtextRepository.remove(bottomtextToRemove);
+        return this.memeBottomtextRepository.remove(bottomtextToRemove);
 
     }
 
