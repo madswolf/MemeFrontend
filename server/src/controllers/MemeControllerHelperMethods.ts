@@ -110,17 +110,6 @@ export function isModerator(topic:Topic,user:User){
     return topic.moderators.indexOf(user) > -1 || topic.owner == user
 }
 
-export async function getTopic(req:Request,res:Response,relations:string[] = []){
-    let topic;
-    try{
-        topic = await getRepository(Topic).findOneOrFail({where: {name: req.params.topic},relations:relations})
-    } catch (error){
-        res.status(404).send({error: "Topic not found"});
-        return;
-    }
-    return topic;
-}
-
 export async function getElement(type,req:Request,res:Response,error:string,topic:Topic = undefined){
     let element;
     try{
