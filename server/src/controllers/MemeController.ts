@@ -9,6 +9,7 @@ import { MemeBottomtext } from "../entity/MemeBottomText";
 import {uploadfolder,visualsFolder,soundsFolder, fileSizeLimit, mediaHost} from '../index';
 import { MemeSoundController } from "./MemeSoundController";
 import * as url from 'url';
+import { UploadedFile } from "express-fileupload";
 
 
 type MemeTextBody = {
@@ -34,7 +35,7 @@ export class MemeController {
 
     async save(request: Request , response: Response, next: NextFunction) {
         //check if any one component is too large
-        if (request.files.visualFile.data.length > fileSizeLimit || (request.files.soundFile && request.files.soundFile.data.length > fileSizeLimit)){
+        if  ((request.files.visualFile as UploadedFile).data.length > fileSizeLimit || (request.files.soundFile && (request.files.soundFile as UploadedFile).data.length > fileSizeLimit)){
             response.status(413);
             return {error:"Filesize too large"};
         }
@@ -44,7 +45,7 @@ export class MemeController {
             return {error:"Top/Bottomtext too long"};
         }
         
-        const result = await saveVerifyCompress(request.files.visualFile,visualsFolder,response)
+        const result = await saveVerifyCompress((request.files.visualFile as UploadedFile),visualsFolder,response)
         if(result.error){
             return result;
         }
@@ -66,8 +67,8 @@ export class MemeController {
         }
 
         if (request.files.soundFile){
-            request.files.soundFile.mv(uploadfolder + '/' + soundsFolder + '/' + request.files.soundFile.name)
-            const memesound = await this.memeSoundRepository.save({filename: request.files.soundFile.name})
+            (request.files.soundFile as UploadedFile).mv(uploadfolder + '/' + soundsFolder + '/' + (request.files.soundFile as UploadedFile).name)
+            const memesound = await this.memeSoundRepository.save({filename: (request.files.soundFile as UploadedFile).name})
             meme.sound = memesound
         }
 
@@ -83,14 +84,13 @@ export class MemeController {
         const memeToRemove = await this.memeRepository.findOne(request.params.id);
         return await this.memeRepository.remove(memeToRemove);
     }
-
+    
     //This is a custom endpoint made for Hydrobot, so filters are applied
     async random(request: Request, response: Response, next: NextFunction) {
-        const allMemes = await this.memeRepository.find();
-
-        const visual = getFromTableRandom(await this.memeVisualRepository.find({filename: Not(Like("%.gif"))})) as MemeVisual
-        const toptext = getFromTableRandom(await this.memeToptextRepository.find({memetext: Raw(alias =>  `char_length(${alias}) < 150`)})) as MemeToptext
-        const bottomtext = getFromTableRandom(await this.memeBottomtextRepository.find({memetext: Raw(alias =>  `char_length(${alias}) < 150`)})) as MemeBottomtext
+    
+        const visual = getFromTableRandom(await this.memeVisualRepository.find({filename: Not(Like("%.gif"))}), request.params.seed) as MemeVisual
+        const toptext = getFromTableRandom(await this.memeToptextRepository.find({memetext: Raw(alias =>  `char_length(${alias}) < 150`)}), request.params.seed) as MemeToptext
+        const bottomtext = getFromTableRandom(await this.memeBottomtextRepository.find({memetext: Raw(alias =>  `char_length(${alias}) < 150`)}), request.params.seed) as MemeBottomtext
 
         const visualURL = url.format({
             protocol: "https",
@@ -103,5 +103,6 @@ export class MemeController {
             toptext:toptext.memetext,
             bottomtext:bottomtext.memetext
         }
+        
     }
 }

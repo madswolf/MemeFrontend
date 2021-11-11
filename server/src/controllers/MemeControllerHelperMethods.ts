@@ -5,10 +5,23 @@ import {uploadfolder} from '../index';
 import * as FileType from 'file-type';
 import * as MimeTypes from 'mime-types';
 import { Response } from "express";
+import prand from 'pure-rand';
+import { v4 as uuidv4 } from 'uuid';
+import { genSalt } from "bcryptjs";
 
 
-export function getFromTableRandom(table: Object[]) {
-    return table[Math.floor(Math.random() * table.length)];
+export function getFromTableRandom(table: Object[], seed = undefined) {
+    if (seed == undefined){
+        seed = uuidv4();    
+    }
+    var [n,_] = prand.mersenne(hashCode(seed)).next();
+    return table[Math.floor(n % table.length)];
+}
+
+function hashCode(s) {
+    for(var i = 0, h = 0; i < s.length; i++)
+        h = Math.imul(31, h) + s.charCodeAt(i) | 0;
+    return h;
 }
 
 export function randomStringOfLength(length: number) {

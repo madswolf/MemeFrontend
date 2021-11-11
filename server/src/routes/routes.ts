@@ -102,10 +102,11 @@ export const Routes = [{
     action: "save"
 }, {
     method: "get",
-    route: "/random/meme",
+    route: "/random/meme/:seed?",
     controller: MemeController,
     action: "random"
-}, {
+},
+{
     method: "get",
     route: "/random/visual",
     controller: MemeVisualController,
