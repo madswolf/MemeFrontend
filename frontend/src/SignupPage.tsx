@@ -24,15 +24,16 @@ const SignupPage: React.FC<{login:login}> = (props) => {
   function handleSignup() {
     if (password === password2) {
       const formdata = new FormData();
-      formdata.append('username', username);
-      formdata.append('email', email);
-      formdata.append('password', password);
+      formdata.append('Username', username);
+      formdata.append('Email', email);
+      formdata.append('Password', password);
 
       axios
-        .post(`${protocol}://${apiHost}/user/Signup`, formdata, {
+        .post(`${protocol}://${apiHost}/Users/register`, formdata, {
           headers: {
             'Content-Type': 'application/json',
           },
+          validateStatus: status => status < 401
         })
         .then((response) => {
           if (response.status === 201) {
@@ -42,7 +43,7 @@ const SignupPage: React.FC<{login:login}> = (props) => {
               profilePicURL: `://${mediaHost}/${response.data.profilePicFileName}`,
             });
           } else {
-            Alert.error(response.data.error);
+            Alert.error("Username or email already in use");
           }
         });
     } else {

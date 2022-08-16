@@ -1,16 +1,17 @@
 import React from 'react';
 import { ReactComponent as Logo } from './vote.svg';
 import { Alert } from 'rsuite';
+import { Upvote } from './State';
 
 export const Votebuttons: React.FC<{
-  state: boolean | undefined;
+  state: Upvote;
   voteCount: number;
-  setVote(isUpvote: boolean | undefined): void;
+  setVote(isUpvote: Upvote): void;
   size: string;
   isLoggedIn:boolean
-  vote(isUpvote: boolean | undefined): void;
+  vote(isUpvote: Upvote): void;
 }> = (props) => {
-  function handleVote(isUpvote: boolean | undefined) {
+  function handleVote(isUpvote: Upvote) {
     if (props.isLoggedIn) {
       props.setVote(isUpvote);
       props.vote(isUpvote);
@@ -21,14 +22,14 @@ export const Votebuttons: React.FC<{
 
   return (
     <span className="vote-container">
-      <button className="vote" onClick={() => handleVote((props.state === true ? undefined : true))}>
-        <Logo className={(props.state ? 'upvoted' : 'upvote') + ' ' + props.size} />
+      <button className="vote" onClick={() => handleVote((props.state === Upvote.Upvote ? Upvote.Unvote : Upvote.Upvote))}>
+        <Logo className={(props.state === Upvote.Upvote ? 'upvoted' : 'upvote') + ' ' + props.size} />
       </button>
-      <h3>{props.voteCount + (props.state == null ? 0 : props.state ? 1 : -1)}</h3>
-      <button className="vote" onClick={() => handleVote((props.state === false ? undefined : false))}>
+      <h3>{props.voteCount + (props.state === Upvote.Unvote ? 0 : props.state === Upvote.Upvote ? 1 : -1)}</h3>
+      <button className="vote" onClick={() => handleVote((props.state === Upvote.Downvote ? Upvote.Unvote : Upvote.Downvote))}>
         <Logo
           className={
-            (props.state != null && !props.state ? 'downvoted' : 'downvote') + ' ' + props.size
+            (props.state === Upvote.Downvote  ? 'downvoted' : 'downvote') + ' ' + props.size
           }
         />
       </button>

@@ -10,19 +10,20 @@ import {
   useMemeStackState,
   useMountEffect,
   useConfig,
-  userstate
+  userstate,
+  Upvote
 } from './State';
 import { Votebuttons } from './VoteButtons';
 import { apiHost, mediaHost, protocol } from './App';
 
-function handleVote(userstate:userstate,login:login,type: string, ids: number[]) {
-  return function (upvote: boolean | undefined) {
+function handleVote(userstate:userstate, login:login,type: string, ids: number[]) {
+  return function (upvote: Upvote) {
     
     const formdata = new FormData();
     formdata.append('type', type);
     
     for (let i = 0; i < ids.length; i++) {
-      formdata.append('ids', ids[i].toString());
+      formdata.append('ElementIDs', ids[i].toString());
     }
     const headers =  {
       'Content-Type': 'multipart/form-data',
@@ -31,9 +32,9 @@ function handleVote(userstate:userstate,login:login,type: string, ids: number[])
 
     var token = "";
 
-    formdata.append('upvote', JSON.stringify(upvote));
+    formdata.append('UpVote', JSON.stringify(upvote));
     axios
-    .post(`${protocol}://${apiHost}/vote/`, formdata, {
+    .post(`${protocol}://${apiHost}/Votes/`, formdata, {
       headers
     })
     .then((response) => {
@@ -44,8 +45,8 @@ function handleVote(userstate:userstate,login:login,type: string, ids: number[])
       {
         isLoggedIn: userstate.isLoggedIn,
         token: userstate.token,
-        username: userstate.username,
-        email: '',
+        Username: userstate.Username,
+        Email: '',
         profilePicURL: 'default.jpg',
       }
     );
@@ -57,7 +58,7 @@ const MemeVoteList : React.FC<{
   memeCanvasState:MemeCanvasState;
   userstate: userstate;
   login:login
-  vote: (type: string) => (isUpvote: boolean) => void;
+  vote: (type: string) => (isUpvote: Upvote) => void;
 }> = (props) => {
 
   const handleToptextVote = handleVote(props.userstate,props.login,'toptext', [props.memeCanvasState.toptextID]);
@@ -349,17 +350,24 @@ export async function getRandom(
     soundConfigured:boolean,
   }
 ) {
-  let visualResource = await getResourceOnChance(`${protocol}://${apiHost}/random/visual`, 100);
-  let soundResource = await getResourceOnChance(
-    `${protocol}://${apiHost}/random/sound`,
-    config.soundChance
-  );
+  let visualResource = await getResourceOnChance(`${protocol}://${apiHost}/Visuals/random`, 100);
+  
+  //todo disabled because lack of interest in sound memes
+  //let soundResource = await getResourceOnChance(
+  //  `${protocol}://${apiHost}/Sounds/random`,
+  //  config.soundChance
+  //);
+  let soundResource = {
+    id:0,
+    votes:0,
+    data:""
+  };
   let toptextResource = await getResourceOnChance(
-    `${protocol}://${apiHost}/random/toptext`,
+    `${protocol}://${apiHost}/Texts/random/Toptext`,
     config.toptextChance
   );
   let bottomtextResource = await getResourceOnChance(
-    `${protocol}://${apiHost}/random/bottomtext`,
+    `${protocol}://${apiHost}/Texts/random/Bottomtext`,
     config.bottomtextChance
   );
 
@@ -394,11 +402,11 @@ export async function getRandom(
       isGif: visualResource.data.endsWith('.gif'),
     },
     {
-      meme: undefined,
-      visual: undefined,
-      toptext: undefined,
-      bottomtext: undefined,
-      sound: undefined,
+      meme: Upvote.Unvote,
+      visual: Upvote.Unvote,
+      toptext: Upvote.Unvote,
+      bottomtext: Upvote.Unvote,
+      sound: Upvote.Unvote,
     }
   );
 }

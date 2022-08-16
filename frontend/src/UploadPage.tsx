@@ -96,18 +96,18 @@ const UploadPage: React.FC = (props) => {
     if (visualFile) {
       const formdata = new FormData();
 
-      formdata.append('toptext', memeCanvasState.toptext);
-      formdata.append('bottomtext', memeCanvasState.bottomtext);
-      formdata.append('visualFile', visualFile);
+      formdata.append('Toptext', memeCanvasState.toptext);
+      formdata.append('Bottomtext', memeCanvasState.bottomtext);
+      formdata.append('VisualFile', visualFile);
 
       if (soundFile) {
-        formdata.append('soundFile', soundFile);
+        formdata.append('SoundFile', soundFile);
       }
 
       setIsLoading(true);
 
       axios
-        .post(`${protocol}://${apiHost}/Upload/Memes`, formdata, {
+        .post(`${protocol}://${apiHost}/Memes`, formdata, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

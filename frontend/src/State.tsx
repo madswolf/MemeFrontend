@@ -1,22 +1,28 @@
+import Axios from 'axios';
 import { EffectCallback, useEffect, useState } from 'react';
+import { apiHost, protocol } from './App';
 import {setCookie, getCookie} from './cookies'
 
-
+export enum Upvote {
+  Upvote,
+  Downvote,
+  Unvote
+}
 
 export type profilePic = {
   profilePicURL: string;
 };
 
-export type email = {
-  email: string;
+export type Email = {
+  Email: string;
 };
 
 export type userstate = {
   isLoggedIn:boolean;
   token:string;
-  username:string;
+  Username:string;
   profilePicURL:string;
-  email:string;
+  Email:string;
 }
 
 export type login = (userState:userstate) =>  void;
@@ -28,9 +34,9 @@ export const useUserState = () => {
   const [userState, setUserState] = useState({
     isLoggedIn: false,
     token: '',
-    username: 'LonelyCrab',
+    Username: 'LonelyCrab',
     profilePicURL: 'default.jpg',
-    email: '',
+    Email: '',
   });
 
   function login(userState: userstate) {
@@ -38,13 +44,17 @@ export const useUserState = () => {
   }
 
   function signout() {
-    setUserState({
-      isLoggedIn: false,
-      token: '',
-      username: 'LoneliestCrab',
-      email: '',
-      profilePicURL: 'default.jpg',
-    });
+    Axios.post(`${protocol}://${apiHost}/Users/logout`).then(_ => {
+      setUserState({
+        isLoggedIn: false,
+        token: '',
+        Username: 'LoneliestCrab',
+        Email: '',
+        profilePicURL: 'default.jpg',
+      });
+    }).catch(error => {
+      console.log("error");
+    })
   }
   return { userState, login, signout };
 };
@@ -92,22 +102,22 @@ export type VoteState = {
 };
 
 export type MemeVoteState = {
-  [index: string]: boolean | undefined;
-  meme: boolean | undefined;
-  visual: boolean | undefined;
-  toptext: boolean | undefined;
-  bottomtext: boolean | undefined;
-  sound: boolean | undefined;
+  [index: string]: Upvote;
+  meme: Upvote;
+  visual: Upvote;
+  toptext: Upvote;
+  bottomtext: Upvote;
+  sound: Upvote;
 };
 
 export const useMemeStackState = () => {
   const { memeCanvasState, setMemeCanvasState } = useMemeCanvasState();
   const [voteState, setVoteState] = useState<MemeVoteState>({
-    meme: undefined,
-    visual: undefined,
-    toptext: undefined,
-    bottomtext: undefined,
-    sound: undefined,
+    meme: Upvote.Unvote,
+    visual: Upvote.Unvote,
+    toptext: Upvote.Unvote,
+    bottomtext: Upvote.Unvote,
+    sound: Upvote.Unvote,
   });
 
   const [memeCanvasStackState, setMemCanvaseStackState] = useState([memeCanvasState]);
@@ -151,7 +161,7 @@ export const useMemeStackState = () => {
   }
 
   function vote(type: string) {
-    return function (isUpvote: boolean) {
+    return function (isUpvote: Upvote) {
       const copy = { ...voteState };
       copy[type] = isUpvote;
       setVoteState(copy);

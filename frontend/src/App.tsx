@@ -12,10 +12,11 @@ import { signout, useConfig, userstate, useUserState } from './State';
 import { SignupPage } from './SignupPage';
 import UploadPage from './UploadPage';
 import { RecoveryPage } from './RecoveryPage';
+import axios from 'axios';
 
 export const apiHost = 'localhost';
 export const mediaHost = 'media.mads.monster';
-export const protocol = 'http';
+export const protocol = 'https';
 
 const Header: React.FC<
 {
@@ -71,6 +72,7 @@ const Header: React.FC<
 const App: React.FC = () => {
   const { userState, login, signout } = useUserState();
   const { advancedMode, setAdvancedMode } = useConfig();
+  axios.defaults.withCredentials = true;
   return (
     <Router>
         <div className="App">
@@ -87,7 +89,7 @@ const App: React.FC = () => {
               render={() => (
                 <HomePage
                   isLoggedIn={userState.isLoggedIn}
-                  username={userState.username}
+                  username={userState.Username}
                 />
               )}
             />
@@ -99,9 +101,9 @@ const App: React.FC = () => {
                   <UserPage
                     isLoggedIn={userState.isLoggedIn}
                     token={userState.token}
-                    username={userState.username}
+                    username={userState.Username}
                     profilePicURL={userState.profilePicURL}
-                    email={userState.email}
+                    email={userState.Email}
                     login={login}
                   />
                 ) : (

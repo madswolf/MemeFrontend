@@ -18,28 +18,33 @@ import { apiHost, mediaHost, protocol } from './App';
 const LoginPage: React.FC<{login:login}> = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  
   function handleLogin() {
     const formdata = new FormData();
-    formdata.append('username', username);
-    formdata.append('password', password);
+    formdata.append('Username', username);
+    formdata.append('Password', password);
     axios
-      .post(`${protocol}://${apiHost}/user/login`, formdata, {
+      .post(`${protocol}://${apiHost}/Users/login`, formdata, {
         headers: {
           'Content-Type': 'application/json',
         },
+        validateStatus: (status) => status < 500
       })
       .then((response) => {
         if (response.status === 200) {
+          console.log("test");
           props.login({
             ...response.data,
             isLoggedIn: true,
             profilePicURL: `${protocol}://${mediaHost}/${response.data.profilePicFileName}`,
             token: response.data.token,
           });
-        } else {
-          Alert.error(response.data.error);
+        } else if (response.status == 401){
+          Alert.error("The entered information is not correct");
         }
       });
+      
+      console.log("done");
   }
 
   return (
