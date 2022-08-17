@@ -78,31 +78,32 @@ const UserPage: React.FC<{
       const formdata = new FormData();
 
       if (editedUserName !== props.username) {
-        formdata.append('username', editedUserName);
+        formdata.append('NewUsername', editedUserName);
       }
 
       if (editedEmail !== props.email) {
-        formdata.append('email', editedEmail);
+        formdata.append('NewEmail', editedEmail);
       }
 
       if (profilePic) {
-        formdata.append('newProfilePic', profilePic);
+        formdata.append('NewProfilePic', profilePic);
       }
 
       if (newPassword) {
-        formdata.append('newPassword', newPassword);
+        formdata.append('NewPassword', newPassword);
       }
 
-      formdata.append('password', password);
+      formdata.append('CurrentPassword', password);
 
       setIsLoading(true);
 
       axios
-        .post(`${protocol}://${apiHost}/user/update`, formdata, {
+        .post(`${protocol}://${apiHost}/Users/update`, formdata, {
           headers: {
             'Content-Type': 'multipart/form-data',
             auth: props,
           },
+          validateStatus: status => status < 501
         })
         .then((response) => {
           if (response.status === 200) {
@@ -120,8 +121,12 @@ const UserPage: React.FC<{
               isLoggedIn: true,
               profilePicURL: `/public/${response.data.profilePicFileName}`,
             });
-          } else {
-            setToolTipString(response.headers.error);
+          } else if(response.status === 400) {
+            setToolTipString("Please include current password");
+          } else if (response.status === 401){
+            setToolTipString("Incorrect login");
+          } else if (response.status === 500){
+            setToolTipString("Please log in");
           }
           setIsLoading(false);
         });
@@ -149,14 +154,14 @@ const UserPage: React.FC<{
               ) : null}
               {UserField('USERNAME', editedUserName, isEditing, setEditedUserName)}
               {UserField('E-MAIL', editedEmail, isEditing, seteditedEmail)}
-              {isEditing ? UserField('NUVÆRENDE PASSWORD', password, true, setPassword) : null}
+              {isEditing ? UserField('CURRENT PASSWORD', password, true, setPassword) : null}
               {isEditing ? (
                 !isEditingPassword ? (
                   <Button appearance="link" onClick={() => setIsEditingPassword(true)}>
                     Ændre password?
                   </Button>
                 ) : (
-                  UserField('NYT PASSWORD', newPassword, true, setNewPassword)
+                  UserField('NEW PASSWORD', newPassword, true, setNewPassword)
                 )
               ) : null}
             </ul>
