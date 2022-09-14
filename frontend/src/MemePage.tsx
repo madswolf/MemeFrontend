@@ -168,7 +168,11 @@ const MemeComponentSelector : React.FC<{
   
   var elements : {value:{data:string,id:number},label:string}[] = []
 
-  axios.get(`${protocol}://${apiHost}/${props.type.toLowerCase()}s/`)
+  var propTypeUrl = `${protocol}://${apiHost}/${props.type}s/`
+  if(props.type === "TopText" || props.type === "BottomText"){
+    propTypeUrl = `${protocol}://${apiHost}/Texts/${props.type}/`
+  }
+  axios.get(propTypeUrl)
   .then((response) => {elements = response.data.forEach((element: {id:number, filename: string; memetext:string }) => {
     const data = element.filename ? element.filename : element.memetext
     elements.push({
@@ -275,7 +279,7 @@ const MemeConfigurator :React.FC<{
         value={props.memeCanvasState.visualFileURL}
       />
       <MemeConfigGroup name="Toptext" numValue={props.toptextChance} setNumValue={props.settoptextChance}></MemeConfigGroup>
-      <MemeComponentSelector type="Toptext" 
+      <MemeComponentSelector type="TopText" 
         onChange={
           (v,id,votes) => {
             props.setMemeCanvasState(
@@ -290,7 +294,7 @@ const MemeConfigurator :React.FC<{
         value={props.memeCanvasState.toptext}
       />
       <MemeConfigGroup name="Bottomtext" numValue={props.bottomtextChance} setNumValue={props.setbottomtextChance}></MemeConfigGroup>
-      <MemeComponentSelector type="Bottomtext" 
+      <MemeComponentSelector type="BottomText" 
         onChange={
           (v,id,votes) =>{ 
             props.setMemeCanvasState(
@@ -304,6 +308,7 @@ const MemeConfigurator :React.FC<{
         } 
         value={props.memeCanvasState.bottomtext}
       />
+      {/* disabled because of lack of interest in sound memes
       <MemeConfigGroup name="Sound" numValue={props.soundChance} setNumValue={props.setsoundChance}></MemeConfigGroup>
       <MemeComponentSelector type="Sound" 
         onChange={
@@ -319,6 +324,7 @@ const MemeConfigurator :React.FC<{
         }
         value={props.memeCanvasState.soundFileURL}
       />
+      */}
   </div>
   );
 }
