@@ -16,7 +16,7 @@ import axios from 'axios';
 
 export const apiHost = 'localhost';
 export const mediaHost = 'media.mads.monster';
-export const protocol = 'https';
+export const protocol = 'http';
 
 const Header: React.FC<
 {

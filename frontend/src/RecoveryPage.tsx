@@ -14,13 +14,13 @@ import axios from 'axios';
 import { apiHost, protocol } from './App';
 
 const RecoveryPage: React.FC = (props) => {
-  const [email, setEmail] = useState('');
+  const [username, setEmail] = useState('');
   function handleRecovery() {
     const formdata = new FormData();
-    formdata.append('email', email);
+    formdata.append('username', username);
 
     axios
-      .post(`${protocol}://${apiHost}/user/forgot-password`, formdata, {
+      .post(`${protocol}://${apiHost}/Users/recover`, formdata, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -45,7 +45,7 @@ const RecoveryPage: React.FC = (props) => {
       <Form className="Login-form">
         <FormGroup>
           <ControlLabel>Username</ControlLabel>
-          <FormControl value={email} name="name" onChange={(v, e) => setEmail(v)} />
+          <FormControl value={username} name="name" onChange={(v, e) => setEmail(v)} />
           <HelpBlock tooltip={true}>Either username or email</HelpBlock>
         </FormGroup>
         <FormGroup>
