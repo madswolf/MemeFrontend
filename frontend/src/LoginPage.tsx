@@ -36,8 +36,8 @@ const LoginPage: React.FC<{login:login}> = (props) => {
           props.login({
             ...response.data,
             isLoggedIn: true,
-            profilePicURL: `${protocol}://${mediaHost}/${response.data.profilePicFileName}`,
-            token: response.data.token,
+            profilePicURL: response.data.profilePicURl,
+            token: response.data.token, // TODO: SESSIONS INSTEAD
           });
         } else if (response.status == 401){
           Alert.error("The entered information is not correct");

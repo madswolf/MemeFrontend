@@ -40,7 +40,7 @@ const SignupPage: React.FC<{login:login}> = (props) => {
             props.login({
               ...response.data,
               isLoggedIn: true,
-              profilePicURL: `://${mediaHost}/${response.data.profilePicFileName}`,
+              profilePicURL: response.data.profilePicURl,
             });
           } else {
             Alert.error("Username or email already in use");
