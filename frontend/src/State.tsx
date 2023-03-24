@@ -53,7 +53,6 @@ export const useUserState = () => {
         profilePicURL: 'default.jpg',
       });
     }).catch(error => {
-      console.log("error");
     })
   }
   return { userState, login, signout };

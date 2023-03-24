@@ -32,7 +32,6 @@ const LoginPage: React.FC<{login:login}> = (props) => {
       })
       .then((response) => {
         if (response.status === 200) {
-          console.log("test");
           props.login({
             ...response.data,
             isLoggedIn: true,
@@ -44,7 +43,6 @@ const LoginPage: React.FC<{login:login}> = (props) => {
         }
       });
       
-      console.log("done");
   }
 
   return (

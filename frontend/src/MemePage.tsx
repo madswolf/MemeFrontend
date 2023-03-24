@@ -165,16 +165,16 @@ const MemeComponentSelector : React.FC<{
   value:string;
   onChange(value:string,id:number,votes:number): void
 }> = (props) => {
-  
   var elements : {value:{data:string,id:number},label:string}[] = []
 
   var propTypeUrl = `${protocol}://${apiHost}/${props.type}s/`
   if(props.type === "TopText" || props.type === "BottomText"){
     propTypeUrl = `${protocol}://${apiHost}/Texts/${props.type}/`
   }
+  
   axios.get(propTypeUrl)
-  .then((response) => {elements = response.data.forEach((element: {id:number, filename: string; memetext:string }) => {
-    const data = element.filename ? element.filename : element.memetext
+  .then((response) => {elements = response.data.forEach((element: {id:number, filename: string; text:string }) => {
+    const data = element.filename ? element.filename : element.text
     elements.push({
       value: {data:data,id:element.id},
       label: data
@@ -182,8 +182,13 @@ const MemeComponentSelector : React.FC<{
   });});
 
   function handleChange(element:{id:number,data:string} | null,onChange:(value:string,id:number,votes:number) => void){
+    
     if (element){
-    axios.get(`${protocol}://${apiHost}/${props.type.toLowerCase()}s/${element.id}`)
+      var propTypeUrl = `${protocol}://${apiHost}/${props.type}s/${element.id}`
+      if(props.type === "TopText" || props.type === "BottomText"){
+        propTypeUrl = `${protocol}://${apiHost}/Texts/one/  ${element.id}`
+      }
+      axios.get(propTypeUrl)
     .then((v) => {
       onChange(v.data.data,element.id,v.data.votes)
     })}else{
@@ -200,7 +205,6 @@ const MemeComponentSelector : React.FC<{
     }
   }
 
-  console.log("draw")
 
   return (
     <SelectPicker 
