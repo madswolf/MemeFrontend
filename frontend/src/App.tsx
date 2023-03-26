@@ -14,9 +14,9 @@ import UploadPage from './UploadPage';
 import { RecoveryPage } from './RecoveryPage';
 import axios from 'axios';
 
-export const apiHost = 'localhost';
-export const mediaHost = 'media.mads.monster';
-export const protocol = 'http';
+export const apiHost = 'test.api.mads.monster';
+export const mediaHost = 'test.media.mads.monster';
+export const protocol = 'https';
 
 const Header: React.FC<
 {

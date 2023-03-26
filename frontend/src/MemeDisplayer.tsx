@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { MemeCanvas } from './MemeCanvas';
 import { MemeGif } from './MemeGif';
 import { MemeCanvasState } from './State';
 
-export const MemeDisplayer: React.FC<{ memeState: MemeCanvasState; className: string }> = (
+export const MemeDisplayer: React.FC<{ memeState: MemeCanvasState; className: string; children: (Element | ReactNode)}> = (
   props
 ) => {
   return (

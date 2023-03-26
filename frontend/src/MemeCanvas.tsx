@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { MemeCanvasState } from './State';
 
-export const MemeCanvas: React.FC<{ memeState: MemeCanvasState; className: string }> = (props) => {
+export const MemeCanvas: React.FC<{ memeState: MemeCanvasState; className: string; children: (Element | ReactNode) }> = (props) => {
   const fontBase = 1000, // selected default width for canvas
     fontSize = 100; // default size for font
 
@@ -110,10 +110,12 @@ export const MemeCanvas: React.FC<{ memeState: MemeCanvasState; className: strin
 
   return (
     <div className={props.className}>
-      <div className="Meme-canvas-container">
-        <canvas ref={canvasRef} />
-      </div>
-      {props.children}
+      <>
+        <div className="Meme-canvas-container">
+          <canvas ref={canvasRef} />
+        </div>
+        {props.children}
+      </>
     </div>
   );
 };

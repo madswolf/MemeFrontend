@@ -210,7 +210,9 @@ const UploadPage: React.FC = (props) => {
         </FormGroup>
         <MemeLoader isloading={isLoading} />
       </Form>
-      <MemeDisplayer className="Meme-preview-container" memeState={memeCanvasState} />
+      <MemeDisplayer className="Meme-preview-container" memeState={memeCanvasState} >
+        
+      </MemeDisplayer>
       <ReactTooltip id="submit" place="top" effect="solid">
         {toolTipString}
       </ReactTooltip>
