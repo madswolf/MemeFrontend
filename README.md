@@ -1,2 +1,2 @@
 # MemeServer
-Python server for memes
+Complete application for uploading storing and generating memes

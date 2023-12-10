@@ -1,0 +1,312 @@
+@import '~@csstools/normalize.css';
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40px;
+  width: 120px;
+  padding-left: 1vmin;
+  padding-right: 1vmin;
+  pointer-events: none;
+}
+
+.Navbar-logo {
+  padding: 8px;
+  display: inline-block;
+}
+
+.User-box-container {
+  height: 80%;
+  display: flex;
+  justify-content: center;
+}
+
+.User-box {
+  padding: 2vh;
+  width: 40vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #121517;
+  border: 0.2vh solid #000000;
+  border-radius: 1.5vh;
+}
+@media only screen and (max-width: 600px) {
+  .User-box {
+    border-radius: 0;
+    width: 100%;
+  }
+}
+
+.User-picture-container {
+  height: 100%;
+  padding-top: 5vh;
+}
+
+.User-picture {
+  height: 15vw;
+  width: 15vw;
+  border-radius: 50%;
+}
+
+.User-picture-navbar{
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  
+  /* Ugly hack to make the picture go up when in a navbar */
+  position: relative;
+  top: -11px;
+}
+
+.User-info-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.User-info {
+  list-style-type: none;
+  width: 40%;
+  display: flex;
+  text-align: left; 
+  justify-content: space-around;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-size: calc(6px + 2vmin);
+}
+
+.User-field {
+  color: white;
+}
+
+.User-field-name {
+  font-family: Cantarell;
+  font-style: normal;
+  font-weight: 500;
+
+  color: #ADADAD;
+}
+
+.User-field-value {
+  font-family: Cantarell;
+  font-style: normal;
+  font-weight: 500;
+
+  color: #FFFFFF;
+}
+
+
+
+.Login-form{
+  font-size: calc(4px + 2vmin);
+  text-align: left; 
+}
+
+.Signup-link{
+  text-decoration: none;
+}
+
+.Signup-link:hover{
+  text-decoration: none;
+}
+
+.Meme-upload-bar{
+  height: 5vh;
+  text-align: left;
+}
+
+.Meme-preview-container {
+  height: 400px;
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Meme-container {
+  height: 92vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Meme-button-container {
+  display: flex;
+  flex-direction: row;
+  margin: 0 -5px;
+}
+
+.Meme-button {
+  margin: 0 5px;
+}
+
+.meme-displayer-container {
+  display: inline-block;
+}
+
+.vote-component-container {
+  display: flex;
+  position: absolute;
+  top: 20%;
+  left:15%;
+  width: 300px;
+  flex-direction: column;
+  justify-content: left;
+}
+
+.config-component-container {
+  display: flex;
+  position: absolute;
+  top: 20%;
+  right:15%;
+  width: 400px;
+  flex-direction: column;
+  justify-content: right;
+}
+
+.vote-container {
+  display: inline-block;
+}
+
+.random-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.vote-component{
+  padding: 3vh;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.vote-flex-container {
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.vote {
+  background-color: transparent;
+  display: flex;
+  justify-content: space-around;
+}
+
+.upvote {
+  transform: rotate(270deg);
+}
+
+.normal-vote{
+  width: calc(10px + 5vmin);
+  height: auto;
+}
+
+.small-vote{
+  width: calc(10px + 3vmin);;
+  height: auto;
+}
+
+.upvoted {
+  transform: rotate(270deg);
+  fill: red;
+}
+
+.downvote {
+  transform: rotate(90deg);
+}
+
+.downvoted {
+  transform: rotate(90deg);
+  fill: blue;
+}
+
+
+.Meme-gif-container {
+  position: relative;
+}
+
+.Meme-gif-toptext {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  -webkit-text-stroke: 1px black;
+}
+
+.Meme-gif-bottomtext {
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    -webkit-text-stroke: 1px black;
+}
+
+.Meme-canvas-container {
+  height: 400px;
+  width: 350px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.Meme-gif {
+  max-width: 400px;
+  max-height: 400px;
+}
+
+
+.Upload-page {
+  height: 94vh;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap-reverse;
+  align-items: center;
+  justify-content: center;
+}
+
+.Login-page {
+  height: 94vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Home-page {
+  height: 94vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.User-page {
+  height: 94vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.App {
+  height: 100vh;
+  background-color: #282c34;
+  color: #424C55;
+}
+
+.App-body {
+  background-color: #282c34;
+  min-height: 94vh;
+  font-size: calc(10px + 2vmin);
+  color: #424C55;
+}
