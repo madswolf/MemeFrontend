@@ -16,7 +16,7 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/react-test-renderer": "^16.9.3",
     "@types/testing-library__react": "^10.2.0",
-    "axios": "^0.20.0",
+    "axios": "^0.28.0",
     "gif-frames": "^1.0.1",
     "graphicsmagick": "^0.0.1",
     "postcss": "8.1.0",
