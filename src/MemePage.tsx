@@ -14,7 +14,7 @@ import {
   Upvote
 } from './State';
 import { Votebuttons } from './VoteButtons';
-import { apiHost, mediaHost, protocol } from './App';
+import { apiHost, protocol } from './App';
 
 function handleVote(userstate:userstate, login:login,type: string, ids: number[]) {
   return function (upvote: Upvote) {

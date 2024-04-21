@@ -13,7 +13,7 @@ import {
 import 'rsuite/dist/styles/rsuite-dark.css';
 import axios from 'axios';
 import { login } from './State';
-import { apiHost, mediaHost, protocol } from './App';
+import { apiHost, protocol } from './App';
 
 const SignupPage: React.FC<{login:login}> = (props) => {
   const [username, setUsername] = useState('');

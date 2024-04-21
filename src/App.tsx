@@ -15,7 +15,6 @@ import { RecoveryPage } from './RecoveryPage';
 import axios from 'axios';
 
 export const apiHost = 'api.mads.monster';
-export const mediaHost = 'media.mads.monster';
 export const protocol = 'https';
 
 const Header: React.FC<
